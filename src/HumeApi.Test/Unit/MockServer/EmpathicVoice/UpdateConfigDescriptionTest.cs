@@ -1,0 +1,131 @@
+using global::System.Threading.Tasks;
+using HumeApi.Core;
+using HumeApi.EmpathicVoice;
+using HumeApi.Test.Unit.MockServer;
+using NUnit.Framework;
+
+namespace HumeApi.Test.Unit.MockServer.EmpathicVoice;
+
+[TestFixture]
+public class UpdateConfigDescriptionTest : BaseMockServerTest
+{
+    [Test]
+    public async global::System.Threading.Tasks.Task MockServerTest()
+    {
+        const string requestJson = """
+            {
+              "version_description": "This is an updated version_description."
+            }
+            """;
+
+        const string mockResponse = """
+            {
+              "id": "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+              "version": 1,
+              "version_description": "This is an updated version_description.",
+              "name": "Weather Assistant Config",
+              "created_on": 1715275452390,
+              "modified_on": 1715275452390,
+              "evi_version": "2",
+              "prompt": {
+                "id": "af699d45-2985-42cc-91b9-af9e5da3bac5",
+                "version": 0,
+                "version_type": "FIXED",
+                "version_description": "",
+                "name": "Weather Assistant Prompt",
+                "created_on": 1715267200693,
+                "modified_on": 1715267200693,
+                "text": "<role>You are an AI weather assistant providing users with accurate and up-to-date weather information. Respond to user queries concisely and clearly. Use simple language and avoid technical jargon. Provide temperature, precipitation, wind conditions, and any weather alerts. Include helpful tips if severe weather is expected.</role>"
+              },
+              "voice": {
+                "provider": "HUME_AI",
+                "name": "SAMPLE VOICE",
+                "custom_voice": {
+                  "id": "00aa8ee9-c50e-4ea1-9af0-7b08ad451704",
+                  "version": 1,
+                  "name": "SAMPLE VOICE",
+                  "created_on": 1724704587367,
+                  "modified_on": 1725489961583,
+                  "base_voice": "KORA",
+                  "parameter_model": "20241004-11parameter",
+                  "parameters": {
+                    "gender": 0,
+                    "assertiveness": 20,
+                    "buoyancy": -30,
+                    "confidence": -40,
+                    "enthusiasm": 50,
+                    "nasality": 45,
+                    "relaxedness": -35,
+                    "smoothness": 25,
+                    "tepidity": 15,
+                    "tightness": 5
+                  }
+                }
+              },
+              "language_model": {
+                "model_provider": "ANTHROPIC",
+                "model_resource": "claude-3-7-sonnet-latest",
+                "temperature": 1
+              },
+              "ellm_model": {
+                "allow_short_responses": false
+              },
+              "tools": [],
+              "builtin_tools": [],
+              "event_messages": {
+                "on_new_chat": {
+                  "enabled": false,
+                  "text": ""
+                },
+                "on_inactivity_timeout": {
+                  "enabled": false,
+                  "text": ""
+                },
+                "on_max_duration_timeout": {
+                  "enabled": false,
+                  "text": ""
+                }
+              },
+              "timeouts": {
+                "inactivity": {
+                  "enabled": true,
+                  "duration_secs": 600
+                },
+                "max_duration": {
+                  "enabled": true,
+                  "duration_secs": 1800
+                }
+              }
+            }
+            """;
+
+        Server
+            .Given(
+                WireMock
+                    .RequestBuilders.Request.Create()
+                    .WithPath("/v0/evi/configs/1b60e1a0-cc59-424a-8d2c-189d354db3f3/version/1")
+                    .WithHeader("Content-Type", "application/json")
+                    .UsingPatch()
+                    .WithBodyAsJson(requestJson)
+            )
+            .RespondWith(
+                WireMock
+                    .ResponseBuilders.Response.Create()
+                    .WithStatusCode(200)
+                    .WithBody(mockResponse)
+            );
+
+        var response = await Client.EmpathicVoice.Configs.UpdateConfigDescriptionAsync(
+            "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+            1,
+            new PostedConfigVersionDescription
+            {
+                VersionDescription = "This is an updated version_description.",
+            }
+        );
+        Assert.That(
+            response,
+            Is.EqualTo(JsonUtils.Deserialize<ReturnConfig>(mockResponse)).UsingDefaults()
+        );
+    }
+}

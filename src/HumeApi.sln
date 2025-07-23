@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumeApi", "HumeApi\HumeApi.csproj", "{D6FF2068-1AA9-4F56-8A8D-22B5400F3D70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumeApi.Test", "HumeApi.Test\HumeApi.Test.csproj", "{E4656C78-F60A-41FD-BF82-F0D29CA271C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6FF2068-1AA9-4F56-8A8D-22B5400F3D70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6FF2068-1AA9-4F56-8A8D-22B5400F3D70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6FF2068-1AA9-4F56-8A8D-22B5400F3D70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6FF2068-1AA9-4F56-8A8D-22B5400F3D70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4656C78-F60A-41FD-BF82-F0D29CA271C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4656C78-F60A-41FD-BF82-F0D29CA271C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4656C78-F60A-41FD-BF82-F0D29CA271C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4656C78-F60A-41FD-BF82-F0D29CA271C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
