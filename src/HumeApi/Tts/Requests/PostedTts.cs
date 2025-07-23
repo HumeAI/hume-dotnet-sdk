@@ -1,17 +1,21 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using HumeApi;
 using HumeApi.Core;
 using OneOf;
 
 namespace HumeApi.Tts;
 
 [Serializable]
-public record PostedTts : IJsonOnDeserialized
+public record PostedTts
 {
-    [JsonExtensionData]
-    private readonly IDictionary<string, JsonElement> _extensionData =
-        new Dictionary<string, JsonElement>();
+    /// <summary>
+    /// Access token used for authenticating the client. If not provided, an `api_key` must be provided to authenticate.
+    ///
+    /// The access token is generated using both an API key and a Secret key, which provides an additional layer of security compared to using just an API key.
+    ///
+    /// For more details, refer to the [Authentication Strategies Guide](/docs/introduction/api-key#authentication-strategies).
+    /// </summary>
+    [JsonIgnore]
+    public string? AccessToken { get; set; }
 
     /// <summary>
     /// Utterances to use as context for generating consistent speech style and prosody across multiple requests. These will not be converted to speech output.
@@ -65,12 +69,6 @@ public record PostedTts : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("instant_mode")]
     public bool? InstantMode { get; set; }
-
-    [JsonIgnore]
-    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
-
-    void IJsonOnDeserialized.OnDeserialized() =>
-        AdditionalProperties.CopyFromExtensionData(_extensionData);
 
     /// <inheritdoc />
     public override string ToString()
