@@ -81,35 +81,32 @@ public class SynthesizeJsonTest : BaseMockServerTest
             );
 
         var response = await Client.Tts.SynthesizeJsonAsync(
-            new SynthesizeJsonRequest
+            new PostedTts
             {
-                Body = new PostedTts
+                Utterances = new List<PostedUtterance>()
+                {
+                    new PostedUtterance
+                    {
+                        Text =
+                            "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                        Description =
+                            "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
+                    },
+                },
+                Context = new PostedContextWithUtterances
                 {
                     Utterances = new List<PostedUtterance>()
                     {
                         new PostedUtterance
                         {
-                            Text =
-                                "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                            Text = "How can people see beauty so differently?",
                             Description =
-                                "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
+                                "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
                         },
                     },
-                    Context = new PostedContextWithUtterances
-                    {
-                        Utterances = new List<PostedUtterance>()
-                        {
-                            new PostedUtterance
-                            {
-                                Text = "How can people see beauty so differently?",
-                                Description =
-                                    "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
-                            },
-                        },
-                    },
-                    Format = new Format(new Format.Mp3(new FormatMp3())),
-                    NumGenerations = 1,
                 },
+                Format = new Format(new Format.Mp3(new FormatMp3())),
+                NumGenerations = 1,
             }
         );
         Assert.That(

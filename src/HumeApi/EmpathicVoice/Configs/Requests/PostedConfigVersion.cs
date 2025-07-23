@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using HumeApi.Core;
+using OneOf;
 
 namespace HumeApi.EmpathicVoice;
 
@@ -25,7 +26,7 @@ public record PostedConfigVersion
     /// A voice specification associated with this Config version.
     /// </summary>
     [JsonPropertyName("voice")]
-    public PostedVoice? Voice { get; set; }
+    public OneOf<VoiceId, VoiceName>? Voice { get; set; }
 
     /// <summary>
     /// The supplemental language model associated with this Config version.
