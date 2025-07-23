@@ -16,6 +16,12 @@ public record ReturnConfig : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Name applied to all versions of a particular Config.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    /// <summary>
     /// Identifier for a Config. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("id")]
@@ -32,22 +38,42 @@ public record ReturnConfig : IJsonOnDeserialized
     public int? Version { get; set; }
 
     /// <summary>
-    /// Specifies the EVI version to use. Use `"1"` for version 1, or `"2"` for the latest enhanced version. For a detailed comparison of the two versions, refer to our [guide](/docs/empathic-voice-interface-evi/configuration/evi-version).
+    /// Specifies the EVI version to use. Use `"1"` for version 1, or `"2"` for the latest enhanced version. For a detailed comparison of the two versions, refer to our [guide](/docs/speech-to-speech-evi/configuration/evi-version).
     /// </summary>
     [JsonPropertyName("evi_version")]
     public string? EviVersion { get; set; }
 
-    /// <summary>
-    /// An optional description of the Config version.
-    /// </summary>
-    [JsonPropertyName("version_description")]
-    public string? VersionDescription { get; set; }
+    [JsonPropertyName("timeouts")]
+    public ReturnTimeoutSpecs? Timeouts { get; set; }
+
+    [JsonPropertyName("nudges")]
+    public ReturnNudgeSpec? Nudges { get; set; }
 
     /// <summary>
-    /// Name applied to all versions of a particular Config.
+    /// The eLLM setup associated with this Config.
+    ///
+    /// Hume's eLLM (empathic Large Language Model) is a multimodal language model that takes into account both expression measures and language. The eLLM generates short, empathic language responses and guides text-to-speech (TTS) prosody.
     /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    [JsonPropertyName("ellm_model")]
+    public ReturnEllmModel? EllmModel { get; set; }
+
+    [JsonPropertyName("voice")]
+    public object? Voice { get; set; }
+
+    [JsonPropertyName("prompt")]
+    public ReturnPrompt? Prompt { get; set; }
+
+    /// <summary>
+    /// List of user-defined tools associated with this Config.
+    /// </summary>
+    [JsonPropertyName("tools")]
+    public IEnumerable<ReturnUserDefinedTool>? Tools { get; set; }
+
+    /// <summary>
+    /// Map of webhooks associated with this config.
+    /// </summary>
+    [JsonPropertyName("webhooks")]
+    public IEnumerable<ReturnWebhookSpec>? Webhooks { get; set; }
 
     /// <summary>
     /// Time at which the Config was created. Measured in seconds since the Unix epoch.
@@ -61,15 +87,6 @@ public record ReturnConfig : IJsonOnDeserialized
     [JsonPropertyName("modified_on")]
     public long? ModifiedOn { get; set; }
 
-    [JsonPropertyName("prompt")]
-    public ReturnPrompt? Prompt { get; set; }
-
-    /// <summary>
-    /// A voice specification associated with this Config.
-    /// </summary>
-    [JsonPropertyName("voice")]
-    public ReturnVoice? Voice { get; set; }
-
     /// <summary>
     /// The supplemental language model associated with this Config.
     ///
@@ -77,20 +94,6 @@ public record ReturnConfig : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("language_model")]
     public ReturnLanguageModel? LanguageModel { get; set; }
-
-    /// <summary>
-    /// The eLLM setup associated with this Config.
-    ///
-    /// Hume's eLLM (empathic Large Language Model) is a multimodal language model that takes into account both expression measures and language. The eLLM generates short, empathic language responses and guides text-to-speech (TTS) prosody.
-    /// </summary>
-    [JsonPropertyName("ellm_model")]
-    public ReturnEllmModel? EllmModel { get; set; }
-
-    /// <summary>
-    /// List of user-defined tools associated with this Config.
-    /// </summary>
-    [JsonPropertyName("tools")]
-    public IEnumerable<ReturnUserDefinedTool>? Tools { get; set; }
 
     /// <summary>
     /// List of built-in tools associated with this Config.
@@ -101,17 +104,11 @@ public record ReturnConfig : IJsonOnDeserialized
     [JsonPropertyName("event_messages")]
     public ReturnEventMessageSpecs? EventMessages { get; set; }
 
-    [JsonPropertyName("timeouts")]
-    public ReturnTimeoutSpecs? Timeouts { get; set; }
-
-    [JsonPropertyName("nudges")]
-    public ReturnNudgeSpec? Nudges { get; set; }
-
     /// <summary>
-    /// Map of webhooks associated with this config.
+    /// An optional description of the Config version.
     /// </summary>
-    [JsonPropertyName("webhooks")]
-    public IEnumerable<ReturnWebhookSpec>? Webhooks { get; set; }
+    [JsonPropertyName("version_description")]
+    public string? VersionDescription { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

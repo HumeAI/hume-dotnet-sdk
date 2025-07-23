@@ -206,16 +206,13 @@ public partial class TtsClient
     ///             {
     ///                 Text =
     ///                     "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-    ///                 Description =
-    ///                     "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
+    ///                 Voice = new PostedUtteranceVoiceWithName
+    ///                 {
+    ///                     Name = "Male English Actor",
+    ///                     Provider = VoiceProvider.HumeAi,
+    ///                 },
     ///             },
     ///         },
-    ///         Context = new PostedContextWithGenerationId
-    ///         {
-    ///             GenerationId = "09ad914d-8e7f-40f8-a279-e34f07f7dab2",
-    ///         },
-    ///         Format = new Format(new Format.Mp3(new FormatMp3())),
-    ///         NumGenerations = 1,
     ///     }
     /// );
     /// </code></example>
@@ -278,23 +275,13 @@ public partial class TtsClient
     ///             {
     ///                 Text =
     ///                     "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-    ///                 Description =
-    ///                     "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
-    ///             },
-    ///         },
-    ///         Context = new PostedContextWithUtterances
-    ///         {
-    ///             Utterances = new List&lt;PostedUtterance&gt;()
-    ///             {
-    ///                 new PostedUtterance
+    ///                 Voice = new PostedUtteranceVoiceWithName
     ///                 {
-    ///                     Text = "How can people see beauty so differently?",
-    ///                     Description =
-    ///                         "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
+    ///                     Name = "Male English Actor",
+    ///                     Provider = VoiceProvider.HumeAi,
     ///                 },
     ///             },
     ///         },
-    ///         Format = new Format(new Format.Mp3(new FormatMp3())),
     ///     }
     /// );
     /// </code></example>

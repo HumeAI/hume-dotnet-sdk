@@ -19,10 +19,10 @@ public class CreateConfigTest : BaseMockServerTest
                 "id": "af699d45-2985-42cc-91b9-af9e5da3bac5",
                 "version": 0
               },
-              "evi_version": "2",
+              "evi_version": "3",
               "voice": {
                 "provider": "HUME_AI",
-                "name": "SAMPLE VOICE"
+                "name": "Ava Song"
               },
               "language_model": {
                 "model_provider": "ANTHROPIC",
@@ -54,7 +54,7 @@ public class CreateConfigTest : BaseMockServerTest
               "name": "Weather Assistant Config",
               "created_on": 1715275452390,
               "modified_on": 1715275452390,
-              "evi_version": "2",
+              "evi_version": "3",
               "prompt": {
                 "id": "af699d45-2985-42cc-91b9-af9e5da3bac5",
                 "version": 0,
@@ -67,28 +67,8 @@ public class CreateConfigTest : BaseMockServerTest
               },
               "voice": {
                 "provider": "HUME_AI",
-                "name": "SAMPLE VOICE",
-                "custom_voice": {
-                  "id": "00aa8ee9-c50e-4ea1-9af0-7b08ad451704",
-                  "version": 1,
-                  "name": "SAMPLE VOICE",
-                  "created_on": 1724704587367,
-                  "modified_on": 1725489961583,
-                  "base_voice": "KORA",
-                  "parameter_model": "20241004-11parameter",
-                  "parameters": {
-                    "gender": 0,
-                    "assertiveness": 20,
-                    "buoyancy": -30,
-                    "confidence": -40,
-                    "enthusiasm": 50,
-                    "nasality": 45,
-                    "relaxedness": -35,
-                    "smoothness": 25,
-                    "tepidity": 15,
-                    "tightness": 5
-                  }
-                }
+                "name": "Ava Song",
+                "id": "5bb7de05-c8fe-426a-8fcc-ba4fc4ce9f9c"
               },
               "language_model": {
                 "model_provider": "ANTHROPIC",
@@ -152,12 +132,8 @@ public class CreateConfigTest : BaseMockServerTest
                     Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
                     Version = 0,
                 },
-                EviVersion = "2",
-                Voice = new PostedVoice
-                {
-                    Provider = PostedVoiceProvider.HumeAi,
-                    Name = "SAMPLE VOICE",
-                },
+                EviVersion = "3",
+                Voice = new VoiceName { Provider = VoiceProvider.HumeAi, Name = "Ava Song" },
                 LanguageModel = new PostedLanguageModel
                 {
                     ModelProvider = ModelProviderEnum.Anthropic,
