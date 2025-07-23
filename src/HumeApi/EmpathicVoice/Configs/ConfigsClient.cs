@@ -19,7 +19,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Fetches a paginated list of **Configs**.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     private async Task<ReturnPagedConfigs> ListConfigsInternalAsync(
         ConfigsListConfigsRequest request,
@@ -99,7 +99,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Fetches a list of a **Config's** versions.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     private async Task<ReturnPagedConfigs> ListConfigVersionsInternalAsync(
         string id,
@@ -179,7 +179,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Fetches a paginated list of **Configs**.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.ListConfigsAsync(
@@ -225,7 +225,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Creates a **Config** which can be applied to EVI.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.CreateConfigAsync(
@@ -237,8 +237,8 @@ public partial class ConfigsClient
     ///             Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
     ///             Version = 0,
     ///         },
-    ///         EviVersion = "2",
-    ///         Voice = new PostedVoice { Provider = PostedVoiceProvider.HumeAi, Name = "SAMPLE VOICE" },
+    ///         EviVersion = "3",
+    ///         Voice = new VoiceName { Provider = VoiceProvider.HumeAi, Name = "Ava Song" },
     ///         LanguageModel = new PostedLanguageModel
     ///         {
     ///             ModelProvider = ModelProviderEnum.Anthropic,
@@ -314,7 +314,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Fetches a list of a **Config's** versions.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.ListConfigVersionsAsync(
@@ -363,7 +363,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Updates a **Config** by creating a new version of the **Config**.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.CreateConfigVersionAsync(
@@ -371,13 +371,13 @@ public partial class ConfigsClient
     ///     new PostedConfigVersion
     ///     {
     ///         VersionDescription = "This is an updated version of the Weather Assistant Config.",
-    ///         EviVersion = "2",
+    ///         EviVersion = "3",
     ///         Prompt = new PostedConfigPromptSpec
     ///         {
     ///             Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
     ///             Version = 0,
     ///         },
-    ///         Voice = new PostedVoice { Provider = PostedVoiceProvider.HumeAi, Name = "ITO" },
+    ///         Voice = new VoiceName { Provider = VoiceProvider.HumeAi, Name = "Ava Song" },
     ///         LanguageModel = new PostedLanguageModel
     ///         {
     ///             ModelProvider = ModelProviderEnum.Anthropic,
@@ -458,7 +458,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Deletes a **Config** and its versions.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3");
@@ -515,7 +515,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Updates the name of a **Config**.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.UpdateConfigNameAsync(
@@ -579,7 +579,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Fetches a specified version of a **Config**.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.GetConfigVersionAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3", 1);
@@ -647,7 +647,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Deletes a specified version of a **Config**.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigVersionAsync(
@@ -709,7 +709,7 @@ public partial class ConfigsClient
     /// <summary>
     /// Updates the description of a **Config**.
     ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/empathic-voice-interface-evi/configuration).
+    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.UpdateConfigDescriptionAsync(

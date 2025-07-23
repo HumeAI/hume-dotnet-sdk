@@ -15,20 +15,12 @@ public class SynthesizeJsonStreamingTest : BaseMockServerTest
               "utterances": [
                 {
                   "text": "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                  "description": "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality."
-                }
-              ],
-              "context": {
-                "utterances": [
-                  {
-                    "text": "How can people see beauty so differently?",
-                    "description": "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question."
+                  "voice": {
+                    "name": "Male English Actor",
+                    "provider": "HUME_AI"
                   }
-                ]
-              },
-              "format": {
-                "type": "mp3"
-              }
+                }
+              ]
             }
             """;
 
@@ -53,23 +45,13 @@ public class SynthesizeJsonStreamingTest : BaseMockServerTest
                         {
                             Text =
                                 "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                            Description =
-                                "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
-                        },
-                    },
-                    Context = new PostedContextWithUtterances
-                    {
-                        Utterances = new List<PostedUtterance>()
-                        {
-                            new PostedUtterance
+                            Voice = new PostedUtteranceVoiceWithName
                             {
-                                Text = "How can people see beauty so differently?",
-                                Description =
-                                    "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
+                                Name = "Male English Actor",
+                                Provider = VoiceProvider.HumeAi,
                             },
                         },
                     },
-                    Format = new Format(new Format.Mp3(new FormatMp3())),
                 }
             )
         );

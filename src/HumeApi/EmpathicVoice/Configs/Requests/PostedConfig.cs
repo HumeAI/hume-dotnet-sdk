@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using HumeApi.Core;
+using OneOf;
 
 namespace HumeApi.EmpathicVoice;
 
@@ -7,7 +8,7 @@ namespace HumeApi.EmpathicVoice;
 public record PostedConfig
 {
     /// <summary>
-    /// Specifies the EVI version to use. Use `"1"` for version 1, or `"2"` for the latest enhanced version. For a detailed comparison of the two versions, refer to our [guide](/docs/empathic-voice-interface-evi/configuration/evi-version).
+    /// Specifies the EVI version to use. Use `"1"` for version 1, or `"2"` for the latest enhanced version. For a detailed comparison of the two versions, refer to our [guide](/docs/speech-to-speech-evi/configuration/evi-version).
     /// </summary>
     [JsonPropertyName("evi_version")]
     public required string EviVersion { get; set; }
@@ -31,7 +32,7 @@ public record PostedConfig
     /// A voice specification associated with this Config.
     /// </summary>
     [JsonPropertyName("voice")]
-    public PostedVoice? Voice { get; set; }
+    public OneOf<VoiceId, VoiceName>? Voice { get; set; }
 
     /// <summary>
     /// The supplemental language model associated with this Config.
