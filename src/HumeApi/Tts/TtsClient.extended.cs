@@ -37,7 +37,7 @@ public partial class TtsClient
     ///     }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task SynthesizeFileAsync(
+    public async global::System.Threading.Tasks.Task<Stream> SynthesizeFileAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -58,10 +58,12 @@ public partial class TtsClient
             )
             .ConfigureAwait(false);
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            // return the stream if it is successful 
             if( response.StatusCode is >= 200 and < 400) {
-              // next: implement file download 
+              return await response.Raw.Content.ReadAsStreamAsync();
             }
+            
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
                 switch (response.StatusCode)
@@ -110,7 +112,7 @@ public partial class TtsClient
     ///     }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task SynthesizeFileStreamingAsync(
+    public async global::System.Threading.Tasks.Task<Stream> SynthesizeFileStreamingAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -131,10 +133,13 @@ public partial class TtsClient
             )
             .ConfigureAwait(false);
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            
+            // return the stream if it is successful 
             if( response.StatusCode is >= 200 and < 400) {
-              // next: implement file download 
+              return await response.Raw.Content.ReadAsStreamAsync();
             }
+            
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
                 switch (response.StatusCode)
@@ -213,10 +218,11 @@ public partial class TtsClient
             )
             .ConfigureAwait(false);
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            
             if( response.StatusCode is >= 200 and < 400) {
               // next: implement file download 
             }
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
                 switch (response.StatusCode)
