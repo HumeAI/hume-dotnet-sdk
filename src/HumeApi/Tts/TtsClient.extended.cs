@@ -232,12 +232,8 @@ public partial class TtsClient
                     }
                     catch (JsonException)
                     {
-                        // unable to map error response, throwing generic error
-                        throw new HumeApiApiException(
-                            $"Error with status code {response.StatusCode}",
-                            response.StatusCode,
-                            line
-                        );
+                        // unable to map error response, throwing error
+                        throw new HumeApiException($"Unable to deserialize JSON response '{line}'");
                     }
                     if (chunk is not null)
                     {
