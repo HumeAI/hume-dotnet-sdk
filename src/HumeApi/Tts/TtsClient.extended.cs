@@ -222,8 +222,8 @@ public partial class TtsClient
             if (response.StatusCode is >= 200 and < 400)
             {
                 string? line;
-                using var reader = new StreamReader(await response.Raw.Content.ReadAsStreamAsync(cancellationToken));
-                while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync(cancellationToken)))
+                using var reader = new StreamReader(await response.Raw.Content.ReadAsStreamAsync());
+                while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
                 {
                     SnippetAudioChunk? chunk = null;
                     try
