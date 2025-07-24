@@ -59,10 +59,11 @@ public partial class TtsClient
             .ConfigureAwait(false);
         {
             // return the stream if it is successful 
-            if( response.StatusCode is >= 200 and < 400) {
-              return await response.Raw.Content.ReadAsStreamAsync();
+            if (response.StatusCode is >= 200 and < 400)
+            {
+                return await response.Raw.Content.ReadAsStreamAsync();
             }
-            
+
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
@@ -133,12 +134,12 @@ public partial class TtsClient
             )
             .ConfigureAwait(false);
         {
-            
             // return the stream if it is successful 
-            if( response.StatusCode is >= 200 and < 400) {
-              return await response.Raw.Content.ReadAsStreamAsync();
+            if (response.StatusCode is >= 200 and < 400)
+            {
+                return await response.Raw.Content.ReadAsStreamAsync();
             }
-            
+
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
@@ -197,10 +198,10 @@ public partial class TtsClient
     ///     }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task SynthesizeJsonStreamingAsync(
+    public async IAsyncEnumerable<SnippetAudioChunk> SynthesizeJsonStreamingAsync(
         PostedTts request,
         RequestOptions? options = null,
-        CancellationToken cancellationToken = default
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default
     )
     {
         var response = await _client
@@ -218,10 +219,34 @@ public partial class TtsClient
             )
             .ConfigureAwait(false);
         {
-            
-            if( response.StatusCode is >= 200 and < 400) {
-              // next: implement file download 
+            if (response.StatusCode is >= 200 and < 400)
+            {
+                string? line;
+                using var reader = new StreamReader(await response.Raw.Content.ReadAsStreamAsync(cancellationToken));
+                while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync(cancellationToken)))
+                {
+                    SnippetAudioChunk? chunk = null;
+                    try
+                    {
+                        chunk = JsonUtils.Deserialize<SnippetAudioChunk>(line);
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                        throw new HumeApiApiException(
+                            $"Error with status code {response.StatusCode}",
+                            response.StatusCode,
+                            line
+                        );
+                    }
+                    if (chunk is not null)
+                    {
+                        yield return chunk;
+                    }
+                }
+                yield break;
             }
+
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
