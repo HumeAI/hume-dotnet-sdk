@@ -1,0 +1,4 @@
+# Ignore all tgz files
+*.tgz
+sdk/
+.github
