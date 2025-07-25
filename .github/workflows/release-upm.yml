@@ -40,7 +40,9 @@ jobs:
 
       - name: Generate Unity SDK
         run: |
-          output=$(npx fern-api/make-unity-sdk --sln ./main/src/HumeApi.sln --target ./Packages/com.humeai.unity --package ./ | tee /dev/tty) 
+          output=$(npx fern-api/make-unity-sdk --sln ./main/src/HumeApi.sln --target ./Packages/com.humeai.unity --package ./)
+          echo "$output"
+          
           upmversion=$(echo "$output" | grep 'UPM Version:' | awk '{print $NF}')
           upmpackage=$(echo "$output" | grep 'Created package:' | awk '{print $NF}')
           
