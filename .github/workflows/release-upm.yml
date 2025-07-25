@@ -1,0 +1,126 @@
+name: Release Unity SDK to UPM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-upm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout upm branch
+        uses: actions/checkout@v4
+        with:
+          ref: upm
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add main branch worktree
+        run: git worktree add ./main main
+
+      - name: Generate Unity SDK
+        run: |
+          output=$(npx fern-api/make-unity-sdk --sln ./main/src/HumeApi.sln --target ./Packages/com.humeai.unity --package ./ | tee /dev/tty) 
+          upmversion=$(echo "$output" | grep 'UPM Version:' | awk '{print $NF}')
+          upmpackage=$(echo "$output" | grep 'Created package:' | awk '{print $NF}')
+          
+          # Validate that version was extracted
+          if [ -z "$upmversion" ]; then
+            echo "Error: Failed to extract UPM version from output"
+            echo "Output was: $output"
+            exit 1
+          fi
+          
+          # Validate that package path was extracted
+          if [ -z "$upmpackage" ]; then
+            echo "Error: Failed to extract UPM package path from output"
+            echo "Output was: $output"
+            exit 1
+          fi
+          
+          # Validate that package file exists
+          if [ ! -f "$upmpackage" ]; then
+            echo "Error: UPM package file not found at: $upmpackage"
+            exit 1
+          fi
+          
+          echo "UPM_VERSION=$upmversion" >> $GITHUB_ENV
+          echo "UPM_PACKAGE=$upmpackage" >> $GITHUB_ENV
+          echo "Successfully extracted version: $upmversion"
+          echo "Package file: $upmpackage"
+
+      - name: Remove main branch worktree
+        run: git worktree remove ./main
+
+      - name: Commit and push changes
+        run: |
+          # Validate required environment variables
+          if [ -z "${{ env.UPM_VERSION }}" ]; then
+            echo "Error: UPM_VERSION environment variable is not set"
+            exit 1
+          fi
+          
+          if [ -z "${{ env.UPM_PACKAGE }}" ]; then
+            echo "Error: UPM_PACKAGE environment variable is not set"
+            exit 1
+          fi
+          
+          git add ./Packages/com.humeai.unity
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Unity SDK package to version ${{ env.UPM_VERSION }} [skip ci]"
+            git push origin upm
+          fi
+
+      - name: Create and push tag
+        run: |
+          # Validate required environment variables
+          if [ -z "${{ env.UPM_VERSION }}" ]; then
+            echo "Error: UPM_VERSION environment variable is not set"
+            exit 1
+          fi
+          
+          git tag "upm:${{ env.UPM_VERSION }}"
+          git push origin "upm:${{ env.UPM_VERSION }}"
+          echo "Successfully created and pushed tag: upm:${{ env.UPM_VERSION }}"
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: upm:${{ env.UPM_VERSION }}
+          release_name: Unity SDK UPM Package v${{ env.UPM_VERSION }}
+          body: |
+            Unity SDK UPM Package Release
+            
+            Version: ${{ env.UPM_VERSION }}
+            
+            This release contains the Unity Package Manager (UPM) package for the Hume AI Unity SDK.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.UPM_PACKAGE }}
+          asset_name: com.humeai.unity-${{ env.UPM_VERSION }}.tgz
+          asset_content_type: application/gzip 
