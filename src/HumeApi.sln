@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumeApi", "HumeApi\HumeApi.csproj", "{5D339FBE-8A3B-4967-99DC-5D9E8EBA930C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumeApi", "HumeApi\HumeApi.csproj", "{70B609F8-A860-448B-A571-C8789D48CCC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumeApi.Test", "HumeApi.Test\HumeApi.Test.csproj", "{9DEBCFCD-2A26-48F5-8972-6AE317471FB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumeApi.Test", "HumeApi.Test\HumeApi.Test.csproj", "{60FF7206-F1CD-4D59-94EE-74EA628C52FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5D339FBE-8A3B-4967-99DC-5D9E8EBA930C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D339FBE-8A3B-4967-99DC-5D9E8EBA930C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D339FBE-8A3B-4967-99DC-5D9E8EBA930C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D339FBE-8A3B-4967-99DC-5D9E8EBA930C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DEBCFCD-2A26-48F5-8972-6AE317471FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DEBCFCD-2A26-48F5-8972-6AE317471FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DEBCFCD-2A26-48F5-8972-6AE317471FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DEBCFCD-2A26-48F5-8972-6AE317471FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B609F8-A860-448B-A571-C8789D48CCC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B609F8-A860-448B-A571-C8789D48CCC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B609F8-A860-448B-A571-C8789D48CCC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B609F8-A860-448B-A571-C8789D48CCC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60FF7206-F1CD-4D59-94EE-74EA628C52FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60FF7206-F1CD-4D59-94EE-74EA628C52FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60FF7206-F1CD-4D59-94EE-74EA628C52FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60FF7206-F1CD-4D59-94EE-74EA628C52FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
