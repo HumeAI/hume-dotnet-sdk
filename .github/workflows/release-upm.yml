@@ -103,9 +103,9 @@ jobs:
             exit 1
           fi
           
-          git tag "upm v${{ env.UPM_VERSION }}"
-          git push origin "upm v${{ env.UPM_VERSION }}"
-          echo "Successfully created and pushed tag: upm v${{ env.UPM_VERSION }}"
+          git tag "upm-v${{ env.UPM_VERSION }}"
+          git push origin "upm-v${{ env.UPM_VERSION }}"
+          echo "Successfully created and pushed tag: upm-v${{ env.UPM_VERSION }}"
 
       - name: Create GitHub Release
         id: create_release
@@ -113,7 +113,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: upm v${{ env.UPM_VERSION }}
+          tag_name: upm-v${{ env.UPM_VERSION }}
           release_name: Unity SDK UPM Package v${{ env.UPM_VERSION }}
           body: |
             Unity SDK UPM Package Release
