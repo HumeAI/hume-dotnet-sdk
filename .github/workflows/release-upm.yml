@@ -12,6 +12,13 @@ jobs:
         with:
           ref: upm
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Fetch main branch
+        run: |
+          git fetch origin main:main
+          echo "Main branch fetched successfully"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
