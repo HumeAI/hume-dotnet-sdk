@@ -54,9 +54,9 @@ using HumeApi.Tts;
 using HumeApi;
 
 var client = new HumeApiClient("API_KEY");
-var pager = await client.Tts.Voices.ListAsync(new VoicesListRequest { Provider = VoiceProvider.CustomVoice });
+var items = await client.Tts.Voices.ListAsync(new VoicesListRequest { Provider = VoiceProvider.CustomVoice });
 
-await foreach (var item in pager)
+await foreach (var item in items)
 {
     // do something with item
 }

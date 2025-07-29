@@ -24,7 +24,7 @@ public record PostedUtterance : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// Speed multiplier for the synthesized speech.
+    /// Speed multiplier for the synthesized speech. Extreme values below 0.75 and above 1.5 may sometimes cause instability to the generated output.
     /// </summary>
     [JsonPropertyName("speed")]
     public double? Speed { get; set; }

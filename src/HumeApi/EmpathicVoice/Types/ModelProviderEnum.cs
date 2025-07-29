@@ -23,6 +23,12 @@ public readonly record struct ModelProviderEnum : IStringEnum
 
     public static readonly ModelProviderEnum AmazonBedrock = new(Values.AmazonBedrock);
 
+    public static readonly ModelProviderEnum Perplexity = new(Values.Perplexity);
+
+    public static readonly ModelProviderEnum Sambanova = new(Values.Sambanova);
+
+    public static readonly ModelProviderEnum Cerebras = new(Values.Cerebras);
+
     public ModelProviderEnum(string value)
     {
         Value = value;
@@ -85,5 +91,11 @@ public readonly record struct ModelProviderEnum : IStringEnum
         public const string HumeAi = "HUME_AI";
 
         public const string AmazonBedrock = "AMAZON_BEDROCK";
+
+        public const string Perplexity = "PERPLEXITY";
+
+        public const string Sambanova = "SAMBANOVA";
+
+        public const string Cerebras = "CEREBRAS";
     }
 }
