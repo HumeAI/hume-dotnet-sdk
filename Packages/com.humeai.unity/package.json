@@ -1,7 +1,7 @@
 {
   "name": "com.humeai.unity",
   "displayName": "HumeApi",
-  "version": "0.0.791",
+  "version": "0.0.839",
   "description": "Unity SDK for HumeAI",
   "author": "HumeAI",
   "license": "MIT",
