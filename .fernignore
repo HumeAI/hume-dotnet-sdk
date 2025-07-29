@@ -2,3 +2,4 @@
 src/HumeApi.Test/Unit/MockServer/Tts/SynthesizeJsonStreamingTest.cs
 unity/**
 generate-unity-sdk.sh
+.github/workflows/release-upm.yml
