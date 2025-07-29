@@ -1,4 +1,5 @@
 # Specify files that shouldn't be modified by Fern
 src/HumeApi/Tts/TtsClient.extended.cs
+src/HumeApi.Test/Unit/MockServer/Tts/SynthesizeJsonStreamingTest.cs
 unity/**
 generate-unity-sdk.sh
