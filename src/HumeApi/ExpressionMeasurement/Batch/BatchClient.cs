@@ -1,7 +1,7 @@
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
-using global::System.Threading.Tasks;
 using HumeApi;
 using HumeApi.Core;
 
@@ -246,7 +246,7 @@ public partial class BatchClient
     /// <summary>
     /// Get the artifacts ZIP of a completed inference job.
     /// </summary>
-    public async global::System.Threading.Tasks.Task GetJobArtifactsAsync(
+    public async Task<System.IO.Stream> GetJobArtifactsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -267,6 +267,10 @@ public partial class BatchClient
                 cancellationToken
             )
             .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return await response.Raw.Content.ReadAsStreamAsync();
+        }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             throw new HumeApiApiException(

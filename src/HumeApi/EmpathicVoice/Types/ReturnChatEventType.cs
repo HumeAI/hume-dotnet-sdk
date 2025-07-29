@@ -7,19 +7,31 @@ namespace HumeApi.EmpathicVoice;
 [Serializable]
 public readonly record struct ReturnChatEventType : IStringEnum
 {
-    public static readonly ReturnChatEventType SystemPrompt = new(Values.SystemPrompt);
-
-    public static readonly ReturnChatEventType UserMessage = new(Values.UserMessage);
-
-    public static readonly ReturnChatEventType UserInterruption = new(Values.UserInterruption);
-
-    public static readonly ReturnChatEventType AgentMessage = new(Values.AgentMessage);
-
     public static readonly ReturnChatEventType FunctionCall = new(Values.FunctionCall);
 
     public static readonly ReturnChatEventType FunctionCallResponse = new(
         Values.FunctionCallResponse
     );
+
+    public static readonly ReturnChatEventType ChatEndMessage = new(Values.ChatEndMessage);
+
+    public static readonly ReturnChatEventType AgentMessage = new(Values.AgentMessage);
+
+    public static readonly ReturnChatEventType SystemPrompt = new(Values.SystemPrompt);
+
+    public static readonly ReturnChatEventType UserRecordingStartMessage = new(
+        Values.UserRecordingStartMessage
+    );
+
+    public static readonly ReturnChatEventType ResumeOnset = new(Values.ResumeOnset);
+
+    public static readonly ReturnChatEventType UserInterruption = new(Values.UserInterruption);
+
+    public static readonly ReturnChatEventType ChatStartMessage = new(Values.ChatStartMessage);
+
+    public static readonly ReturnChatEventType PauseOnset = new(Values.PauseOnset);
+
+    public static readonly ReturnChatEventType UserMessage = new(Values.UserMessage);
 
     public ReturnChatEventType(string value)
     {
@@ -68,16 +80,26 @@ public readonly record struct ReturnChatEventType : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string SystemPrompt = "SYSTEM_PROMPT";
-
-        public const string UserMessage = "USER_MESSAGE";
-
-        public const string UserInterruption = "USER_INTERRUPTION";
-
-        public const string AgentMessage = "AGENT_MESSAGE";
-
         public const string FunctionCall = "FUNCTION_CALL";
 
         public const string FunctionCallResponse = "FUNCTION_CALL_RESPONSE";
+
+        public const string ChatEndMessage = "CHAT_END_MESSAGE";
+
+        public const string AgentMessage = "AGENT_MESSAGE";
+
+        public const string SystemPrompt = "SYSTEM_PROMPT";
+
+        public const string UserRecordingStartMessage = "USER_RECORDING_START_MESSAGE";
+
+        public const string ResumeOnset = "RESUME_ONSET";
+
+        public const string UserInterruption = "USER_INTERRUPTION";
+
+        public const string ChatStartMessage = "CHAT_START_MESSAGE";
+
+        public const string PauseOnset = "PAUSE_ONSET";
+
+        public const string UserMessage = "USER_MESSAGE";
     }
 }

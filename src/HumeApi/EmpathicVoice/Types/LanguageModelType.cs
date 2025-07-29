@@ -31,6 +31,10 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.Claude3Haiku20240307
     );
 
+    public static readonly LanguageModelType ClaudeSonnet420250514 = new(
+        Values.ClaudeSonnet420250514
+    );
+
     public static readonly LanguageModelType UsAnthropicClaude35Haiku20241022V10 = new(
         Values.UsAnthropicClaude35Haiku20241022V10
     );
@@ -43,6 +47,8 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.UsAnthropicClaude3Haiku20240307V10
     );
 
+    public static readonly LanguageModelType Qwen3235Ba22B = new(Values.Qwen3235Ba22B);
+
     public static readonly LanguageModelType Gemini15Pro = new(Values.Gemini15Pro);
 
     public static readonly LanguageModelType Gemini15Flash = new(Values.Gemini15Flash);
@@ -52,6 +58,12 @@ public readonly record struct LanguageModelType : IStringEnum
     public static readonly LanguageModelType Gemini15Flash002 = new(Values.Gemini15Flash002);
 
     public static readonly LanguageModelType Gemini20Flash = new(Values.Gemini20Flash);
+
+    public static readonly LanguageModelType Gemini25Flash = new(Values.Gemini25Flash);
+
+    public static readonly LanguageModelType Gemini25FlashPreview0417 = new(
+        Values.Gemini25FlashPreview0417
+    );
 
     public static readonly LanguageModelType Gpt4Turbo = new(Values.Gpt4Turbo);
 
@@ -77,6 +89,10 @@ public readonly record struct LanguageModelType : IStringEnum
 
     public static readonly LanguageModelType Llama318BInstant = new(Values.Llama318BInstant);
 
+    public static readonly LanguageModelType MoonshotaiKimiK2Instruct = new(
+        Values.MoonshotaiKimiK2Instruct
+    );
+
     public static readonly LanguageModelType AccountsFireworksModelsMixtral8X7BInstruct = new(
         Values.AccountsFireworksModelsMixtral8X7BInstruct
     );
@@ -93,9 +109,27 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.AccountsFireworksModelsLlamaV3P18BInstruct
     );
 
+    public static readonly LanguageModelType Sonar = new(Values.Sonar);
+
+    public static readonly LanguageModelType SonarPro = new(Values.SonarPro);
+
+    public static readonly LanguageModelType Sambanova = new(Values.Sambanova);
+
+    public static readonly LanguageModelType DeepSeekR1DistillLlama70B = new(
+        Values.DeepSeekR1DistillLlama70B
+    );
+
+    public static readonly LanguageModelType Llama4Maverick17B128EInstruct = new(
+        Values.Llama4Maverick17B128EInstruct
+    );
+
+    public static readonly LanguageModelType Qwen332B = new(Values.Qwen332B);
+
     public static readonly LanguageModelType Ellm = new(Values.Ellm);
 
     public static readonly LanguageModelType CustomLanguageModel = new(Values.CustomLanguageModel);
+
+    public static readonly LanguageModelType HumeEvi3WebSearch = new(Values.HumeEvi3WebSearch);
 
     public LanguageModelType(string value)
     {
@@ -158,6 +192,8 @@ public readonly record struct LanguageModelType : IStringEnum
 
         public const string Claude3Haiku20240307 = "claude-3-haiku-20240307";
 
+        public const string ClaudeSonnet420250514 = "claude-sonnet-4-20250514";
+
         public const string UsAnthropicClaude35Haiku20241022V10 =
             "us.anthropic.claude-3-5-haiku-20241022-v1:0";
 
@@ -166,6 +202,8 @@ public readonly record struct LanguageModelType : IStringEnum
 
         public const string UsAnthropicClaude3Haiku20240307V10 =
             "us.anthropic.claude-3-haiku-20240307-v1:0";
+
+        public const string Qwen3235Ba22B = "qwen-3-235b-a22b";
 
         public const string Gemini15Pro = "gemini-1.5-pro";
 
@@ -176,6 +214,10 @@ public readonly record struct LanguageModelType : IStringEnum
         public const string Gemini15Flash002 = "gemini-1.5-flash-002";
 
         public const string Gemini20Flash = "gemini-2.0-flash";
+
+        public const string Gemini25Flash = "gemini-2.5-flash";
+
+        public const string Gemini25FlashPreview0417 = "gemini-2.5-flash-preview-04-17";
 
         public const string Gpt4Turbo = "gpt-4-turbo";
 
@@ -201,6 +243,8 @@ public readonly record struct LanguageModelType : IStringEnum
 
         public const string Llama318BInstant = "llama-3.1-8b-instant";
 
+        public const string MoonshotaiKimiK2Instruct = "moonshotai/kimi-k2-instruct";
+
         public const string AccountsFireworksModelsMixtral8X7BInstruct =
             "accounts/fireworks/models/mixtral-8x7b-instruct";
 
@@ -213,8 +257,22 @@ public readonly record struct LanguageModelType : IStringEnum
         public const string AccountsFireworksModelsLlamaV3P18BInstruct =
             "accounts/fireworks/models/llama-v3p1-8b-instruct";
 
+        public const string Sonar = "sonar";
+
+        public const string SonarPro = "sonar-pro";
+
+        public const string Sambanova = "sambanova";
+
+        public const string DeepSeekR1DistillLlama70B = "DeepSeek-R1-Distill-Llama-70B";
+
+        public const string Llama4Maverick17B128EInstruct = "Llama-4-Maverick-17B-128E-Instruct";
+
+        public const string Qwen332B = "Qwen3-32B";
+
         public const string Ellm = "ellm";
 
         public const string CustomLanguageModel = "custom-language-model";
+
+        public const string HumeEvi3WebSearch = "hume-evi-3-web-search";
     }
 }

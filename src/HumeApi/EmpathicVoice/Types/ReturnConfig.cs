@@ -38,7 +38,32 @@ public record ReturnConfig : IJsonOnDeserialized
     public int? Version { get; set; }
 
     /// <summary>
-    /// Specifies the EVI version to use. Use `"1"` for version 1, or `"2"` for the latest enhanced version. For a detailed comparison of the two versions, refer to our [guide](/docs/speech-to-speech-evi/configuration/evi-version).
+    /// An optional description of the Config version.
+    /// </summary>
+    [JsonPropertyName("version_description")]
+    public string? VersionDescription { get; set; }
+
+    /// <summary>
+    /// The supplemental language model associated with this Config.
+    ///
+    /// This model is used to generate longer, more detailed responses from EVI. Choosing an appropriate supplemental language model for your use case is crucial for generating fast, high-quality responses from EVI.
+    /// </summary>
+    [JsonPropertyName("language_model")]
+    public ReturnLanguageModel? LanguageModel { get; set; }
+
+    /// <summary>
+    /// List of built-in tools associated with this Config.
+    /// </summary>
+    [JsonPropertyName("builtin_tools")]
+    public IEnumerable<ReturnBuiltinTool>? BuiltinTools { get; set; }
+
+    [JsonPropertyName("event_messages")]
+    public ReturnEventMessageSpecs? EventMessages { get; set; }
+
+    /// <summary>
+    /// Specifies the EVI version to use. See our [EVI Version  Guide](/docs/speech-to-speech-evi/configuration/evi-version) for differences between versions.
+    ///
+    /// **We're officially sunsetting EVI versions 1 and 2 on August 30, 2025**. To keep things running smoothly, be sure to [migrate to EVI 3](/docs/speech-to-speech-evi/configuration/evi-version#migrating-to-evi-3) before then.
     /// </summary>
     [JsonPropertyName("evi_version")]
     public string? EviVersion { get; set; }
@@ -86,29 +111,6 @@ public record ReturnConfig : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("modified_on")]
     public long? ModifiedOn { get; set; }
-
-    /// <summary>
-    /// The supplemental language model associated with this Config.
-    ///
-    /// This model is used to generate longer, more detailed responses from EVI. Choosing an appropriate supplemental language model for your use case is crucial for generating fast, high-quality responses from EVI.
-    /// </summary>
-    [JsonPropertyName("language_model")]
-    public ReturnLanguageModel? LanguageModel { get; set; }
-
-    /// <summary>
-    /// List of built-in tools associated with this Config.
-    /// </summary>
-    [JsonPropertyName("builtin_tools")]
-    public IEnumerable<ReturnBuiltinTool>? BuiltinTools { get; set; }
-
-    [JsonPropertyName("event_messages")]
-    public ReturnEventMessageSpecs? EventMessages { get; set; }
-
-    /// <summary>
-    /// An optional description of the Config version.
-    /// </summary>
-    [JsonPropertyName("version_description")]
-    public string? VersionDescription { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
