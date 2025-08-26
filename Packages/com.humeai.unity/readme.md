@@ -21,7 +21,7 @@ openupm add com.humeai.humeapi
   - Name: `OpenUPM`
   - URL: `https://package.openupm.com`
   - Scope(s):
-    - `come.humeai.unity`
+    - `com.humeai.unity`
 
 ![scoped-registries](./Documentation~/images/unity-package-manager.png)
 
