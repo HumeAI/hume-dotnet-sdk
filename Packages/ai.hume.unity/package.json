@@ -1,0 +1,12 @@
+{
+  "name": "ai.hume.unity",
+  "displayName": "Hume",
+  "version": "0.1.0",
+  "description": "Unity SDK for HumeAI",
+  "author": "hello@hume.ai",
+  "license": "MIT",
+  "changelogUrl": "https://dev.hume.ai/changelog",
+  "documentationUrl": "https://dev.hume.ai",
+  "unity": "6000.0",
+  "company": "HumeAI"
+}

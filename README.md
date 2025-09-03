@@ -17,7 +17,7 @@ If you are looking for the source code for the SDK, check out the `main` branch 
 git worktree add ./main main
 
 # update the unity package from the SDK in that branch
-npx fern-api/make-unity-sdk --sln ./main/src/HumeApi.sln --target ./Packages/com.humeai.unity --package ./
+npx fern-api/make-unity-sdk --sln ./main/src/Hume.sln --target ./Packages/com.humeai.unity --package ./
 
 # remove the worktree
 git worktree remove ./main
