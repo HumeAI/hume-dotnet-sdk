@@ -1,8 +1,8 @@
+using NUnit.Framework;
 using Hume.Test.Unit.MockServer;
 using Hume.Tts;
-using NUnit.Framework;
 
-namespace Hume.Test.Unit.MockServer.Tts;
+namespace HumeApi.Test.Unit.MockServer.Tts;
 
 [TestFixture]
 public class SynthesizeJsonStreamingTest : BaseMockServerTest
@@ -35,8 +35,8 @@ public class SynthesizeJsonStreamingTest : BaseMockServerTest
             )
             .RespondWith(WireMock.ResponseBuilders.Response.Create().WithStatusCode(200));
 
-        Assert.DoesNotThrowAsync(async () =>
-            await Client.Tts.SynthesizeJsonStreamingAsync(
+        Assert.DoesNotThrowAsync(async () =>{
+            await foreach( var item in Client.Tts.SynthesizeJsonStreamingAsync(
                 new PostedTts
                 {
                     Utterances = new List<PostedUtterance>()
@@ -53,7 +53,9 @@ public class SynthesizeJsonStreamingTest : BaseMockServerTest
                         },
                     },
                 }
-            )
-        );
+            )){
+              // do nothing
+            }
+    });
     }
 }
