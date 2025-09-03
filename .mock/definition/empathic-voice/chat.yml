@@ -4,21 +4,6 @@ channel:
   auth: false
   docs: Chat with Empathic Voice Interface (EVI)
   query-parameters:
-    access_token:
-      type: optional<string>
-      default: ''
-      docs: >-
-        Access token used for authenticating the client. If not provided, an
-        `api_key` must be provided to authenticate.
-
-
-        The access token is generated using both an API key and a Secret key,
-        which provides an additional layer of security compared to using just an
-        API key.
-
-
-        For more details, refer to the [Authentication Strategies
-        Guide](/docs/introduction/api-key#authentication-strategies).
     config_id:
       type: optional<string>
       docs: >-
@@ -28,11 +13,11 @@ channel:
         Include this ID in your connection request to equip EVI with the Prompt,
         Language Model, Voice, and Tools associated with the specified
         configuration. If omitted, EVI will apply [default configuration
-        settings](/docs/empathic-voice-interface-evi/configuration/build-a-configuration#default-configuration).
+        settings](/docs/speech-to-speech-evi/configuration/build-a-configuration#default-configuration).
 
 
         For help obtaining this ID, see our [Configuration
-        Guide](/docs/empathic-voice-interface-evi/configuration).
+        Guide](/docs/speech-to-speech-evi/configuration).
     config_version:
       type: optional<integer>
       docs: >-
@@ -47,13 +32,6 @@ channel:
 
         Include this parameter to apply a specific version of an EVI
         configuration. If omitted, the latest version will be applied.
-    event_limit:
-      type: optional<integer>
-      docs: >-
-        The maximum number of chat events to return from chat history. By
-        default, the system returns up to 300 events (100 events per page × 3
-        pages). Set this parameter to a smaller value to limit the number of
-        events returned.
     resumed_chat_group_id:
       type: optional<string>
       docs: >-
@@ -79,7 +57,7 @@ channel:
 
 
         - [Chat
-        Metadata](/reference/empathic-voice-interface-evi/chat/chat#receive.ChatMetadata.type):
+        Metadata](/reference/speech-to-speech-evi/chat#receive.ChatMetadata):
         Upon establishing a WebSocket connection with EVI, the user receives a
         Chat Metadata message. This message contains a `chat_group_id`, which
         can be used to resume conversations within this chat group in future
@@ -87,17 +65,23 @@ channel:
 
 
         - [List Chats
-        endpoint](/reference/empathic-voice-interface-evi/chats/list-chats): Use
-        the GET `/v0/evi/chats` endpoint to obtain the Chat Group ID of
-        individual Chat sessions. This endpoint lists all available Chat
-        sessions and their associated Chat Group ID.
+        endpoint](/reference/speech-to-speech-evi/chats/list-chats): Use the GET
+        `/v0/evi/chats` endpoint to obtain the Chat Group ID of individual Chat
+        sessions. This endpoint lists all available Chat sessions and their
+        associated Chat Group ID.
 
 
         - [List Chat Groups
-        endpoint](/reference/empathic-voice-interface-evi/chat-groups/list-chat-groups):
+        endpoint](/reference/speech-to-speech-evi/chat-groups/list-chat-groups):
         Use the GET `/v0/evi/chat_groups` endpoint to obtain the Chat Group IDs
         of all Chat Groups associated with an API key. This endpoint returns a
         list of all available chat groups.
+    voice_id:
+      type: optional<string>
+      docs: >-
+        The name or ID of the voice from the `Voice Library` to be used as the
+        speaker for this EVI session. This will override the speaker set in the
+        selected configuration.
     verbose_transcription:
       type: optional<boolean>
       default: false
@@ -105,10 +89,32 @@ channel:
         A flag to enable verbose transcription. Set this query parameter to
         `true` to have unfinalized user transcripts be sent to the client as
         interim UserMessage messages. The
-        [interim](/reference/empathic-voice-interface-evi/chat/chat#receive.UserMessage.interim)
+        [interim](/reference/speech-to-speech-evi/chat#receive.UserMessage.interim)
         field on a
-        [UserMessage](/reference/empathic-voice-interface-evi/chat/chat#receive.UserMessage.type)
+        [UserMessage](/reference/speech-to-speech-evi/chat#receive.UserMessage)
         denotes whether the message is "interim" or "final."
+    event_limit:
+      type: optional<integer>
+      docs: >-
+        The maximum number of chat events to return from chat history. By
+        default, the system returns up to 300 events (100 events per page × 3
+        pages). Set this parameter to a smaller value to limit the number of
+        events returned.
+    access_token:
+      type: optional<string>
+      default: ''
+      docs: >-
+        Access token used for authenticating the client. If not provided, an
+        `api_key` must be provided to authenticate.
+
+
+        The access token is generated using both an API key and a Secret key,
+        which provides an additional layer of security compared to using just an
+        API key.
+
+
+        For more details, refer to the [Authentication Strategies
+        Guide](/docs/introduction/api-key#authentication-strategies).
     api_key:
       type: optional<string>
       default: ''
@@ -130,8 +136,8 @@ channel:
     - messages:
         - type: publish
           body:
-            data: data
             type: audio_input
+            data: data
         - type: subscribe
           body:
             type: assistant_end

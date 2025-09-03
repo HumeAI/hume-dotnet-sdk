@@ -1,9 +1,9 @@
 # Hume C# Library
 
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Ffern-demo%2Fhumeai-dotnet-sdk)
-[![nuget shield](https://img.shields.io/nuget/v/HumeApi)](https://nuget.org/packages/HumeApi)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2FHumeAI%2Fhume-dotnet-sdk)
+[![nuget shield](https://img.shields.io/nuget/v/Hume)](https://nuget.org/packages/Hume)
 
-The Hume C# library provides convenient access to the Hume API from C#.
+The Hume C# library provides convenient access to the Hume APIs from C#.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ This SDK requires:
 ## Installation
 
 ```sh
-dotnet add package HumeApi
+dotnet add package Hume
 ```
 
 ## Usage
@@ -20,10 +20,10 @@ dotnet add package HumeApi
 Instantiate and use the client with the following:
 
 ```csharp
-using HumeApi.Tts;
-using HumeApi;
+using Hume.Tts;
+using Hume;
 
-var client = new HumeApiClient("API_KEY");
+var client = new HumeClient("API_KEY");
 await client.Tts.Voices.CreateAsync(
     new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
 );
@@ -35,11 +35,11 @@ When the API returns a non-success status code (4xx or 5xx response), a subclass
 will be thrown.
 
 ```csharp
-using HumeApi;
+using Hume;
 
 try {
     var response = await client.Tts.Voices.CreateAsync(...);
-} catch (HumeApiApiException e) {
+} catch (HumeClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
 }
@@ -50,10 +50,10 @@ try {
 List endpoints are paginated. The SDK provides an async enumerable so that you can simply loop over the items:
 
 ```csharp
-using HumeApi.Tts;
-using HumeApi;
+using Hume.Tts;
+using Hume;
 
-var client = new HumeApiClient("API_KEY");
+var client = new HumeClient("API_KEY");
 var items = await client.Tts.Voices.ListAsync(new VoicesListRequest { Provider = VoiceProvider.CustomVoice });
 
 await foreach (var item in items)
