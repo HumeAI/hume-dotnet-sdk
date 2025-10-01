@@ -6,20 +6,20 @@ using Hume.Core;
 namespace Hume.Tts;
 
 [Serializable]
-public record ReturnTts : IJsonOnDeserialized
+public record Timestamp : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("generations")]
-    public IEnumerable<ReturnGeneration> Generations { get; set; } = new List<ReturnGeneration>();
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 
-    /// <summary>
-    /// A unique ID associated with this request for tracking and troubleshooting. Use this ID when contacting [support](/support) for troubleshooting assistance.
-    /// </summary>
-    [JsonPropertyName("request_id")]
-    public string? RequestId { get; set; }
+    [JsonPropertyName("time")]
+    public required MillisecondInterval Time { get; set; }
+
+    [JsonPropertyName("type")]
+    public required TimestampType Type { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

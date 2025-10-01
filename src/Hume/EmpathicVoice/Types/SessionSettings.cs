@@ -17,14 +17,32 @@ public record SessionSettings : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; must be `session_settings` for our server to correctly identify and process it as a Session Settings message.
+    /// Configuration details for the audio input used during the session. Ensures the audio is being correctly set up for processing.
     ///
-    /// Session settings are temporary and apply only to the current Chat session. These settings can be adjusted dynamically based on the requirements of each session to ensure optimal performance and user experience.
-    ///
-    /// For more information, please refer to the [Session Settings guide](/docs/speech-to-speech-evi/configuration/session-settings).
+    /// This optional field is only required when the audio input is encoded in PCM Linear 16 (16-bit, little-endian, signed PCM WAV data). For detailed instructions on how to configure session settings for PCM Linear 16 audio, please refer to the [Session Settings guide](/docs/speech-to-speech-evi/configuration/session-settings).
     /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "session_settings";
+    [JsonPropertyName("audio")]
+    public AudioConfiguration? Audio { get; set; }
+
+    /// <summary>
+    /// List of built-in tools to enable for the session.
+    ///
+    /// Tools are resources used by EVI to perform various tasks, such as searching the web or calling external APIs. Built-in tools, like web search, are natively integrated, while user-defined tools are created and invoked by the user. To learn more, see our [Tool Use Guide](/docs/speech-to-speech-evi/features/tool-use).
+    ///
+    /// Currently, the only built-in tool Hume provides is **Web Search**. When enabled, Web Search equips EVI with the ability to search the web for up-to-date information.
+    /// </summary>
+    [JsonPropertyName("builtin_tools")]
+    public IEnumerable<BuiltinToolConfig>? BuiltinTools { get; set; }
+
+    /// <summary>
+    /// Field for injecting additional context into the conversation, which is appended to the end of user messages for the session.
+    ///
+    /// When included in a Session Settings message, the provided context can be used to remind the LLM of its role in every user message, prevent it from forgetting important details, or add new relevant information to the conversation.
+    ///
+    /// Set to `null` to clear injected context.
+    /// </summary>
+    [JsonPropertyName("context")]
+    public Context? Context { get; set; }
 
     /// <summary>
     /// Unique identifier for the session. Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
@@ -35,6 +53,17 @@ public record SessionSettings : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("custom_session_id")]
     public string? CustomSessionId { get; set; }
+
+    /// <summary>
+    /// Third party API key for the supplemental language model.
+    ///
+    /// When provided, EVI will use this key instead of Hume's API key for the supplemental LLM. This allows you to bypass rate limits and utilize your own API key as needed.
+    /// </summary>
+    [JsonPropertyName("language_model_api_key")]
+    public string? LanguageModelApiKey { get; set; }
+
+    [JsonPropertyName("metadata")]
+    public Dictionary<string, object?>? Metadata { get; set; }
 
     /// <summary>
     /// Instructions used to shape EVI's behavior, responses, and style for the session.
@@ -49,32 +78,6 @@ public record SessionSettings : IJsonOnDeserialized
     public string? SystemPrompt { get; set; }
 
     /// <summary>
-    /// Field for injecting additional context into the conversation, which is appended to the end of user messages for the session.
-    ///
-    /// When included in a Session Settings message, the provided context can be used to remind the LLM of its role in every user message, prevent it from forgetting important details, or add new relevant information to the conversation.
-    ///
-    /// Set to `null` to clear injected context.
-    /// </summary>
-    [JsonPropertyName("context")]
-    public Context? Context { get; set; }
-
-    /// <summary>
-    /// Configuration details for the audio input used during the session. Ensures the audio is being correctly set up for processing.
-    ///
-    /// This optional field is only required when the audio input is encoded in PCM Linear 16 (16-bit, little-endian, signed PCM WAV data). For detailed instructions on how to configure session settings for PCM Linear 16 audio, please refer to the [Session Settings guide](/docs/speech-to-speech-evi/configuration/session-settings).
-    /// </summary>
-    [JsonPropertyName("audio")]
-    public AudioConfiguration? Audio { get; set; }
-
-    /// <summary>
-    /// Third party API key for the supplemental language model.
-    ///
-    /// When provided, EVI will use this key instead of Hume's API key for the supplemental LLM. This allows you to bypass rate limits and utilize your own API key as needed.
-    /// </summary>
-    [JsonPropertyName("language_model_api_key")]
-    public string? LanguageModelApiKey { get; set; }
-
-    /// <summary>
     /// List of user-defined tools to enable for the session.
     ///
     /// Tools are resources used by EVI to perform various tasks, such as searching the web or calling external APIs. Built-in tools, like web search, are natively integrated, while user-defined tools are created and invoked by the user. To learn more, see our [Tool Use Guide](/docs/speech-to-speech-evi/features/tool-use).
@@ -83,17 +86,14 @@ public record SessionSettings : IJsonOnDeserialized
     public IEnumerable<Tool>? Tools { get; set; }
 
     /// <summary>
-    /// List of built-in tools to enable for the session.
+    /// The type of message sent through the socket; must be `session_settings` for our server to correctly identify and process it as a Session Settings message.
     ///
-    /// Tools are resources used by EVI to perform various tasks, such as searching the web or calling external APIs. Built-in tools, like web search, are natively integrated, while user-defined tools are created and invoked by the user. To learn more, see our [Tool Use Guide](/docs/speech-to-speech-evi/features/tool-use).
+    /// Session settings are temporary and apply only to the current Chat session. These settings can be adjusted dynamically based on the requirements of each session to ensure optimal performance and user experience.
     ///
-    /// Currently, the only built-in tool Hume provides is **Web Search**. When enabled, Web Search equips EVI with the ability to search the web for up-to-date information.
+    /// For more information, please refer to the [Session Settings guide](/docs/speech-to-speech-evi/configuration/session-settings).
     /// </summary>
-    [JsonPropertyName("builtin_tools")]
-    public IEnumerable<BuiltinToolConfig>? BuiltinTools { get; set; }
-
-    [JsonPropertyName("metadata")]
-    public Dictionary<string, object?>? Metadata { get; set; }
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "session_settings";
 
     /// <summary>
     /// This field allows you to assign values to dynamic variables referenced in your system prompt.
@@ -104,6 +104,12 @@ public record SessionSettings : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("variables")]
     public Dictionary<string, OneOf<string, double, bool>>? Variables { get; set; }
+
+    /// <summary>
+    /// Allows you to change the voice during an active chat. Updating the voice does not affect chat context or conversation history.
+    /// </summary>
+    [JsonPropertyName("voice_id")]
+    public string? VoiceId { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

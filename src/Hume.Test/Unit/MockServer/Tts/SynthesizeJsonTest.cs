@@ -54,7 +54,8 @@ public class SynthesizeJsonTest : BaseMockServerTest
                         "generation_id": "795c949a-1510-4a80-9646-7d0863b023ab",
                         "id": "37b1b1b1-1b1b-1b1b-1b1b-1b1b1b1b1b1b",
                         "text": "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                        "utterance_index": 0
+                        "utterance_index": 0,
+                        "timestamps": []
                       }
                     ]
                   ]

@@ -16,16 +16,16 @@ public record AudioOutput : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; for an Audio Output message, this must be `audio_output`.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "audio_output";
-
-    /// <summary>
     /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
     /// </summary>
     [JsonPropertyName("custom_session_id")]
     public string? CustomSessionId { get; set; }
+
+    /// <summary>
+    /// Base64 encoded audio output. This encoded audio is transmitted to the client, where it can be decoded and played back as part of the user interaction.
+    /// </summary>
+    [JsonPropertyName("data")]
+    public required string Data { get; set; }
 
     /// <summary>
     /// ID of the audio output. Allows the Audio Output message to be tracked and referenced.
@@ -40,10 +40,10 @@ public record AudioOutput : IJsonOnDeserialized
     public required int Index { get; set; }
 
     /// <summary>
-    /// Base64 encoded audio output. This encoded audio is transmitted to the client, where it can be decoded and played back as part of the user interaction.
+    /// The type of message sent through the socket; for an Audio Output message, this must be `audio_output`.
     /// </summary>
-    [JsonPropertyName("data")]
-    public required string Data { get; set; }
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "audio_output";
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

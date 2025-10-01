@@ -4,14 +4,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>12</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.1.0</Version>
+    <Version>0.0.1032</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
-    <PackageId>Hume</PackageId>
-    <PackageDescription>Hume AI APIs for text-to-speech and conversation</PackageDescription>
-    <PackageTags>hume api client sdk dotnet voice-synthesis conversational-ai ai emotional-intelligence</PackageTags>
-    <Authors>zachary.greathouse@hume.ai;richard@hume.ai;rob@hume.ai;ivan@hume.ai</Authors>
-    <Company>Hume AI</Company>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/HumeAI/hume-dotnet-sdk</PackageProjectUrl>
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>

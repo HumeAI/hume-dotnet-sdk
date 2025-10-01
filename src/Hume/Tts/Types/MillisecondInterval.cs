@@ -6,20 +6,23 @@ using Hume.Core;
 namespace Hume.Tts;
 
 [Serializable]
-public record ReturnTts : IJsonOnDeserialized
+public record MillisecondInterval : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("generations")]
-    public IEnumerable<ReturnGeneration> Generations { get; set; } = new List<ReturnGeneration>();
+    /// <summary>
+    /// Start time of the interval in milliseconds.
+    /// </summary>
+    [JsonPropertyName("begin")]
+    public required int Begin { get; set; }
 
     /// <summary>
-    /// A unique ID associated with this request for tracking and troubleshooting. Use this ID when contacting [support](/support) for troubleshooting assistance.
+    /// End time of the interval in milliseconds.
     /// </summary>
-    [JsonPropertyName("request_id")]
-    public string? RequestId { get; set; }
+    [JsonPropertyName("end")]
+    public required int End { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
