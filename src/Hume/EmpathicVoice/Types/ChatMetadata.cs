@@ -16,20 +16,6 @@ public record ChatMetadata : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; for a Chat Metadata message, this must be `chat_metadata`.
-    ///
-    /// The Chat Metadata message is the first message you receive after establishing a connection with EVI and contains important identifiers for the current Chat session.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "chat_metadata";
-
-    /// <summary>
-    /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
-    /// </summary>
-    [JsonPropertyName("custom_session_id")]
-    public string? CustomSessionId { get; set; }
-
-    /// <summary>
     /// ID of the Chat Group.
     ///
     /// Used to resume a Chat when passed in the [resumed_chat_group_id](/reference/speech-to-speech-evi/chat#request.query.resumed_chat_group_id) query parameter of a subsequent connection request. This allows EVI to continue the conversation from where it left off within the Chat Group.
@@ -46,10 +32,28 @@ public record ChatMetadata : IJsonOnDeserialized
     public required string ChatId { get; set; }
 
     /// <summary>
+    /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
+    /// </summary>
+    [JsonPropertyName("custom_session_id")]
+    public string? CustomSessionId { get; set; }
+
+    /// <summary>
     /// ID of the initiating request.
     /// </summary>
     [JsonPropertyName("request_id")]
     public string? RequestId { get; set; }
+
+    /// <summary>
+    /// The type of message sent through the socket; for a Chat Metadata message, this must be `chat_metadata`.
+    ///
+    /// The Chat Metadata message is the first message you receive after establishing a connection with EVI and contains important identifiers for the current Chat session.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public string Type
+    {
+        get => "chat_metadata";
+        set => value.Assert(value == "chat_metadata", "'Type' must be " + "chat_metadata");
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

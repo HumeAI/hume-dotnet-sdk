@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
-using global::System.Threading.Tasks;
 using Hume;
 using Hume.Core;
 
@@ -21,7 +20,7 @@ public partial class ToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    private async Task<ReturnPagedUserDefinedTools> ListToolsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedUserDefinedTools> ListToolsInternalAsync(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -101,7 +100,7 @@ public partial class ToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    private async Task<ReturnPagedUserDefinedTools> ListToolVersionsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedUserDefinedTools> ListToolVersionsInternalAsync(
         string id,
         ToolsListToolVersionsRequest request,
         RequestOptions? options = null,
@@ -186,7 +185,7 @@ public partial class ToolsClient
     ///     new ToolsListToolsRequest { PageNumber = 0, PageSize = 2 }
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -241,7 +240,7 @@ public partial class ToolsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnUserDefinedTool?> CreateToolAsync(
+    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> CreateToolAsync(
         PostedUserDefinedTool request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -309,7 +308,7 @@ public partial class ToolsClient
     ///     new ToolsListToolVersionsRequest()
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnUserDefinedTool>> ListToolVersionsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolVersionsAsync(
         string id,
         ToolsListToolVersionsRequest request,
         RequestOptions? options = null,
@@ -366,7 +365,7 @@ public partial class ToolsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnUserDefinedTool?> CreateToolVersionAsync(
+    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> CreateToolVersionAsync(
         string id,
         PostedUserDefinedToolVersion request,
         RequestOptions? options = null,
@@ -435,7 +434,7 @@ public partial class ToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolAsync("00183a3f-79ba-413d-9f3b-609864268bea");
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteToolAsync(
+    public async System.Threading.Tasks.Task DeleteToolAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -495,7 +494,7 @@ public partial class ToolsClient
     ///     new PostedUserDefinedToolName { Name = "get_current_temperature" }
     /// );
     /// </code></example>
-    public async Task<string> UpdateToolNameAsync(
+    public async System.Threading.Tasks.Task<string> UpdateToolNameAsync(
         string id,
         PostedUserDefinedToolName request,
         RequestOptions? options = null,
@@ -556,7 +555,7 @@ public partial class ToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.GetToolVersionAsync("00183a3f-79ba-413d-9f3b-609864268bea", 1);
     /// </code></example>
-    public async Task<ReturnUserDefinedTool?> GetToolVersionAsync(
+    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> GetToolVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -624,7 +623,7 @@ public partial class ToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("00183a3f-79ba-413d-9f3b-609864268bea", 1);
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteToolVersionAsync(
+    public async System.Threading.Tasks.Task DeleteToolVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -691,7 +690,7 @@ public partial class ToolsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnUserDefinedTool?> UpdateToolDescriptionAsync(
+    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> UpdateToolDescriptionAsync(
         string id,
         int version,
         PostedUserDefinedToolVersionDescription request,

@@ -223,7 +223,7 @@ public record Task
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Classification(
+        public static implicit operator Task.Classification(
             Hume.ExpressionMeasurement.Batch.TaskClassification value
         ) => new(value);
     }
@@ -243,7 +243,7 @@ public record Task
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Regression(
+        public static implicit operator Task.Regression(
             Hume.ExpressionMeasurement.Batch.TaskRegression value
         ) => new(value);
     }

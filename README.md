@@ -15,17 +15,30 @@ This SDK requires:
 dotnet add package Hume
 ```
 
+## Reference
+
+A full reference for this library is available [here](https://github.com/HumeAI/hume-dotnet-sdk/blob/HEAD/./reference.md).
+
 ## Usage
 
 Instantiate and use the client with the following:
 
 ```csharp
-using Hume.Tts;
+using Hume.EmpathicVoice;
 using Hume;
 
 var client = new HumeClient("API_KEY");
-await client.Tts.Voices.CreateAsync(
-    new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
+await client.EmpathicVoice.Tools.CreateToolAsync(
+    new PostedUserDefinedTool
+    {
+        Name = "get_current_weather",
+        Parameters =
+            "{ \"type\": \"object\", \"properties\": { \"location\": { \"type\": \"string\", \"description\": \"The city and state, e.g. San Francisco, CA\" }, \"format\": { \"type\": \"string\", \"enum\": [\"celsius\", \"fahrenheit\"], \"description\": \"The temperature unit to use. Infer this from the users location.\" } }, \"required\": [\"location\", \"format\"] }",
+        VersionDescription =
+            "Fetches current weather and uses celsius or fahrenheit based on location of user.",
+        Description = "This tool is for getting the current weather.",
+        FallbackContent = "Unable to fetch current weather.",
+    }
 );
 ```
 
@@ -38,7 +51,7 @@ will be thrown.
 using Hume;
 
 try {
-    var response = await client.Tts.Voices.CreateAsync(...);
+    var response = await client.EmpathicVoice.Tools.CreateToolAsync(...);
 } catch (HumeClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -50,11 +63,13 @@ try {
 List endpoints are paginated. The SDK provides an async enumerable so that you can simply loop over the items:
 
 ```csharp
-using Hume.Tts;
+using Hume.EmpathicVoice;
 using Hume;
 
 var client = new HumeClient("API_KEY");
-var items = await client.Tts.Voices.ListAsync(new VoicesListRequest { Provider = VoiceProvider.CustomVoice });
+var items = await client.EmpathicVoice.Tools.ListToolsAsync(
+    new ToolsListToolsRequest { PageNumber = 0, PageSize = 2 }
+);
 
 await foreach (var item in items)
 {
@@ -79,7 +94,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.Tts.Voices.CreateAsync(
+var response = await client.EmpathicVoice.Tools.CreateToolAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -92,7 +107,7 @@ var response = await client.Tts.Voices.CreateAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.Tts.Voices.CreateAsync(
+var response = await client.EmpathicVoice.Tools.CreateToolAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s

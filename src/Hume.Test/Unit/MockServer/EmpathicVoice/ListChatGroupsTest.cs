@@ -1,4 +1,3 @@
-using global::System.Threading.Tasks;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
 using NUnit.Framework;
@@ -8,8 +7,8 @@ namespace Hume.Test.Unit.MockServer.EmpathicVoice;
 [TestFixture]
 public class ListChatGroupsTest : BaseMockServerTest
 {
-    [Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    [NUnit.Framework.Test]
+    public async System.Threading.Tasks.Task MockServerTest()
     {
         const string mockResponse = """
             {
@@ -47,7 +46,7 @@ public class ListChatGroupsTest : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var pager = await Client.EmpathicVoice.ChatGroups.ListChatGroupsAsync(
+        var items = await Client.EmpathicVoice.ChatGroups.ListChatGroupsAsync(
             new ChatGroupsListChatGroupsRequest
             {
                 PageNumber = 0,
@@ -56,7 +55,7 @@ public class ListChatGroupsTest : BaseMockServerTest
                 ConfigId = "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
             }
         );
-        await foreach (var item in pager)
+        await foreach (var item in items)
         {
             Assert.That(item, Is.Not.Null);
             break; // Only check the first item

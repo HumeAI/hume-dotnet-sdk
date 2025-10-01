@@ -342,7 +342,7 @@ public record StateTlInference
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Queued(
+        public static implicit operator StateTlInference.Queued(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued value
         ) => new(value);
     }
@@ -362,7 +362,7 @@ public record StateTlInference
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator InProgress(
+        public static implicit operator StateTlInference.InProgress(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress value
         ) => new(value);
     }
@@ -384,7 +384,7 @@ public record StateTlInference
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Completed(
+        public static implicit operator StateTlInference.Completed(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference value
         ) => new(value);
     }
@@ -404,7 +404,7 @@ public record StateTlInference
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Failed(
+        public static implicit operator StateTlInference.Failed(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed value
         ) => new(value);
     }

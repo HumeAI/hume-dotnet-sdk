@@ -13,6 +13,24 @@ public record WebhookEventChatStarted : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Phone number of the caller in E.164 format (e.g., `+12223333333`). This field is included only if the Chat was created via the [Twilio phone calling](/docs/empathic-voice-interface-evi/phone-calling) integration.
+    /// </summary>
+    [JsonPropertyName("caller_number")]
+    public string? CallerNumber { get; set; }
+
+    /// <summary>
+    /// Indicates whether the chat is the first in a new Chat Group (`new_chat_group`) or the continuation of an existing chat group (`resumed_chat_group`).
+    /// </summary>
+    [JsonPropertyName("chat_start_type")]
+    public required WebhookEventChatStartType ChatStartType { get; set; }
+
+    /// <summary>
+    /// User-defined session ID. Relevant only when employing a [custom language model](/docs/empathic-voice-interface-evi/custom-language-model) in the EVI Config.
+    /// </summary>
+    [JsonPropertyName("custom_session_id")]
+    public string? CustomSessionId { get; set; }
+
+    /// <summary>
     /// Always `chat_started`.
     /// </summary>
     [JsonPropertyName("event_name")]
@@ -23,24 +41,6 @@ public record WebhookEventChatStarted : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("start_time")]
     public required int StartTime { get; set; }
-
-    /// <summary>
-    /// Indicates whether the chat is the first in a new Chat Group (`new_chat_group`) or the continuation of an existing chat group (`resumed_chat_group`).
-    /// </summary>
-    [JsonPropertyName("chat_start_type")]
-    public required WebhookEventChatStartType ChatStartType { get; set; }
-
-    /// <summary>
-    /// Phone number of the caller in E.164 format (e.g., `+12223333333`). This field is included only if the Chat was created via the [Twilio phone calling](/docs/empathic-voice-interface-evi/phone-calling) integration.
-    /// </summary>
-    [JsonPropertyName("caller_number")]
-    public string? CallerNumber { get; set; }
-
-    /// <summary>
-    /// User-defined session ID. Relevant only when employing a [custom language model](/docs/empathic-voice-interface-evi/custom-language-model) in the EVI Config.
-    /// </summary>
-    [JsonPropertyName("custom_session_id")]
-    public string? CustomSessionId { get; set; }
 
     /// <summary>
     /// Unique ID of the **Chat Group** associated with the **Chat** session.

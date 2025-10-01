@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
-using global::System.Threading.Tasks;
 using Hume;
 using Hume.Core;
 
@@ -19,7 +18,7 @@ public partial class VoicesClient
     /// <summary>
     /// Lists voices you have saved in your account, or voices from the [Voice Library](https://platform.hume.ai/tts/voice-library).
     /// </summary>
-    private async Task<ReturnPagedVoices> ListInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedVoices> ListInternalAsync(
         VoicesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -93,9 +92,11 @@ public partial class VoicesClient
     /// Lists voices you have saved in your account, or voices from the [Voice Library](https://platform.hume.ai/tts/voice-library).
     /// </summary>
     /// <example><code>
-    /// await client.Tts.Voices.ListAsync(new VoicesListRequest { Provider = VoiceProvider.CustomVoice });
+    /// await client.Tts.Voices.ListAsync(
+    ///     new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
+    /// );
     /// </code></example>
-    public async Task<Pager<ReturnVoice>> ListAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnVoice>> ListAsync(
         VoicesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -141,7 +142,7 @@ public partial class VoicesClient
     ///     new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
     /// );
     /// </code></example>
-    public async Task<ReturnVoice> CreateAsync(
+    public async System.Threading.Tasks.Task<ReturnVoice> CreateAsync(
         PostedVoice request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -204,7 +205,7 @@ public partial class VoicesClient
     /// <example><code>
     /// await client.Tts.Voices.DeleteAsync(new VoicesDeleteRequest { Name = "David Hume" });
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteAsync(
+    public async System.Threading.Tasks.Task DeleteAsync(
         VoicesDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

@@ -38,18 +38,6 @@ public record ReturnConfig : IJsonOnDeserialized
     public int? Version { get; set; }
 
     /// <summary>
-    /// List of user-defined tools associated with this Config.
-    /// </summary>
-    [JsonPropertyName("tools")]
-    public IEnumerable<ReturnUserDefinedTool>? Tools { get; set; }
-
-    /// <summary>
-    /// An optional description of the Config version.
-    /// </summary>
-    [JsonPropertyName("version_description")]
-    public string? VersionDescription { get; set; }
-
-    /// <summary>
     /// The supplemental language model associated with this Config.
     ///
     /// This model is used to generate longer, more detailed responses from EVI. Choosing an appropriate supplemental language model for your use case is crucial for generating fast, high-quality responses from EVI.
@@ -114,6 +102,18 @@ public record ReturnConfig : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("modified_on")]
     public long? ModifiedOn { get; set; }
+
+    /// <summary>
+    /// An optional description of the Config version.
+    /// </summary>
+    [JsonPropertyName("version_description")]
+    public string? VersionDescription { get; set; }
+
+    /// <summary>
+    /// List of user-defined tools associated with this Config.
+    /// </summary>
+    [JsonPropertyName("tools")]
+    public IEnumerable<ReturnUserDefinedTool>? Tools { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

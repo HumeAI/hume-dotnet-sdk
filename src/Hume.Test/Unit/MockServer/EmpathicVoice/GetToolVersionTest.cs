@@ -1,4 +1,3 @@
-using global::System.Threading.Tasks;
 using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
@@ -9,8 +8,8 @@ namespace Hume.Test.Unit.MockServer.EmpathicVoice;
 [TestFixture]
 public class GetToolVersionTest : BaseMockServerTest
 {
-    [Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    [NUnit.Framework.Test]
+    public async System.Threading.Tasks.Task MockServerTest()
     {
         const string mockResponse = """
             {

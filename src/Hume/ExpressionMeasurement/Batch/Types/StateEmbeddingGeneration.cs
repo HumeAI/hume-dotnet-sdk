@@ -358,7 +358,7 @@ public record StateEmbeddingGeneration
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Queued(
+        public static implicit operator StateEmbeddingGeneration.Queued(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued value
         ) => new(value);
     }
@@ -378,7 +378,7 @@ public record StateEmbeddingGeneration
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator InProgress(
+        public static implicit operator StateEmbeddingGeneration.InProgress(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress value
         ) => new(value);
     }
@@ -400,7 +400,7 @@ public record StateEmbeddingGeneration
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Completed(
+        public static implicit operator StateEmbeddingGeneration.Completed(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration value
         ) => new(value);
     }
@@ -420,7 +420,7 @@ public record StateEmbeddingGeneration
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Failed(
+        public static implicit operator StateEmbeddingGeneration.Failed(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed value
         ) => new(value);
     }

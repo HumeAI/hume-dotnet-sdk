@@ -16,6 +16,12 @@ public record ToolCallMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
+    /// </summary>
+    [JsonPropertyName("custom_session_id")]
+    public string? CustomSessionId { get; set; }
+
+    /// <summary>
     /// Name of the tool called.
     /// </summary>
     [JsonPropertyName("name")]
@@ -30,6 +36,12 @@ public record ToolCallMessage : IJsonOnDeserialized
     public required string Parameters { get; set; }
 
     /// <summary>
+    /// Indicates whether a response to the tool call is required from the developer, either in the form of a [Tool Response message](/reference/speech-to-speech-evi/chat#send.ToolResponseMessage) or a [Tool Error message](/reference/speech-to-speech-evi/chat#send.ToolErrorMessage).
+    /// </summary>
+    [JsonPropertyName("response_required")]
+    public required bool ResponseRequired { get; set; }
+
+    /// <summary>
     /// The unique identifier for a specific tool call instance.
     ///
     /// This ID is used to track the request and response of a particular tool invocation, ensuring that the correct response is linked to the appropriate request.
@@ -38,30 +50,22 @@ public record ToolCallMessage : IJsonOnDeserialized
     public required string ToolCallId { get; set; }
 
     /// <summary>
-    /// The type of message sent through the socket; for a Tool Call message, this must be `tool_call`.
-    ///
-    /// This message indicates that the supplemental LLM has detected a need to invoke the specified tool.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "tool_call";
-
-    /// <summary>
-    /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
-    /// </summary>
-    [JsonPropertyName("custom_session_id")]
-    public string? CustomSessionId { get; set; }
-
-    /// <summary>
     /// Type of tool called. Either `builtin` for natively implemented tools, like web search, or `function` for user-defined tools.
     /// </summary>
     [JsonPropertyName("tool_type")]
     public ToolType? ToolType { get; set; }
 
     /// <summary>
-    /// Indicates whether a response to the tool call is required from the developer, either in the form of a [Tool Response message](/reference/speech-to-speech-evi/chat#send.ToolResponseMessage) or a [Tool Error message](/reference/speech-to-speech-evi/chat#send.ToolErrorMessage).
+    /// The type of message sent through the socket; for a Tool Call message, this must be `tool_call`.
+    ///
+    /// This message indicates that the supplemental LLM has detected a need to invoke the specified tool.
     /// </summary>
-    [JsonPropertyName("response_required")]
-    public required bool ResponseRequired { get; set; }
+    [JsonPropertyName("type")]
+    public string Type
+    {
+        get => "tool_call";
+        set => value.Assert(value == "tool_call", "'Type' must be " + "tool_call");
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

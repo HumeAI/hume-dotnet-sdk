@@ -1,4 +1,3 @@
-using global::System.Threading.Tasks;
 using Hume.Core;
 using Hume.ExpressionMeasurement.Batch;
 using Hume.Test.Unit.MockServer;
@@ -9,8 +8,8 @@ namespace Hume.Test.Unit.MockServer.ExpressionMeasurement.Batch;
 [TestFixture]
 public class GetJobPredictionsTest : BaseMockServerTest
 {
-    [Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    [NUnit.Framework.Test]
+    public async System.Threading.Tasks.Task MockServerTest()
     {
         const string mockResponse = """
             [

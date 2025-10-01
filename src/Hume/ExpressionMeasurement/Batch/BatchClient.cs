@@ -1,4 +1,3 @@
-using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -22,7 +21,7 @@ public partial class BatchClient
     /// <example><code>
     /// await client.ExpressionMeasurement.Batch.ListJobsAsync(new BatchListJobsRequest());
     /// </code></example>
-    public async Task<IEnumerable<InferenceJob>> ListJobsAsync(
+    public async System.Threading.Tasks.Task<IEnumerable<InferenceJob>> ListJobsAsync(
         BatchListJobsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -98,7 +97,7 @@ public partial class BatchClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<JobId> StartInferenceJobAsync(
+    public async System.Threading.Tasks.Task<JobId> StartInferenceJobAsync(
         InferenceBaseRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -147,7 +146,7 @@ public partial class BatchClient
     /// <example><code>
     /// await client.ExpressionMeasurement.Batch.GetJobDetailsAsync("job_id");
     /// </code></example>
-    public async Task<InferenceJob> GetJobDetailsAsync(
+    public async System.Threading.Tasks.Task<InferenceJob> GetJobDetailsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -197,7 +196,9 @@ public partial class BatchClient
     /// <example><code>
     /// await client.ExpressionMeasurement.Batch.GetJobPredictionsAsync("job_id");
     /// </code></example>
-    public async Task<IEnumerable<InferenceSourcePredictResult>> GetJobPredictionsAsync(
+    public async System.Threading.Tasks.Task<
+        IEnumerable<InferenceSourcePredictResult>
+    > GetJobPredictionsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -246,7 +247,7 @@ public partial class BatchClient
     /// <summary>
     /// Get the artifacts ZIP of a completed inference job.
     /// </summary>
-    public async Task<System.IO.Stream> GetJobArtifactsAsync(
+    public async System.Threading.Tasks.Task<System.IO.Stream> GetJobArtifactsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -284,7 +285,7 @@ public partial class BatchClient
     /// <summary>
     /// Start a new batch inference job.
     /// </summary>
-    public async Task<JobId> StartInferenceJobFromLocalFileAsync(
+    public async System.Threading.Tasks.Task<JobId> StartInferenceJobFromLocalFileAsync(
         BatchStartInferenceJobFromLocalFileRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

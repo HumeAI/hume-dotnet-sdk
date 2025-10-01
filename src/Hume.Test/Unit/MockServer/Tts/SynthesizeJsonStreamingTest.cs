@@ -1,13 +1,13 @@
-using NUnit.Framework;
 using Hume.Test.Unit.MockServer;
 using Hume.Tts;
+using NUnit.Framework;
 
-namespace HumeApi.Test.Unit.MockServer.Tts;
+namespace Hume.Test.Unit.MockServer.Tts;
 
 [TestFixture]
 public class SynthesizeJsonStreamingTest : BaseMockServerTest
 {
-    [Test]
+    [NUnit.Framework.Test]
     public void MockServerTest()
     {
         const string requestJson = """
@@ -35,27 +35,31 @@ public class SynthesizeJsonStreamingTest : BaseMockServerTest
             )
             .RespondWith(WireMock.ResponseBuilders.Response.Create().WithStatusCode(200));
 
-        Assert.DoesNotThrowAsync(async () =>{
-            await foreach( var item in Client.Tts.SynthesizeJsonStreamingAsync(
-                new PostedTts
-                {
-                    Utterances = new List<PostedUtterance>()
+        Assert.DoesNotThrowAsync(async () =>
+        {
+            await foreach (
+                var item in Client.Tts.SynthesizeJsonStreamingAsync(
+                    new PostedTts
                     {
-                        new PostedUtterance
+                        Utterances = new List<PostedUtterance>()
                         {
-                            Text =
-                                "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                            Voice = new PostedUtteranceVoiceWithName
+                            new PostedUtterance
                             {
-                                Name = "Male English Actor",
-                                Provider = VoiceProvider.HumeAi,
+                                Text =
+                                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                                Voice = new PostedUtteranceVoiceWithName
+                                {
+                                    Name = "Male English Actor",
+                                    Provider = Hume.Tts.VoiceProvider.HumeAi,
+                                },
                             },
                         },
-                    },
-                }
-            )){
-              // do nothing
+                    }
+                )
+            )
+            {
+                /* consume each item */
             }
-    });
+        });
     }
 }

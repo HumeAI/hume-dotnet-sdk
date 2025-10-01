@@ -13,16 +13,20 @@ public record AudioConfiguration : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Encoding format of the audio input, such as `linear16`.
-    /// </summary>
-    [JsonPropertyName("encoding")]
-    public string Encoding { get; set; } = "linear16";
-
-    /// <summary>
     /// Number of audio channels.
     /// </summary>
     [JsonPropertyName("channels")]
     public required int Channels { get; set; }
+
+    /// <summary>
+    /// Encoding format of the audio input, such as `linear16`.
+    /// </summary>
+    [JsonPropertyName("encoding")]
+    public string Encoding
+    {
+        get => "linear16";
+        set => value.Assert(value == "linear16", "'Encoding' must be " + "linear16");
+    }
 
     /// <summary>
     /// Audio sample rate. Number of samples per second in the audio input, measured in Hertz.

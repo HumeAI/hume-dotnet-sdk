@@ -18,7 +18,7 @@ public partial class ChatGroupsClient
     /// <summary>
     /// Fetches a paginated list of **Chat Groups**.
     /// </summary>
-    private async Task<ReturnPagedChatGroups> ListChatGroupsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedChatGroups> ListChatGroupsInternalAsync(
         ChatGroupsListChatGroupsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -94,7 +94,7 @@ public partial class ChatGroupsClient
     /// <summary>
     /// Fetches a paginated list of **Chat** events associated with a **Chat Group**.
     /// </summary>
-    private async Task<ReturnChatGroupPagedEvents> ListChatGroupEventsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnChatGroupPagedEvents> ListChatGroupEventsInternalAsync(
         string id,
         ChatGroupsListChatGroupEventsRequest request,
         RequestOptions? options = null,
@@ -181,7 +181,7 @@ public partial class ChatGroupsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnChatGroup>> ListChatGroupsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnChatGroup>> ListChatGroupsAsync(
         ChatGroupsListChatGroupsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -231,7 +231,7 @@ public partial class ChatGroupsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnChatGroupPagedChats> GetChatGroupAsync(
+    public async System.Threading.Tasks.Task<ReturnChatGroupPagedChats> GetChatGroupAsync(
         string id,
         ChatGroupsGetChatGroupRequest request,
         RequestOptions? options = null,
@@ -318,7 +318,7 @@ public partial class ChatGroupsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnChatEvent>> ListChatGroupEventsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnChatEvent>> ListChatGroupEventsAsync(
         string id,
         ChatGroupsListChatGroupEventsRequest request,
         RequestOptions? options = null,
@@ -370,7 +370,7 @@ public partial class ChatGroupsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnChatGroupPagedAudioReconstructions> GetAudioAsync(
+    public async System.Threading.Tasks.Task<ReturnChatGroupPagedAudioReconstructions> GetAudioAsync(
         string id,
         ChatGroupsGetAudioRequest request,
         RequestOptions? options = null,

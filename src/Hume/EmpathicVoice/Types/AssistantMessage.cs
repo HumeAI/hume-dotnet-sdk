@@ -16,18 +16,16 @@ public record AssistantMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; for an Assistant Message, this must be `assistant_message`.
-    ///
-    /// This message contains both a transcript of the assistant's response and the expression measurement predictions of the assistant's audio output.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "assistant_message";
-
-    /// <summary>
     /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
     /// </summary>
     [JsonPropertyName("custom_session_id")]
     public string? CustomSessionId { get; set; }
+
+    /// <summary>
+    /// Indicates if this message was inserted into the conversation as text from an [Assistant Input message](/reference/speech-to-speech-evi/chat#send.AssistantInput.text).
+    /// </summary>
+    [JsonPropertyName("from_text")]
+    public required bool FromText { get; set; }
 
     /// <summary>
     /// ID of the assistant message. Allows the Assistant Message to be tracked and referenced.
@@ -48,10 +46,16 @@ public record AssistantMessage : IJsonOnDeserialized
     public required Inference Models { get; set; }
 
     /// <summary>
-    /// Indicates if this message was inserted into the conversation as text from an [Assistant Input message](/reference/speech-to-speech-evi/chat#send.AssistantInput.text).
+    /// The type of message sent through the socket; for an Assistant Message, this must be `assistant_message`.
+    ///
+    /// This message contains both a transcript of the assistant's response and the expression measurement predictions of the assistant's audio output.
     /// </summary>
-    [JsonPropertyName("from_text")]
-    public required bool FromText { get; set; }
+    [JsonPropertyName("type")]
+    public string Type
+    {
+        get => "assistant_message";
+        set => value.Assert(value == "assistant_message", "'Type' must be " + "assistant_message");
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

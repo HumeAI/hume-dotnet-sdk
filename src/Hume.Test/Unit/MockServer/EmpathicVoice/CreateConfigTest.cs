@@ -1,4 +1,3 @@
-using global::System.Threading.Tasks;
 using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
@@ -9,8 +8,8 @@ namespace Hume.Test.Unit.MockServer.EmpathicVoice;
 [TestFixture]
 public class CreateConfigTest : BaseMockServerTest
 {
-    [Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    [NUnit.Framework.Test]
+    public async System.Threading.Tasks.Task MockServerTest()
     {
         const string requestJson = """
             {
@@ -133,7 +132,11 @@ public class CreateConfigTest : BaseMockServerTest
                     Version = 0,
                 },
                 EviVersion = "3",
-                Voice = new VoiceName { Provider = VoiceProvider.HumeAi, Name = "Ava Song" },
+                Voice = new VoiceName
+                {
+                    Provider = Hume.EmpathicVoice.VoiceProvider.HumeAi,
+                    Name = "Ava Song",
+                },
                 LanguageModel = new PostedLanguageModel
                 {
                     ModelProvider = ModelProviderEnum.Anthropic,

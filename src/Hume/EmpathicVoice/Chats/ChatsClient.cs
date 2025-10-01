@@ -18,7 +18,7 @@ public partial class ChatsClient
     /// <summary>
     /// Fetches a paginated list of **Chats**.
     /// </summary>
-    private async Task<ReturnPagedChats> ListChatsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedChats> ListChatsInternalAsync(
         ChatsListChatsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -94,7 +94,7 @@ public partial class ChatsClient
     /// <summary>
     /// Fetches a paginated list of **Chat** events.
     /// </summary>
-    private async Task<ReturnChatPagedEvents> ListChatEventsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnChatPagedEvents> ListChatEventsInternalAsync(
         string id,
         ChatsListChatEventsRequest request,
         RequestOptions? options = null,
@@ -180,7 +180,7 @@ public partial class ChatsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnChat>> ListChatsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnChat>> ListChatsAsync(
         ChatsListChatsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -230,7 +230,7 @@ public partial class ChatsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnChatEvent>> ListChatEventsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnChatEvent>> ListChatEventsAsync(
         string id,
         ChatsListChatEventsRequest request,
         RequestOptions? options = null,
@@ -274,7 +274,7 @@ public partial class ChatsClient
     /// <example><code>
     /// await client.EmpathicVoice.Chats.GetAudioAsync("470a49f6-1dec-4afe-8b61-035d3b2d63b0");
     /// </code></example>
-    public async Task<ReturnChatAudioReconstruction> GetAudioAsync(
+    public async System.Threading.Tasks.Task<ReturnChatAudioReconstruction> GetAudioAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
