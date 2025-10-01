@@ -1,4 +1,3 @@
-using global::System.Threading.Tasks;
 using Hume.Test.Unit.MockServer;
 using Hume.Tts;
 using NUnit.Framework;
@@ -8,8 +7,8 @@ namespace Hume.Test.Unit.MockServer.Tts;
 [TestFixture]
 public class ListTest : BaseMockServerTest
 {
-    [Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    [NUnit.Framework.Test]
+    public async System.Threading.Tasks.Task MockServerTest()
     {
         const string mockResponse = """
             {
@@ -46,10 +45,10 @@ public class ListTest : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var pager = await Client.Tts.Voices.ListAsync(
-            new VoicesListRequest { Provider = VoiceProvider.CustomVoice }
+        var items = await Client.Tts.Voices.ListAsync(
+            new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
         );
-        await foreach (var item in pager)
+        await foreach (var item in items)
         {
             Assert.That(item, Is.Not.Null);
             break; // Only check the first item

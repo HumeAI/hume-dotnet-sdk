@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
-using global::System.Threading.Tasks;
 using Hume;
 using Hume.Core;
 
@@ -21,7 +20,7 @@ public partial class ConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    private async Task<ReturnPagedConfigs> ListConfigsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedConfigs> ListConfigsInternalAsync(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -101,7 +100,7 @@ public partial class ConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    private async Task<ReturnPagedConfigs> ListConfigVersionsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedConfigs> ListConfigVersionsInternalAsync(
         string id,
         ConfigsListConfigVersionsRequest request,
         RequestOptions? options = null,
@@ -186,7 +185,7 @@ public partial class ConfigsClient
     ///     new ConfigsListConfigsRequest { PageNumber = 0, PageSize = 1 }
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnConfig>> ListConfigsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigsAsync(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -238,7 +237,11 @@ public partial class ConfigsClient
     ///             Version = 0,
     ///         },
     ///         EviVersion = "3",
-    ///         Voice = new VoiceName { Provider = VoiceProvider.HumeAi, Name = "Ava Song" },
+    ///         Voice = new VoiceName
+    ///         {
+    ///             Provider = Hume.EmpathicVoice.VoiceProvider.HumeAi,
+    ///             Name = "Ava Song",
+    ///         },
     ///         LanguageModel = new PostedLanguageModel
     ///         {
     ///             ModelProvider = ModelProviderEnum.Anthropic,
@@ -254,7 +257,7 @@ public partial class ConfigsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnConfig> CreateConfigAsync(
+    public async System.Threading.Tasks.Task<ReturnConfig> CreateConfigAsync(
         PostedConfig request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -322,7 +325,7 @@ public partial class ConfigsClient
     ///     new ConfigsListConfigVersionsRequest()
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
         string id,
         ConfigsListConfigVersionsRequest request,
         RequestOptions? options = null,
@@ -377,7 +380,11 @@ public partial class ConfigsClient
     ///             Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
     ///             Version = 0,
     ///         },
-    ///         Voice = new VoiceName { Provider = VoiceProvider.HumeAi, Name = "Ava Song" },
+    ///         Voice = new VoiceName
+    ///         {
+    ///             Provider = Hume.EmpathicVoice.VoiceProvider.HumeAi,
+    ///             Name = "Ava Song",
+    ///         },
     ///         LanguageModel = new PostedLanguageModel
     ///         {
     ///             ModelProvider = ModelProviderEnum.Anthropic,
@@ -394,7 +401,7 @@ public partial class ConfigsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnConfig> CreateConfigVersionAsync(
+    public async System.Threading.Tasks.Task<ReturnConfig> CreateConfigVersionAsync(
         string id,
         PostedConfigVersion request,
         RequestOptions? options = null,
@@ -463,7 +470,7 @@ public partial class ConfigsClient
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3");
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteConfigAsync(
+    public async System.Threading.Tasks.Task DeleteConfigAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -523,7 +530,7 @@ public partial class ConfigsClient
     ///     new PostedConfigName { Name = "Updated Weather Assistant Config Name" }
     /// );
     /// </code></example>
-    public async Task<string> UpdateConfigNameAsync(
+    public async System.Threading.Tasks.Task<string> UpdateConfigNameAsync(
         string id,
         PostedConfigName request,
         RequestOptions? options = null,
@@ -584,7 +591,7 @@ public partial class ConfigsClient
     /// <example><code>
     /// await client.EmpathicVoice.Configs.GetConfigVersionAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3", 1);
     /// </code></example>
-    public async Task<ReturnConfig> GetConfigVersionAsync(
+    public async System.Threading.Tasks.Task<ReturnConfig> GetConfigVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -655,7 +662,7 @@ public partial class ConfigsClient
     ///     1
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteConfigVersionAsync(
+    public async System.Threading.Tasks.Task DeleteConfigVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -721,7 +728,7 @@ public partial class ConfigsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnConfig> UpdateConfigDescriptionAsync(
+    public async System.Threading.Tasks.Task<ReturnConfig> UpdateConfigDescriptionAsync(
         string id,
         int version,
         PostedConfigVersionDescription request,

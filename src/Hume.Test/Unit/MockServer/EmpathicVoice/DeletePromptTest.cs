@@ -6,7 +6,7 @@ namespace Hume.Test.Unit.MockServer.EmpathicVoice;
 [TestFixture]
 public class DeletePromptTest : BaseMockServerTest
 {
-    [Test]
+    [NUnit.Framework.Test]
     public void MockServerTest()
     {
         Server

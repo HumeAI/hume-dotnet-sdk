@@ -7,7 +7,7 @@ namespace Hume.Test.Unit.MockServer.EmpathicVoice;
 [TestFixture]
 public class UpdateConfigNameTest : BaseMockServerTest
 {
-    [Test]
+    [NUnit.Framework.Test]
     public void MockServerTest()
     {
         const string requestJson = """

@@ -14,16 +14,16 @@ public record ChatMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Role of who is providing the message.
-    /// </summary>
-    [JsonPropertyName("role")]
-    public required Role Role { get; set; }
-
-    /// <summary>
     /// Transcript of the message.
     /// </summary>
     [JsonPropertyName("content")]
     public string? Content { get; set; }
+
+    /// <summary>
+    /// Role of who is providing the message.
+    /// </summary>
+    [JsonPropertyName("role")]
+    public required Role Role { get; set; }
 
     /// <summary>
     /// Function call name and arguments.

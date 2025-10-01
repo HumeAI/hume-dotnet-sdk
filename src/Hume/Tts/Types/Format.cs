@@ -265,7 +265,7 @@ public record Format
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Mp3(Hume.Tts.FormatMp3 value) => new(value);
+        public static implicit operator Format.Mp3(Hume.Tts.FormatMp3 value) => new(value);
     }
 
     /// <summary>
@@ -283,7 +283,7 @@ public record Format
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Pcm(Hume.Tts.FormatPcm value) => new(value);
+        public static implicit operator Format.Pcm(Hume.Tts.FormatPcm value) => new(value);
     }
 
     /// <summary>
@@ -301,6 +301,6 @@ public record Format
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Wav(Hume.Tts.FormatWav value) => new(value);
+        public static implicit operator Format.Wav(Hume.Tts.FormatWav value) => new(value);
     }
 }

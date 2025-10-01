@@ -46,12 +46,6 @@ public record ReturnPrompt : IJsonOnDeserialized
     public required int Version { get; set; }
 
     /// <summary>
-    /// An optional description of the Prompt version.
-    /// </summary>
-    [JsonPropertyName("version_description")]
-    public string? VersionDescription { get; set; }
-
-    /// <summary>
     /// Versioning method for a Prompt. Either `FIXED` for using a fixed version number or `LATEST` for auto-updating to the latest version.
     /// </summary>
     [JsonPropertyName("version_type")]
@@ -68,6 +62,12 @@ public record ReturnPrompt : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("modified_on")]
     public required long ModifiedOn { get; set; }
+
+    /// <summary>
+    /// An optional description of the Prompt version.
+    /// </summary>
+    [JsonPropertyName("version_description")]
+    public string? VersionDescription { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

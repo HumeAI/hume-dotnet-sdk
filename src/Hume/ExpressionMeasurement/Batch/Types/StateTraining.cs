@@ -336,7 +336,7 @@ public record StateTraining
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Queued(
+        public static implicit operator StateTraining.Queued(
             Hume.ExpressionMeasurement.Batch.StateTrainingQueued value
         ) => new(value);
     }
@@ -356,7 +356,7 @@ public record StateTraining
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator InProgress(
+        public static implicit operator StateTraining.InProgress(
             Hume.ExpressionMeasurement.Batch.StateTrainingInProgress value
         ) => new(value);
     }
@@ -376,7 +376,7 @@ public record StateTraining
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Completed(
+        public static implicit operator StateTraining.Completed(
             Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining value
         ) => new(value);
     }
@@ -396,7 +396,7 @@ public record StateTraining
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Failed(
+        public static implicit operator StateTraining.Failed(
             Hume.ExpressionMeasurement.Batch.StateTrainingFailed value
         ) => new(value);
     }

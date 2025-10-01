@@ -276,8 +276,9 @@ public record Source
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Url(Hume.ExpressionMeasurement.Batch.SourceUrl value) =>
-            new(value);
+        public static implicit operator Source.Url(
+            Hume.ExpressionMeasurement.Batch.SourceUrl value
+        ) => new(value);
     }
 
     /// <summary>
@@ -295,8 +296,9 @@ public record Source
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator File(Hume.ExpressionMeasurement.Batch.SourceFile value) =>
-            new(value);
+        public static implicit operator Source.File(
+            Hume.ExpressionMeasurement.Batch.SourceFile value
+        ) => new(value);
     }
 
     /// <summary>
@@ -314,7 +316,7 @@ public record Source
 
         public override string ToString() => Value.ToString();
 
-        public static implicit operator Text(
+        public static implicit operator Source.Text(
             Hume.ExpressionMeasurement.Batch.SourceTextSource value
         ) => new(value);
     }

@@ -29,14 +29,14 @@ public partial class HumeClient
             }
         }
         _client = new RawClient(clientOptions);
-        Tts = new TtsClient(_client);
         EmpathicVoice = new EmpathicVoiceClient(_client);
+        Tts = new TtsClient(_client);
         ExpressionMeasurement = new ExpressionMeasurementClient(_client);
     }
 
-    public TtsClient Tts { get; }
-
     public EmpathicVoiceClient EmpathicVoice { get; }
+
+    public TtsClient Tts { get; }
 
     public ExpressionMeasurementClient ExpressionMeasurement { get; }
 }

@@ -20,24 +20,22 @@ public record PostedTts : IJsonOnDeserialized
     public OneOf<PostedContextWithGenerationId, PostedContextWithUtterances>? Context { get; set; }
 
     /// <summary>
-    /// A list of **Utterances** to be converted to speech output.
-    ///
-    /// An **Utterance** is a unit of input for [Octave](/docs/text-to-speech-tts/overview), and includes input `text`, an optional `description` to serve as the prompt for how the speech should be delivered, an optional `voice` specification, and additional controls to guide delivery for `speed` and `trailing_silence`.
+    /// Specifies the output audio file format.
     /// </summary>
-    [JsonPropertyName("utterances")]
-    public IEnumerable<PostedUtterance> Utterances { get; set; } = new List<PostedUtterance>();
+    [JsonPropertyName("format")]
+    public Format? Format { get; set; }
+
+    /// <summary>
+    /// The set of timestamp types to include in the response.
+    /// </summary>
+    [JsonPropertyName("include_timestamp_types")]
+    public IEnumerable<TimestampType>? IncludeTimestampTypes { get; set; }
 
     /// <summary>
     /// Number of generations of the audio to produce.
     /// </summary>
     [JsonPropertyName("num_generations")]
     public int? NumGenerations { get; set; }
-
-    /// <summary>
-    /// Specifies the output audio file format.
-    /// </summary>
-    [JsonPropertyName("format")]
-    public Format? Format { get; set; }
 
     /// <summary>
     /// Controls how audio output is segmented in the response.
@@ -56,6 +54,20 @@ public record PostedTts : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("strip_headers")]
     public bool? StripHeaders { get; set; }
+
+    /// <summary>
+    /// A list of **Utterances** to be converted to speech output.
+    ///
+    /// An **Utterance** is a unit of input for [Octave](/docs/text-to-speech-tts/overview), and includes input `text`, an optional `description` to serve as the prompt for how the speech should be delivered, an optional `voice` specification, and additional controls to guide delivery for `speed` and `trailing_silence`.
+    /// </summary>
+    [JsonPropertyName("utterances")]
+    public IEnumerable<PostedUtterance> Utterances { get; set; } = new List<PostedUtterance>();
+
+    /// <summary>
+    /// The version of the Octave Model to use. 1 for the legacy model, 2 for the new model.
+    /// </summary>
+    [JsonPropertyName("version")]
+    public OctaveVersion? Version { get; set; }
 
     /// <summary>
     /// Enables ultra-low latency streaming, significantly reducing the time until the first audio chunk is received. Recommended for real-time applications requiring immediate audio playback. For further details, see our documentation on [instant mode](/docs/text-to-speech-tts/overview#ultra-low-latency-streaming-instant-mode).

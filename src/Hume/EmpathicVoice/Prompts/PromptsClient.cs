@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
-using global::System.Threading.Tasks;
 using Hume;
 using Hume.Core;
 
@@ -21,7 +20,7 @@ public partial class PromptsClient
     ///
     /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
     /// </summary>
-    private async Task<ReturnPagedPrompts> ListPromptsInternalAsync(
+    private async System.Threading.Tasks.Task<ReturnPagedPrompts> ListPromptsInternalAsync(
         PromptsListPromptsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -106,7 +105,7 @@ public partial class PromptsClient
     ///     new PromptsListPromptsRequest { PageNumber = 0, PageSize = 2 }
     /// );
     /// </code></example>
-    public async Task<Pager<ReturnPrompt>> ListPromptsAsync(
+    public async System.Threading.Tasks.Task<Pager<ReturnPrompt>> ListPromptsAsync(
         PromptsListPromptsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -157,7 +156,7 @@ public partial class PromptsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnPrompt?> CreatePromptAsync(
+    public async System.Threading.Tasks.Task<ReturnPrompt?> CreatePromptAsync(
         PostedPrompt request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -225,7 +224,7 @@ public partial class PromptsClient
     ///     new PromptsListPromptVersionsRequest()
     /// );
     /// </code></example>
-    public async Task<ReturnPagedPrompts> ListPromptVersionsAsync(
+    public async System.Threading.Tasks.Task<ReturnPagedPrompts> ListPromptVersionsAsync(
         string id,
         PromptsListPromptVersionsRequest request,
         RequestOptions? options = null,
@@ -316,7 +315,7 @@ public partial class PromptsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnPrompt?> CreatePromptVersionAsync(
+    public async System.Threading.Tasks.Task<ReturnPrompt?> CreatePromptVersionAsync(
         string id,
         PostedPromptVersion request,
         RequestOptions? options = null,
@@ -385,7 +384,7 @@ public partial class PromptsClient
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.DeletePromptAsync("af699d45-2985-42cc-91b9-af9e5da3bac5");
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeletePromptAsync(
+    public async System.Threading.Tasks.Task DeletePromptAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -445,7 +444,7 @@ public partial class PromptsClient
     ///     new PostedPromptName { Name = "Updated Weather Assistant Prompt Name" }
     /// );
     /// </code></example>
-    public async Task<string> UpdatePromptNameAsync(
+    public async System.Threading.Tasks.Task<string> UpdatePromptNameAsync(
         string id,
         PostedPromptName request,
         RequestOptions? options = null,
@@ -506,7 +505,7 @@ public partial class PromptsClient
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.GetPromptVersionAsync("af699d45-2985-42cc-91b9-af9e5da3bac5", 0);
     /// </code></example>
-    public async Task<ReturnPrompt?> GetPromptVersionAsync(
+    public async System.Threading.Tasks.Task<ReturnPrompt?> GetPromptVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -577,7 +576,7 @@ public partial class PromptsClient
     ///     1
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeletePromptVersionAsync(
+    public async System.Threading.Tasks.Task DeletePromptVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -643,7 +642,7 @@ public partial class PromptsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ReturnPrompt?> UpdatePromptDescriptionAsync(
+    public async System.Threading.Tasks.Task<ReturnPrompt?> UpdatePromptDescriptionAsync(
         string id,
         int version,
         PostedPromptVersionDescription request,

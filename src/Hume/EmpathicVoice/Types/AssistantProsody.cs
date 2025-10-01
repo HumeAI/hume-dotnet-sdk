@@ -16,18 +16,16 @@ public record AssistantProsody : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; for an Assistant Prosody message, this must be `assistant_PROSODY`.
-    ///
-    /// This message the expression measurement predictions of the assistant's audio output.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "assistant_prosody";
-
-    /// <summary>
     /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
     /// </summary>
     [JsonPropertyName("custom_session_id")]
     public string? CustomSessionId { get; set; }
+
+    /// <summary>
+    /// Unique identifier for the segment.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
 
     /// <summary>
     /// Inference model results.
@@ -36,10 +34,16 @@ public record AssistantProsody : IJsonOnDeserialized
     public required Inference Models { get; set; }
 
     /// <summary>
-    /// Unique identifier for the segment.
+    /// The type of message sent through the socket; for an Assistant Prosody message, this must be `assistant_PROSODY`.
+    ///
+    /// This message the expression measurement predictions of the assistant's audio output.
     /// </summary>
-    [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    [JsonPropertyName("type")]
+    public string Type
+    {
+        get => "assistant_prosody";
+        set => value.Assert(value == "assistant_prosody", "'Type' must be " + "assistant_prosody");
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

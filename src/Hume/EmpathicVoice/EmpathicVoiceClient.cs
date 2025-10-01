@@ -25,4 +25,14 @@ public partial class EmpathicVoiceClient
     public ChatsClient Chats { get; }
 
     public ChatGroupsClient ChatGroups { get; }
+
+    public ChatApi CreateChatApi()
+    {
+        return new ChatApi(new ChatApi.Options());
+    }
+
+    public ChatApi CreateChatApi(ChatApi.Options options)
+    {
+        return new ChatApi(options);
+    }
 }

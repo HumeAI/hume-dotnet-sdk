@@ -7,7 +7,7 @@ namespace Hume.Test.Unit.MockServer.Tts;
 [TestFixture]
 public class DeleteTest : BaseMockServerTest
 {
-    [Test]
+    [NUnit.Framework.Test]
     public void MockServerTest()
     {
         Server

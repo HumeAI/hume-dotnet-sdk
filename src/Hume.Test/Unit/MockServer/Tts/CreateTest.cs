@@ -1,4 +1,3 @@
-using global::System.Threading.Tasks;
 using Hume.Core;
 using Hume.Test.Unit.MockServer;
 using Hume.Tts;
@@ -9,8 +8,8 @@ namespace Hume.Test.Unit.MockServer.Tts;
 [TestFixture]
 public class CreateTest : BaseMockServerTest
 {
-    [Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    [NUnit.Framework.Test]
+    public async System.Threading.Tasks.Task MockServerTest()
     {
         const string requestJson = """
             {
@@ -52,7 +51,7 @@ public class CreateTest : BaseMockServerTest
         );
         Assert.That(
             response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnVoice>(mockResponse)).UsingDefaults()
+            Is.EqualTo(JsonUtils.Deserialize<Hume.Tts.ReturnVoice>(mockResponse)).UsingDefaults()
         );
     }
 }

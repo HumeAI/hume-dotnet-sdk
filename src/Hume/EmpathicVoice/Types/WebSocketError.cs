@@ -16,30 +16,16 @@ public record WebSocketError : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; for a Web Socket Error message, this must be `error`.
-    ///
-    /// This message indicates a disruption in the WebSocket connection, such as an unexpected disconnection, protocol error, or data transmission issue.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "error";
-
-    /// <summary>
-    /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
-    /// </summary>
-    [JsonPropertyName("custom_session_id")]
-    public string? CustomSessionId { get; set; }
-
-    /// <summary>
     /// Error code. Identifies the type of error encountered.
     /// </summary>
     [JsonPropertyName("code")]
     public required string Code { get; set; }
 
     /// <summary>
-    /// Short, human-readable identifier and description for the error. See a complete list of error slugs on the [Errors page](/docs/resources/errors).
+    /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
     /// </summary>
-    [JsonPropertyName("slug")]
-    public required string Slug { get; set; }
+    [JsonPropertyName("custom_session_id")]
+    public string? CustomSessionId { get; set; }
 
     /// <summary>
     /// Detailed description of the error.
@@ -52,6 +38,24 @@ public record WebSocketError : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("request_id")]
     public string? RequestId { get; set; }
+
+    /// <summary>
+    /// Short, human-readable identifier and description for the error. See a complete list of error slugs on the [Errors page](/docs/resources/errors).
+    /// </summary>
+    [JsonPropertyName("slug")]
+    public required string Slug { get; set; }
+
+    /// <summary>
+    /// The type of message sent through the socket; for a Web Socket Error message, this must be `error`.
+    ///
+    /// This message indicates a disruption in the WebSocket connection, such as an unexpected disconnection, protocol error, or data transmission issue.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public string Type
+    {
+        get => "error";
+        set => value.Assert(value == "error", "'Type' must be " + "error");
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
