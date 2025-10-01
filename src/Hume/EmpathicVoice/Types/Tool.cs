@@ -13,10 +13,16 @@ public record Tool : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Type of tool. Set to `function` for user-defined tools.
+    /// An optional description of what the tool does, used by the supplemental LLM to choose when and how to call the function.
     /// </summary>
-    [JsonPropertyName("type")]
-    public required ToolType Type { get; set; }
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Optional text passed to the supplemental LLM if the tool call fails. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation.
+    /// </summary>
+    [JsonPropertyName("fallback_content")]
+    public string? FallbackContent { get; set; }
 
     /// <summary>
     /// Name of the user-defined tool to be enabled.
@@ -33,16 +39,10 @@ public record Tool : IJsonOnDeserialized
     public required string Parameters { get; set; }
 
     /// <summary>
-    /// An optional description of what the tool does, used by the supplemental LLM to choose when and how to call the function.
+    /// Type of tool. Set to `function` for user-defined tools.
     /// </summary>
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    /// <summary>
-    /// Optional text passed to the supplemental LLM if the tool call fails. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation.
-    /// </summary>
-    [JsonPropertyName("fallback_content")]
-    public string? FallbackContent { get; set; }
+    [JsonPropertyName("type")]
+    public required ToolType Type { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

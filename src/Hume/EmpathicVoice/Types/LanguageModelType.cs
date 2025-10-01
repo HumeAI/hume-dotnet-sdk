@@ -35,6 +35,10 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.ClaudeSonnet420250514
     );
 
+    public static readonly LanguageModelType ClaudeSonnet4520250929 = new(
+        Values.ClaudeSonnet4520250929
+    );
+
     public static readonly LanguageModelType UsAnthropicClaude35Haiku20241022V10 = new(
         Values.UsAnthropicClaude35Haiku20241022V10
     );
@@ -95,6 +99,18 @@ public readonly record struct LanguageModelType : IStringEnum
 
     public static readonly LanguageModelType Gpt5Nano = new(Values.Gpt5Nano);
 
+    public static readonly LanguageModelType Gpt4OPriority = new(Values.Gpt4OPriority);
+
+    public static readonly LanguageModelType Gpt4OMiniPriority = new(Values.Gpt4OMiniPriority);
+
+    public static readonly LanguageModelType Gpt41Priority = new(Values.Gpt41Priority);
+
+    public static readonly LanguageModelType Gpt5Priority = new(Values.Gpt5Priority);
+
+    public static readonly LanguageModelType Gpt5MiniPriority = new(Values.Gpt5MiniPriority);
+
+    public static readonly LanguageModelType Gpt5NanoPriority = new(Values.Gpt5NanoPriority);
+
     public static readonly LanguageModelType Gemma7BIt = new(Values.Gemma7BIt);
 
     public static readonly LanguageModelType Llama38B8192 = new(Values.Llama38B8192);
@@ -142,6 +158,10 @@ public readonly record struct LanguageModelType : IStringEnum
     );
 
     public static readonly LanguageModelType Qwen332B = new(Values.Qwen332B);
+
+    public static readonly LanguageModelType Grok4FastNonReasoningLatest = new(
+        Values.Grok4FastNonReasoningLatest
+    );
 
     public static readonly LanguageModelType Ellm = new(Values.Ellm);
 
@@ -212,6 +232,8 @@ public readonly record struct LanguageModelType : IStringEnum
 
         public const string ClaudeSonnet420250514 = "claude-sonnet-4-20250514";
 
+        public const string ClaudeSonnet4520250929 = "claude-sonnet-4-5-20250929";
+
         public const string UsAnthropicClaude35Haiku20241022V10 =
             "us.anthropic.claude-3-5-haiku-20241022-v1:0";
 
@@ -263,6 +285,18 @@ public readonly record struct LanguageModelType : IStringEnum
 
         public const string Gpt5Nano = "gpt-5-nano";
 
+        public const string Gpt4OPriority = "gpt-4o-priority";
+
+        public const string Gpt4OMiniPriority = "gpt-4o-mini-priority";
+
+        public const string Gpt41Priority = "gpt-4.1-priority";
+
+        public const string Gpt5Priority = "gpt-5-priority";
+
+        public const string Gpt5MiniPriority = "gpt-5-mini-priority";
+
+        public const string Gpt5NanoPriority = "gpt-5-nano-priority";
+
         public const string Gemma7BIt = "gemma-7b-it";
 
         public const string Llama38B8192 = "llama3-8b-8192";
@@ -300,6 +334,8 @@ public readonly record struct LanguageModelType : IStringEnum
         public const string Llama4Maverick17B128EInstruct = "Llama-4-Maverick-17B-128E-Instruct";
 
         public const string Qwen332B = "Qwen3-32B";
+
+        public const string Grok4FastNonReasoningLatest = "grok-4-fast-non-reasoning-latest";
 
         public const string Ellm = "ellm";
 

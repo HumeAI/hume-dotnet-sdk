@@ -13,6 +13,18 @@ public record Snippet : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// The segmented audio output in the requested format, encoded as a base64 string.
+    /// </summary>
+    [JsonPropertyName("audio")]
+    public required string Audio { get; set; }
+
+    /// <summary>
+    /// The generation ID this snippet corresponds to.
+    /// </summary>
+    [JsonPropertyName("generation_id")]
+    public required string GenerationId { get; set; }
+
+    /// <summary>
     /// A unique ID associated with this **Snippet**.
     /// </summary>
     [JsonPropertyName("id")]
@@ -25,16 +37,10 @@ public record Snippet : IJsonOnDeserialized
     public required string Text { get; set; }
 
     /// <summary>
-    /// The generation ID this snippet corresponds to.
+    /// A list of word or phoneme level timestamps for the generated audio.
     /// </summary>
-    [JsonPropertyName("generation_id")]
-    public required string GenerationId { get; set; }
-
-    /// <summary>
-    /// The index of the utterance in the request this snippet corresponds to.
-    /// </summary>
-    [JsonPropertyName("utterance_index")]
-    public int? UtteranceIndex { get; set; }
+    [JsonPropertyName("timestamps")]
+    public IEnumerable<Timestamp> Timestamps { get; set; } = new List<Timestamp>();
 
     /// <summary>
     /// The transcribed text of the generated audio. It is only present if `instant_mode` is set to `false`.
@@ -43,10 +49,10 @@ public record Snippet : IJsonOnDeserialized
     public string? TranscribedText { get; set; }
 
     /// <summary>
-    /// The segmented audio output in the requested format, encoded as a base64 string.
+    /// The index of the utterance in the request this snippet corresponds to.
     /// </summary>
-    [JsonPropertyName("audio")]
-    public required string Audio { get; set; }
+    [JsonPropertyName("utterance_index")]
+    public int? UtteranceIndex { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

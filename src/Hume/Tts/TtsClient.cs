@@ -191,97 +191,6 @@ public partial class TtsClient
 
     /// <summary>
     /// Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
-    ///
-    /// The response is a stream of JSON objects including audio encoded in base64.
-    /// </summary>
-    /// <example><code>
-    /// await client.Tts.SynthesizeJsonStreamingAsync(
-    ///     new PostedTts
-    ///     {
-    ///         Utterances = new List&lt;PostedUtterance&gt;()
-    ///         {
-    ///             new PostedUtterance
-    ///             {
-    ///                 Text =
-    ///                     "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-    ///                 Voice = new PostedUtteranceVoiceWithName
-    ///                 {
-    ///                     Name = "Male English Actor",
-    ///                     Provider = VoiceProvider.HumeAi,
-    ///                 },
-    ///             },
-    ///         },
-    ///     }
-    /// );
-    /// </code></example>
-    public async IAsyncEnumerable<SnippetAudioChunk> SynthesizeJsonStreamingAsync(
-        PostedTts request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.BaseUrl,
-                    Method = HttpMethod.Post,
-                    Path = "v0/tts/stream/json",
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            string? line;
-            using var reader = new StreamReader(await response.Raw.Content.ReadAsStreamAsync());
-            while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
-            {
-                var chunk = (SnippetAudioChunk?)null;
-                try
-                {
-                    chunk = JsonUtils.Deserialize<SnippetAudioChunk>(line);
-                }
-                catch (JsonException)
-                {
-                    throw new HumeClientException($"Unable to deserialize JSON response '{line}'");
-                }
-                if (chunk is not null)
-                {
-                    yield return chunk;
-                }
-            }
-            yield break;
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 422:
-                        throw new UnprocessableEntityError(
-                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
-    }
-
-    /// <summary>
-    /// Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
     /// </summary>
     /// <example><code>
     /// await client.Tts.SynthesizeFileStreamingAsync(
@@ -326,6 +235,97 @@ public partial class TtsClient
         if (response.StatusCode is >= 200 and < 400)
         {
             return await response.Raw.Content.ReadAsStreamAsync();
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    /// <summary>
+    /// Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
+    ///
+    /// The response is a stream of JSON objects including audio encoded in base64.
+    /// </summary>
+    /// <example><code>
+    /// await client.Tts.SynthesizeJsonStreamingAsync(
+    ///     new PostedTts
+    ///     {
+    ///         Utterances = new List&lt;PostedUtterance&gt;()
+    ///         {
+    ///             new PostedUtterance
+    ///             {
+    ///                 Text =
+    ///                     "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+    ///                 Voice = new PostedUtteranceVoiceWithName
+    ///                 {
+    ///                     Name = "Male English Actor",
+    ///                     Provider = VoiceProvider.HumeAi,
+    ///                 },
+    ///             },
+    ///         },
+    ///     }
+    /// );
+    /// </code></example>
+    public async IAsyncEnumerable<TtsOutput> SynthesizeJsonStreamingAsync(
+        PostedTts request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.BaseUrl,
+                    Method = HttpMethod.Post,
+                    Path = "v0/tts/stream/json",
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            string? line;
+            using var reader = new StreamReader(await response.Raw.Content.ReadAsStreamAsync());
+            while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
+            {
+                var chunk = (TtsOutput?)null;
+                try
+                {
+                    chunk = JsonUtils.Deserialize<TtsOutput>(line);
+                }
+                catch (JsonException)
+                {
+                    throw new HumeClientException($"Unable to deserialize JSON response '{line}'");
+                }
+                if (chunk is not null)
+                {
+                    yield return chunk;
+                }
+            }
+            yield break;
         }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();

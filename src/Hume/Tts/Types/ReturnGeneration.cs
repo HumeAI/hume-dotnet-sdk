@@ -13,10 +13,10 @@ public record ReturnGeneration : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// A unique ID associated with this TTS generation that can be used as context for generating consistent speech style and prosody across multiple requests.
+    /// The generated audio output in the requested format, encoded as a base64 string.
     /// </summary>
-    [JsonPropertyName("generation_id")]
-    public required string GenerationId { get; set; }
+    [JsonPropertyName("audio")]
+    public required string Audio { get; set; }
 
     /// <summary>
     /// Duration of the generated audio in seconds.
@@ -24,20 +24,20 @@ public record ReturnGeneration : IJsonOnDeserialized
     [JsonPropertyName("duration")]
     public required double Duration { get; set; }
 
+    [JsonPropertyName("encoding")]
+    public required AudioEncoding Encoding { get; set; }
+
     /// <summary>
     /// Size of the generated audio in bytes.
     /// </summary>
     [JsonPropertyName("file_size")]
     public required int FileSize { get; set; }
 
-    [JsonPropertyName("encoding")]
-    public required AudioEncoding Encoding { get; set; }
-
     /// <summary>
-    /// The generated audio output in the requested format, encoded as a base64 string.
+    /// A unique ID associated with this TTS generation that can be used as context for generating consistent speech style and prosody across multiple requests.
     /// </summary>
-    [JsonPropertyName("audio")]
-    public required string Audio { get; set; }
+    [JsonPropertyName("generation_id")]
+    public required string GenerationId { get; set; }
 
     /// <summary>
     /// A list of snippet groups where each group corresponds to an utterance in the request. Each group contains segmented snippets that represent the original utterance divided into more natural-sounding units optimized for speech delivery.

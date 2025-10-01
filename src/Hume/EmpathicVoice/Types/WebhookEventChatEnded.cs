@@ -13,16 +13,16 @@ public record WebhookEventChatEnded : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Always `chat_ended`.
+    /// Phone number of the caller in E.164 format (e.g., `+12223333333`). This field is included only if the Chat was created via the [Twilio phone calling](/docs/empathic-voice-interface-evi/phone-calling) integration.
     /// </summary>
-    [JsonPropertyName("event_name")]
-    public string? EventName { get; set; }
+    [JsonPropertyName("caller_number")]
+    public string? CallerNumber { get; set; }
 
     /// <summary>
-    /// Unix timestamp (in milliseconds) indicating when the session ended.
+    /// User-defined session ID. Relevant only when employing a [custom language model](/docs/empathic-voice-interface-evi/custom-language-model) in the EVI Config.
     /// </summary>
-    [JsonPropertyName("end_time")]
-    public required int EndTime { get; set; }
+    [JsonPropertyName("custom_session_id")]
+    public string? CustomSessionId { get; set; }
 
     /// <summary>
     /// Total duration of the session in seconds.
@@ -37,16 +37,16 @@ public record WebhookEventChatEnded : IJsonOnDeserialized
     public required WebhookEventChatStatus EndReason { get; set; }
 
     /// <summary>
-    /// Phone number of the caller in E.164 format (e.g., `+12223333333`). This field is included only if the Chat was created via the [Twilio phone calling](/docs/empathic-voice-interface-evi/phone-calling) integration.
+    /// Unix timestamp (in milliseconds) indicating when the session ended.
     /// </summary>
-    [JsonPropertyName("caller_number")]
-    public string? CallerNumber { get; set; }
+    [JsonPropertyName("end_time")]
+    public required int EndTime { get; set; }
 
     /// <summary>
-    /// User-defined session ID. Relevant only when employing a [custom language model](/docs/empathic-voice-interface-evi/custom-language-model) in the EVI Config.
+    /// Always `chat_ended`.
     /// </summary>
-    [JsonPropertyName("custom_session_id")]
-    public string? CustomSessionId { get; set; }
+    [JsonPropertyName("event_name")]
+    public string? EventName { get; set; }
 
     /// <summary>
     /// Unique ID of the **Chat Group** associated with the **Chat** session.

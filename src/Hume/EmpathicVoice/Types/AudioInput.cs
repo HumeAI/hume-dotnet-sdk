@@ -16,14 +16,6 @@ public record AudioInput : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; must be `audio_input` for our server to correctly identify and process it as an Audio Input message.
-    ///
-    /// This message is used for sending audio input data to EVI for processing and expression measurement. Audio data should be sent as a continuous stream, encoded in Base64.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "audio_input";
-
-    /// <summary>
     /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
     /// </summary>
     [JsonPropertyName("custom_session_id")]
@@ -40,6 +32,14 @@ public record AudioInput : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("data")]
     public required string Data { get; set; }
+
+    /// <summary>
+    /// The type of message sent through the socket; must be `audio_input` for our server to correctly identify and process it as an Audio Input message.
+    ///
+    /// This message is used for sending audio input data to EVI for processing and expression measurement. Audio data should be sent as a continuous stream, encoded in Base64.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "audio_input";
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

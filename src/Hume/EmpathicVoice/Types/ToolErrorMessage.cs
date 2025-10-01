@@ -16,12 +16,16 @@ public record ToolErrorMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of message sent through the socket; for a Tool Error message, this must be `tool_error`.
-    ///
-    /// Upon receiving a [Tool Call message](/reference/speech-to-speech-evi/chat#receive.ToolCallMessage) and failing to invoke the function, this message is sent to notify EVI of the tool's failure.
+    /// Error code. Identifies the type of error encountered.
     /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "tool_error";
+    [JsonPropertyName("code")]
+    public string? Code { get; set; }
+
+    /// <summary>
+    /// Optional text passed to the supplemental LLM in place of the tool call result. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation if the tool errors.
+    /// </summary>
+    [JsonPropertyName("content")]
+    public string? Content { get; set; }
 
     /// <summary>
     /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
@@ -30,10 +34,16 @@ public record ToolErrorMessage : IJsonOnDeserialized
     public string? CustomSessionId { get; set; }
 
     /// <summary>
-    /// Type of tool called. Either `builtin` for natively implemented tools, like web search, or `function` for user-defined tools.
+    /// Error message from the tool call, not exposed to the LLM or user.
     /// </summary>
-    [JsonPropertyName("tool_type")]
-    public ToolType? ToolType { get; set; }
+    [JsonPropertyName("error")]
+    public required string Error { get; set; }
+
+    /// <summary>
+    /// Indicates the severity of an error; for a Tool Error message, this must be `warn` to signal an unexpected event.
+    /// </summary>
+    [JsonPropertyName("level")]
+    public string? Level { get; set; }
 
     /// <summary>
     /// The unique identifier for a specific tool call instance.
@@ -44,28 +54,18 @@ public record ToolErrorMessage : IJsonOnDeserialized
     public required string ToolCallId { get; set; }
 
     /// <summary>
-    /// Optional text passed to the supplemental LLM in place of the tool call result. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation if the tool errors.
+    /// Type of tool called. Either `builtin` for natively implemented tools, like web search, or `function` for user-defined tools.
     /// </summary>
-    [JsonPropertyName("content")]
-    public string? Content { get; set; }
+    [JsonPropertyName("tool_type")]
+    public ToolType? ToolType { get; set; }
 
     /// <summary>
-    /// Error message from the tool call, not exposed to the LLM or user.
+    /// The type of message sent through the socket; for a Tool Error message, this must be `tool_error`.
+    ///
+    /// Upon receiving a [Tool Call message](/reference/speech-to-speech-evi/chat#receive.ToolCallMessage) and failing to invoke the function, this message is sent to notify EVI of the tool's failure.
     /// </summary>
-    [JsonPropertyName("error")]
-    public required string Error { get; set; }
-
-    /// <summary>
-    /// Error code. Identifies the type of error encountered.
-    /// </summary>
-    [JsonPropertyName("code")]
-    public string? Code { get; set; }
-
-    /// <summary>
-    /// Indicates the severity of an error; for a Tool Error message, this must be `warn` to signal an unexpected event.
-    /// </summary>
-    [JsonPropertyName("level")]
-    public string? Level { get; set; }
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "tool_error";
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
