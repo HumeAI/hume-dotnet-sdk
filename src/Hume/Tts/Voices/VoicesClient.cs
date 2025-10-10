@@ -102,10 +102,7 @@ public partial class VoicesClient
         CancellationToken cancellationToken = default
     )
     {
-        if (request is not null)
-        {
-            request = request with { };
-        }
+        request = request with { };
         var pager = await OffsetPager<
             VoicesListRequest,
             RequestOptions?,

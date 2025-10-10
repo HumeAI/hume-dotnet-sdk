@@ -9,10 +9,22 @@ namespace Hume.ExpressionMeasurement.Stream;
 
 public partial class StreamApi : AsyncApi<StreamApi.Options>
 {
+    /// <summary>
+    /// Event handler for StreamModelPredictions.
+    /// Use StreamModelPredictions.Subscribe(...) to receive messages.
+    /// </summary>
     public readonly Event<StreamModelPredictions> StreamModelPredictions = new();
 
+    /// <summary>
+    /// Event handler for StreamErrorMessage.
+    /// Use StreamErrorMessage.Subscribe(...) to receive messages.
+    /// </summary>
     public readonly Event<StreamErrorMessage> StreamErrorMessage = new();
 
+    /// <summary>
+    /// Event handler for StreamWarningMessage.
+    /// Use StreamWarningMessage.Subscribe(...) to receive messages.
+    /// </summary>
     public readonly Event<StreamWarningMessage> StreamWarningMessage = new();
 
     /// <summary>
@@ -27,14 +39,22 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     public StreamApi(StreamApi.Options options)
         : base(options) { }
 
+    /// <summary>
+    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
+    /// </summary>
     protected override Uri CreateUri()
     {
-        return new UriBuilder(BaseUrl.TrimEnd('/') + "/models").Uri;
+        var uri = new UriBuilder(BaseUrl);
+        uri.Path = $"{uri.Path.TrimEnd('/')}/models";
+        return uri.Uri;
     }
 
     protected override void SetConnectionOptions(ClientWebSocketOptions options) { }
 
-    protected override async System.Threading.Tasks.Task OnTextMessage(System.IO.Stream stream)
+    /// <summary>
+    /// Dispatches incoming WebSocket messages
+    /// </summary>
+    protected async override System.Threading.Tasks.Task OnTextMessage(System.IO.Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -46,47 +66,28 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
         }
 
         // deserialize the message to find the correct event
-
-        try
         {
-            var message = json.Deserialize<StreamModelPredictions>();
-            if (message != null)
+            if (JsonUtils.TryDeserialize(json, out StreamModelPredictions? message))
             {
-                await StreamModelPredictions.RaiseEvent(message).ConfigureAwait(false);
+                await StreamModelPredictions.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
-        catch (Exception)
-        {
-            // message is not StreamModelPredictions, continue
-        }
 
-        try
         {
-            var message = json.Deserialize<StreamErrorMessage>();
-            if (message != null)
+            if (JsonUtils.TryDeserialize(json, out StreamErrorMessage? message))
             {
-                await StreamErrorMessage.RaiseEvent(message).ConfigureAwait(false);
+                await StreamErrorMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
-        catch (Exception)
-        {
-            // message is not StreamErrorMessage, continue
-        }
 
-        try
         {
-            var message = json.Deserialize<StreamWarningMessage>();
-            if (message != null)
+            if (JsonUtils.TryDeserialize(json, out StreamWarningMessage? message))
             {
-                await StreamWarningMessage.RaiseEvent(message).ConfigureAwait(false);
+                await StreamWarningMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
-        }
-        catch (Exception)
-        {
-            // message is not StreamWarningMessage, continue
         }
 
         await ExceptionOccurred
@@ -94,6 +95,9 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Disposes of event subscriptions
+    /// </summary>
     protected override void DisposeEvents()
     {
         StreamModelPredictions.Dispose();
@@ -101,11 +105,17 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
         StreamWarningMessage.Dispose();
     }
 
+    /// <summary>
+    /// Sends a StreamModelsEndpointPayload message to the server
+    /// </summary>
     public async System.Threading.Tasks.Task Send(StreamModelsEndpointPayload message)
     {
         await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Options for the API client
+    /// </summary>
     public class Options : AsyncApiOptions
     {
         /// <summary>

@@ -186,10 +186,7 @@ public partial class ChatsClient
         CancellationToken cancellationToken = default
     )
     {
-        if (request is not null)
-        {
-            request = request with { };
-        }
+        request = request with { };
         var pager = await OffsetPager<
             ChatsListChatsRequest,
             RequestOptions?,
@@ -237,10 +234,7 @@ public partial class ChatsClient
         CancellationToken cancellationToken = default
     )
     {
-        if (request is not null)
-        {
-            request = request with { };
-        }
+        request = request with { };
         var pager = await OffsetPager<
             ChatsListChatEventsRequest,
             RequestOptions?,

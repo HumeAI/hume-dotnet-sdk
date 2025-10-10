@@ -92,7 +92,7 @@ public record StateEmbeddingGeneration
     public Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued AsQueued() =>
         IsQueued
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued)Value!
-            : throw new Exception("StateEmbeddingGeneration.Status is not 'QUEUED'");
+            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'QUEUED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress"/> if <see cref="Status"/> is 'IN_PROGRESS', otherwise throws an exception.
@@ -101,7 +101,7 @@ public record StateEmbeddingGeneration
     public Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress AsInProgress() =>
         IsInProgress
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress)Value!
-            : throw new Exception("StateEmbeddingGeneration.Status is not 'IN_PROGRESS'");
+            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'IN_PROGRESS'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration"/> if <see cref="Status"/> is 'COMPLETED', otherwise throws an exception.
@@ -111,7 +111,7 @@ public record StateEmbeddingGeneration
         IsCompleted
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration)
                 Value!
-            : throw new Exception("StateEmbeddingGeneration.Status is not 'COMPLETED'");
+            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'COMPLETED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed"/> if <see cref="Status"/> is 'FAILED', otherwise throws an exception.
@@ -120,7 +120,7 @@ public record StateEmbeddingGeneration
     public Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed AsFailed() =>
         IsFailed
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed)Value!
-            : throw new Exception("StateEmbeddingGeneration.Status is not 'FAILED'");
+            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'FAILED'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued, T> onQueued,
@@ -291,28 +291,28 @@ public record StateEmbeddingGeneration
             var value = discriminator switch
             {
                 "QUEUED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued"
                         ),
                 "IN_PROGRESS" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress"
                         ),
                 "COMPLETED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration"
                         ),
                 "FAILED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed?>(
                         options
                     )
                         ?? throw new JsonException(
@@ -356,7 +356,7 @@ public record StateEmbeddingGeneration
 
         internal Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateEmbeddingGeneration.Queued(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued value
@@ -376,7 +376,7 @@ public record StateEmbeddingGeneration
 
         internal Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateEmbeddingGeneration.InProgress(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress value
@@ -398,7 +398,7 @@ public record StateEmbeddingGeneration
 
         internal Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateEmbeddingGeneration.Completed(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration value
@@ -418,7 +418,7 @@ public record StateEmbeddingGeneration
 
         internal Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateEmbeddingGeneration.Failed(
             Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed value

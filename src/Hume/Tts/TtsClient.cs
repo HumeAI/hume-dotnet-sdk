@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using Hume;
 using Hume.Core;
+using OneOf;
 
 namespace Hume.Tts;
 
@@ -40,7 +42,7 @@ public partial class TtsClient
     ///                 },
     ///             },
     ///         },
-    ///         Format = new Format(new Format.Mp3(new FormatMp3())),
+    ///         Format = new FormatMp3 { Type = "mp3" },
     ///         NumGenerations = 1,
     ///         Utterances = new List&lt;PostedUtterance&gt;()
     ///         {
@@ -125,7 +127,7 @@ public partial class TtsClient
     ///         {
     ///             GenerationId = "09ad914d-8e7f-40f8-a279-e34f07f7dab2",
     ///         },
-    ///         Format = new Format(new Format.Mp3(new FormatMp3())),
+    ///         Format = new FormatMp3 { Type = "mp3" },
     ///         NumGenerations = 1,
     ///         Utterances = new List&lt;PostedUtterance&gt;()
     ///         {
@@ -284,7 +286,9 @@ public partial class TtsClient
     ///     }
     /// );
     /// </code></example>
-    public async IAsyncEnumerable<TtsOutput> SynthesizeJsonStreamingAsync(
+    public async IAsyncEnumerable<
+        OneOf<TimestampMessage, SnippetAudioChunk>
+    > SynthesizeJsonStreamingAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -310,18 +314,17 @@ public partial class TtsClient
             using var reader = new StreamReader(await response.Raw.Content.ReadAsStreamAsync());
             while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
             {
-                var chunk = (TtsOutput?)null;
-                try
                 {
-                    chunk = JsonUtils.Deserialize<TtsOutput>(line);
+                    if (JsonUtils.TryDeserialize(line, out TimestampMessage? result))
+                    {
+                        yield return result!;
+                    }
                 }
-                catch (System.Text.Json.JsonException)
                 {
-                    throw new HumeClientException($"Unable to deserialize JSON response '{line}'");
-                }
-                if (chunk is not null)
-                {
-                    yield return chunk;
+                    if (JsonUtils.TryDeserialize(line, out SnippetAudioChunk? result))
+                    {
+                        yield return result!;
+                    }
                 }
             }
             yield break;
@@ -348,11 +351,6 @@ public partial class TtsClient
                 responseBody
             );
         }
-    }
-
-    public StreamInputApi CreateStreamInputApi()
-    {
-        return new StreamInputApi(new StreamInputApi.Options());
     }
 
     public StreamInputApi CreateStreamInputApi(StreamInputApi.Options options)

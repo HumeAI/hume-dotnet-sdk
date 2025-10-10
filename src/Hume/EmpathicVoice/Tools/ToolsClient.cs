@@ -191,10 +191,7 @@ public partial class ToolsClient
         CancellationToken cancellationToken = default
     )
     {
-        if (request is not null)
-        {
-            request = request with { };
-        }
+        request = request with { };
         var pager = await OffsetPager<
             ToolsListToolsRequest,
             RequestOptions?,
@@ -315,10 +312,7 @@ public partial class ToolsClient
         CancellationToken cancellationToken = default
     )
     {
-        if (request is not null)
-        {
-            request = request with { };
-        }
+        request = request with { };
         var pager = await OffsetPager<
             ToolsListToolVersionsRequest,
             RequestOptions?,

@@ -92,7 +92,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued AsQueued() =>
         IsQueued
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued)Value!
-            : throw new Exception("StateTlInference.Status is not 'QUEUED'");
+            : throw new System.Exception("StateTlInference.Status is not 'QUEUED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress"/> if <see cref="Status"/> is 'IN_PROGRESS', otherwise throws an exception.
@@ -101,7 +101,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress AsInProgress() =>
         IsInProgress
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress)Value!
-            : throw new Exception("StateTlInference.Status is not 'IN_PROGRESS'");
+            : throw new System.Exception("StateTlInference.Status is not 'IN_PROGRESS'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference"/> if <see cref="Status"/> is 'COMPLETED', otherwise throws an exception.
@@ -110,7 +110,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference AsCompleted() =>
         IsCompleted
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference)Value!
-            : throw new Exception("StateTlInference.Status is not 'COMPLETED'");
+            : throw new System.Exception("StateTlInference.Status is not 'COMPLETED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed"/> if <see cref="Status"/> is 'FAILED', otherwise throws an exception.
@@ -119,7 +119,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed AsFailed() =>
         IsFailed
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed)Value!
-            : throw new Exception("StateTlInference.Status is not 'FAILED'");
+            : throw new System.Exception("StateTlInference.Status is not 'FAILED'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued, T> onQueued,
@@ -275,28 +275,28 @@ public record StateTlInference
             var value = discriminator switch
             {
                 "QUEUED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued"
                         ),
                 "IN_PROGRESS" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress"
                         ),
                 "COMPLETED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference"
                         ),
                 "FAILED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed?>(
                         options
                     )
                         ?? throw new JsonException(
@@ -340,7 +340,7 @@ public record StateTlInference
 
         internal Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTlInference.Queued(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued value
@@ -360,7 +360,7 @@ public record StateTlInference
 
         internal Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTlInference.InProgress(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress value
@@ -382,7 +382,7 @@ public record StateTlInference
 
         internal Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTlInference.Completed(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference value
@@ -402,7 +402,7 @@ public record StateTlInference
 
         internal Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTlInference.Failed(
             Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed value
