@@ -64,7 +64,7 @@ public record Task
     public Hume.ExpressionMeasurement.Batch.TaskClassification AsClassification() =>
         IsClassification
             ? (Hume.ExpressionMeasurement.Batch.TaskClassification)Value!
-            : throw new Exception("Task.Type is not 'classification'");
+            : throw new System.Exception("Task.Type is not 'classification'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.TaskRegression"/> if <see cref="Type"/> is 'regression', otherwise throws an exception.
@@ -73,7 +73,7 @@ public record Task
     public Hume.ExpressionMeasurement.Batch.TaskRegression AsRegression() =>
         IsRegression
             ? (Hume.ExpressionMeasurement.Batch.TaskRegression)Value!
-            : throw new Exception("Task.Type is not 'regression'");
+            : throw new System.Exception("Task.Type is not 'regression'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.TaskClassification, T> onClassification,
@@ -179,11 +179,11 @@ public record Task
             var value = discriminator switch
             {
                 "classification" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.TaskClassification>(options)
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.TaskClassification?>(options)
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.TaskClassification"
                         ),
-                "regression" => json.Deserialize<Hume.ExpressionMeasurement.Batch.TaskRegression>(
+                "regression" => json.Deserialize<Hume.ExpressionMeasurement.Batch.TaskRegression?>(
                     options
                 )
                     ?? throw new JsonException(
@@ -221,7 +221,7 @@ public record Task
 
         internal Hume.ExpressionMeasurement.Batch.TaskClassification Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator Task.Classification(
             Hume.ExpressionMeasurement.Batch.TaskClassification value
@@ -241,7 +241,7 @@ public record Task
 
         internal Hume.ExpressionMeasurement.Batch.TaskRegression Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator Task.Regression(
             Hume.ExpressionMeasurement.Batch.TaskRegression value

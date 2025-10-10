@@ -9,12 +9,12 @@ public partial class HumeClient
 {
     private readonly RawClient _client;
 
-    public HumeClient(string? apiKey = null, ClientOptions? clientOptions = null)
+    public HumeClient(string? apiKey, ClientOptions? clientOptions = null)
     {
         var defaultHeaders = new Headers(
             new Dictionary<string, string>()
             {
-                { "X-Hume-Api-Key", apiKey },
+                { "X-Hume-Api-Key", apiKey ?? "" },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "Hume" },
                 { "X-Fern-SDK-Version", Version.Current },
@@ -29,14 +29,14 @@ public partial class HumeClient
             }
         }
         _client = new RawClient(clientOptions);
-        EmpathicVoice = new EmpathicVoiceClient(_client);
         Tts = new TtsClient(_client);
+        EmpathicVoice = new EmpathicVoiceClient(_client);
         ExpressionMeasurement = new ExpressionMeasurementClient(_client);
     }
 
-    public EmpathicVoiceClient EmpathicVoice { get; }
-
     public TtsClient Tts { get; }
+
+    public EmpathicVoiceClient EmpathicVoice { get; }
 
     public ExpressionMeasurementClient ExpressionMeasurement { get; }
 }

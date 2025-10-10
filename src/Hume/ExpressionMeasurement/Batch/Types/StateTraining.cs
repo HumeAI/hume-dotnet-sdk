@@ -92,7 +92,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingQueued AsQueued() =>
         IsQueued
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingQueued)Value!
-            : throw new Exception("StateTraining.Status is not 'QUEUED'");
+            : throw new System.Exception("StateTraining.Status is not 'QUEUED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTrainingInProgress"/> if <see cref="Status"/> is 'IN_PROGRESS', otherwise throws an exception.
@@ -101,7 +101,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingInProgress AsInProgress() =>
         IsInProgress
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingInProgress)Value!
-            : throw new Exception("StateTraining.Status is not 'IN_PROGRESS'");
+            : throw new System.Exception("StateTraining.Status is not 'IN_PROGRESS'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining"/> if <see cref="Status"/> is 'COMPLETED', otherwise throws an exception.
@@ -110,7 +110,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining AsCompleted() =>
         IsCompleted
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining)Value!
-            : throw new Exception("StateTraining.Status is not 'COMPLETED'");
+            : throw new System.Exception("StateTraining.Status is not 'COMPLETED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTrainingFailed"/> if <see cref="Status"/> is 'FAILED', otherwise throws an exception.
@@ -119,7 +119,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingFailed AsFailed() =>
         IsFailed
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingFailed)Value!
-            : throw new Exception("StateTraining.Status is not 'FAILED'");
+            : throw new System.Exception("StateTraining.Status is not 'FAILED'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.StateTrainingQueued, T> onQueued,
@@ -270,27 +270,27 @@ public record StateTraining
 
             var value = discriminator switch
             {
-                "QUEUED" => json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingQueued>(
+                "QUEUED" => json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingQueued?>(
                     options
                 )
                     ?? throw new JsonException(
                         "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingQueued"
                     ),
                 "IN_PROGRESS" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingInProgress>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingInProgress?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingInProgress"
                         ),
                 "COMPLETED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining>(
+                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining"
                         ),
-                "FAILED" => json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingFailed>(
+                "FAILED" => json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingFailed?>(
                     options
                 )
                     ?? throw new JsonException(
@@ -334,7 +334,7 @@ public record StateTraining
 
         internal Hume.ExpressionMeasurement.Batch.StateTrainingQueued Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTraining.Queued(
             Hume.ExpressionMeasurement.Batch.StateTrainingQueued value
@@ -354,7 +354,7 @@ public record StateTraining
 
         internal Hume.ExpressionMeasurement.Batch.StateTrainingInProgress Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTraining.InProgress(
             Hume.ExpressionMeasurement.Batch.StateTrainingInProgress value
@@ -374,7 +374,7 @@ public record StateTraining
 
         internal Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTraining.Completed(
             Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining value
@@ -394,7 +394,7 @@ public record StateTraining
 
         internal Hume.ExpressionMeasurement.Batch.StateTrainingFailed Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator StateTraining.Failed(
             Hume.ExpressionMeasurement.Batch.StateTrainingFailed value

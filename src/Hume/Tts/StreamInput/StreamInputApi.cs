@@ -3,17 +3,27 @@ using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
 using Hume.Core.Async;
+using Hume.Core.Async.Events;
 using Hume.Core.Async.Models;
 
 namespace Hume.Tts;
 
+/// <summary>
+/// Generate emotionally expressive speech.
+/// </summary>
 public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
 {
     /// <summary>
-    /// Default constructor
+    /// Event handler for TimestampMessage.
+    /// Use TimestampMessage.Subscribe(...) to receive messages.
     /// </summary>
-    public StreamInputApi()
-        : this(new StreamInputApi.Options()) { }
+    public readonly Event<TimestampMessage> TimestampMessage = new();
+
+    /// <summary>
+    /// Event handler for SnippetAudioChunk.
+    /// Use SnippetAudioChunk.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<SnippetAudioChunk> SnippetAudioChunk = new();
 
     /// <summary>
     /// Constructor with options
@@ -138,9 +148,12 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
             );
     }
 
+    /// <summary>
+    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
+    /// </summary>
     protected override Uri CreateUri()
     {
-        return new UriBuilder(BaseUrl.TrimEnd('/') + "/stream/input")
+        var uri = new UriBuilder(BaseUrl)
         {
             Query = new Query()
             {
@@ -154,12 +167,17 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
                 { "version", Version },
                 { "api_key", ApiKey },
             },
-        }.Uri;
+        };
+        uri.Path = $"{uri.Path.TrimEnd('/')}/stream/input";
+        return uri.Uri;
     }
 
     protected override void SetConnectionOptions(ClientWebSocketOptions options) { }
 
-    protected override async System.Threading.Tasks.Task OnTextMessage(Stream stream)
+    /// <summary>
+    /// Dispatches incoming WebSocket messages
+    /// </summary>
+    protected async override System.Threading.Tasks.Task OnTextMessage(Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -171,19 +189,47 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
         }
 
         // deserialize the message to find the correct event
+        {
+            if (JsonUtils.TryDeserialize(json, out TimestampMessage? message))
+            {
+                await TimestampMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out SnippetAudioChunk? message))
+            {
+                await SnippetAudioChunk.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
 
         await ExceptionOccurred
             .RaiseEvent(new Exception($"Unknown message: {json.ToString()}"))
             .ConfigureAwait(false);
     }
 
-    protected override void DisposeEvents() { }
+    /// <summary>
+    /// Disposes of event subscriptions
+    /// </summary>
+    protected override void DisposeEvents()
+    {
+        TimestampMessage.Dispose();
+        SnippetAudioChunk.Dispose();
+    }
 
+    /// <summary>
+    /// Sends a PublishTts message to the server
+    /// </summary>
     public async System.Threading.Tasks.Task Send(PublishTts message)
     {
         await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Options for the API client
+    /// </summary>
     public class Options : AsyncApiOptions
     {
         /// <summary>
@@ -205,7 +251,7 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
         /// </summary>
         public string? ContextGenerationId { get; set; }
 
-        public AudioFormatType FormatType { get; set; }
+        public required AudioFormatType FormatType { get; set; }
 
         /// <summary>
         /// The set of timestamp types to include in the response.
@@ -227,7 +273,7 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
         /// </summary>
         public bool? StripHeaders { get; set; }
 
-        public OctaveVersion Version { get; set; }
+        public required OctaveVersion Version { get; set; }
 
         /// <summary>
         /// API key used for authenticating the client. If not provided, an `access_token` must be provided to authenticate.

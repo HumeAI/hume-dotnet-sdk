@@ -78,7 +78,7 @@ public record Source
     public Hume.ExpressionMeasurement.Batch.SourceUrl AsUrl() =>
         IsUrl
             ? (Hume.ExpressionMeasurement.Batch.SourceUrl)Value!
-            : throw new Exception("Source.Type is not 'url'");
+            : throw new System.Exception("Source.Type is not 'url'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.SourceFile"/> if <see cref="Type"/> is 'file', otherwise throws an exception.
@@ -87,7 +87,7 @@ public record Source
     public Hume.ExpressionMeasurement.Batch.SourceFile AsFile() =>
         IsFile
             ? (Hume.ExpressionMeasurement.Batch.SourceFile)Value!
-            : throw new Exception("Source.Type is not 'file'");
+            : throw new System.Exception("Source.Type is not 'file'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.SourceTextSource"/> if <see cref="Type"/> is 'text', otherwise throws an exception.
@@ -96,7 +96,7 @@ public record Source
     public Hume.ExpressionMeasurement.Batch.SourceTextSource AsText() =>
         IsText
             ? (Hume.ExpressionMeasurement.Batch.SourceTextSource)Value!
-            : throw new Exception("Source.Type is not 'text'");
+            : throw new System.Exception("Source.Type is not 'text'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.SourceUrl, T> onUrl,
@@ -223,15 +223,15 @@ public record Source
 
             var value = discriminator switch
             {
-                "url" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceUrl>(options)
+                "url" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceUrl?>(options)
                     ?? throw new JsonException(
                         "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceUrl"
                     ),
-                "file" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceFile>(options)
+                "file" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceFile?>(options)
                     ?? throw new JsonException(
                         "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceFile"
                     ),
-                "text" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceTextSource>(
+                "text" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceTextSource?>(
                     options
                 )
                     ?? throw new JsonException(
@@ -274,7 +274,7 @@ public record Source
 
         internal Hume.ExpressionMeasurement.Batch.SourceUrl Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator Source.Url(
             Hume.ExpressionMeasurement.Batch.SourceUrl value
@@ -294,7 +294,7 @@ public record Source
 
         internal Hume.ExpressionMeasurement.Batch.SourceFile Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator Source.File(
             Hume.ExpressionMeasurement.Batch.SourceFile value
@@ -314,7 +314,7 @@ public record Source
 
         internal Hume.ExpressionMeasurement.Batch.SourceTextSource Value { get; set; }
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? "null";
 
         public static implicit operator Source.Text(
             Hume.ExpressionMeasurement.Batch.SourceTextSource value
