@@ -34,6 +34,12 @@ public record AssistantMessage : IJsonOnDeserialized
     public string? Id { get; set; }
 
     /// <summary>
+    /// Detected language of the message text.
+    /// </summary>
+    [JsonPropertyName("language")]
+    public string? Language { get; set; }
+
+    /// <summary>
     /// Transcript of the message.
     /// </summary>
     [JsonPropertyName("message")]

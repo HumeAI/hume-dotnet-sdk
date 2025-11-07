@@ -19,6 +19,12 @@ public record AudioConfiguration : IJsonOnDeserialized
     public required int Channels { get; set; }
 
     /// <summary>
+    /// Optional codec information.
+    /// </summary>
+    [JsonPropertyName("codec")]
+    public string? Codec { get; set; }
+
+    /// <summary>
     /// Encoding format of the audio input, such as `linear16`.
     /// </summary>
     [JsonPropertyName("encoding")]

@@ -39,6 +39,12 @@ public record UserMessage : IJsonOnDeserialized
     public required bool Interim { get; set; }
 
     /// <summary>
+    /// Detected language of the message text.
+    /// </summary>
+    [JsonPropertyName("language")]
+    public string? Language { get; set; }
+
+    /// <summary>
     /// Transcript of the message.
     /// </summary>
     [JsonPropertyName("message")]

@@ -42,7 +42,7 @@ public partial class VoicesClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/tts/voices",
                     Query = _query,
@@ -149,7 +149,7 @@ public partial class VoicesClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/tts/voices",
                     Body = request,
@@ -214,7 +214,7 @@ public partial class VoicesClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Delete,
                     Path = "v0/tts/voices",
                     Query = _query,

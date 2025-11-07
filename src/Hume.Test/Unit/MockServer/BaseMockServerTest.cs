@@ -26,7 +26,17 @@ public class BaseMockServerTest
         // Initialize the Client
         Client = new HumeClient(
             "API_KEY",
-            clientOptions: new ClientOptions { BaseUrl = Server.Urls[0], MaxRetries = 0 }
+            clientOptions: new ClientOptions
+            {
+                Environment = new HumeClientEnvironment
+                {
+                    Base = Server.Urls[0],
+                    Evi = Server.Urls[0],
+                    Tts = Server.Urls[0],
+                    Stream = Server.Urls[0],
+                },
+                MaxRetries = 0,
+            }
         );
     }
 

@@ -400,7 +400,7 @@ await client.Tts.SynthesizeFileStreamingAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonStreamingAsync</a>(Tts.PostedTts { ... }) -> System.Collections.Generic.IAsyncEnumerable<OneOf.OneOf<Tts.TimestampMessage, Tts.SnippetAudioChunk>></code></summary>
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonStreamingAsync</a>(Tts.PostedTts { ... }) -> System.Collections.Generic.IAsyncEnumerable<OneOf.OneOf<Tts.SnippetAudioChunk, Tts.TimestampMessage>></code></summary>
 <dl>
 <dd>
 
@@ -462,6 +462,72 @@ client.Tts.SynthesizeJsonStreamingAsync(
 <dd>
 
 **request:** `Tts.PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## EmpathicVoice ControlPlane
+<details><summary><code>client.EmpathicVoice.ControlPlane.<a href="/src/Hume/EmpathicVoice/ControlPlane/ControlPlaneClient.cs">SendAsync</a>(chatId, OneOf.OneOf<EmpathicVoice.SessionSettings, EmpathicVoice.UserInput, EmpathicVoice.AssistantInput, EmpathicVoice.ToolResponseMessage, EmpathicVoice.ToolErrorMessage, EmpathicVoice.PauseAssistantMessage, EmpathicVoice.ResumeAssistantMessage> { ... })</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Send a message to a specific chat.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.EmpathicVoice.ControlPlane.SendAsync(
+    "chat_id",
+    new SessionSettings { Type = "session_settings" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**chatId:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `OneOf.OneOf<EmpathicVoice.SessionSettings, EmpathicVoice.UserInput, EmpathicVoice.AssistantInput, EmpathicVoice.ToolResponseMessage, EmpathicVoice.ToolErrorMessage, EmpathicVoice.PauseAssistantMessage, EmpathicVoice.ResumeAssistantMessage>` 
     
 </dd>
 </dl>

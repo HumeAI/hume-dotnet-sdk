@@ -67,7 +67,7 @@ public partial class TtsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/tts",
                     Body = request,
@@ -152,7 +152,7 @@ public partial class TtsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/tts/file",
                     Body = request,
@@ -223,7 +223,7 @@ public partial class TtsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/tts/stream/file",
                     Body = request,
@@ -287,7 +287,7 @@ public partial class TtsClient
     /// );
     /// </code></example>
     public async IAsyncEnumerable<
-        OneOf<TimestampMessage, SnippetAudioChunk>
+        OneOf<SnippetAudioChunk, TimestampMessage>
     > SynthesizeJsonStreamingAsync(
         PostedTts request,
         RequestOptions? options = null,
@@ -298,7 +298,7 @@ public partial class TtsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/tts/stream/json",
                     Body = request,
@@ -315,13 +315,13 @@ public partial class TtsClient
             while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
             {
                 {
-                    if (JsonUtils.TryDeserialize(line, out TimestampMessage? result))
+                    if (JsonUtils.TryDeserialize(line, out SnippetAudioChunk? result))
                     {
                         yield return result!;
                     }
                 }
                 {
-                    if (JsonUtils.TryDeserialize(line, out SnippetAudioChunk? result))
+                    if (JsonUtils.TryDeserialize(line, out TimestampMessage? result))
                     {
                         yield return result!;
                     }
@@ -351,6 +351,134 @@ public partial class TtsClient
                 responseBody
             );
         }
+    }
+
+    public async System.Threading.Tasks.Task<System.IO.Stream> ConvertVoiceFileAsync(
+        ConvertVoiceFileRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var multipartFormRequest_ = new MultipartFormRequest
+        {
+            BaseUrl = _client.Options.Environment.Base,
+            Method = HttpMethod.Post,
+            Path = "v0/tts/voice_conversion/file",
+            Options = options,
+        };
+        multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
+        multipartFormRequest_.AddFileParameterPart("audio", request.Audio);
+        multipartFormRequest_.AddJsonPart("context", request.Context);
+        multipartFormRequest_.AddJsonPart("voice", request.Voice);
+        multipartFormRequest_.AddJsonPart("format", request.Format);
+        multipartFormRequest_.AddJsonParts(
+            "include_timestamp_types",
+            request.IncludeTimestampTypes
+        );
+        var response = await _client
+            .SendRequestAsync(multipartFormRequest_, cancellationToken)
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return await response.Raw.Content.ReadAsStreamAsync();
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    public async IAsyncEnumerable<OneOf<SnippetAudioChunk, TimestampMessage>> ConvertVoiceJsonAsync(
+        ConvertVoiceJsonRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var multipartFormRequest_ = new MultipartFormRequest
+        {
+            BaseUrl = _client.Options.Environment.Base,
+            Method = HttpMethod.Post,
+            Path = "v0/tts/voice_conversion/json",
+            Options = options,
+        };
+        multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
+        multipartFormRequest_.AddFileParameterPart("audio", request.Audio);
+        multipartFormRequest_.AddJsonPart("context", request.Context);
+        multipartFormRequest_.AddJsonPart("voice", request.Voice);
+        multipartFormRequest_.AddJsonPart("format", request.Format);
+        multipartFormRequest_.AddJsonParts(
+            "include_timestamp_types",
+            request.IncludeTimestampTypes
+        );
+        var response = await _client
+            .SendRequestAsync(multipartFormRequest_, cancellationToken)
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            string? line;
+            using var reader = new StreamReader(await response.Raw.Content.ReadAsStreamAsync());
+            while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
+            {
+                {
+                    if (JsonUtils.TryDeserialize(line, out SnippetAudioChunk? result))
+                    {
+                        yield return result!;
+                    }
+                }
+                {
+                    if (JsonUtils.TryDeserialize(line, out TimestampMessage? result))
+                    {
+                        yield return result!;
+                    }
+                }
+            }
+            yield break;
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    public StreamInputApi CreateStreamInputApi()
+    {
+        return new StreamInputApi(new StreamInputApi.Options());
     }
 
     public StreamInputApi CreateStreamInputApi(StreamInputApi.Options options)

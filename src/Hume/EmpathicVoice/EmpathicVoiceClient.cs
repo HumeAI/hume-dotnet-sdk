@@ -9,12 +9,15 @@ public partial class EmpathicVoiceClient
     internal EmpathicVoiceClient(RawClient client)
     {
         _client = client;
+        ControlPlane = new ControlPlaneClient(_client);
         Tools = new ToolsClient(_client);
         Prompts = new PromptsClient(_client);
         Configs = new ConfigsClient(_client);
         Chats = new ChatsClient(_client);
         ChatGroups = new ChatGroupsClient(_client);
     }
+
+    public ControlPlaneClient ControlPlane { get; }
 
     public ToolsClient Tools { get; }
 
@@ -26,9 +29,9 @@ public partial class EmpathicVoiceClient
 
     public ChatGroupsClient ChatGroups { get; }
 
-    public ChatApi CreateChatApi()
+    public ControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options)
     {
-        return new ChatApi(new ChatApi.Options());
+        return new ControlPlaneApi(options);
     }
 
     public ChatApi CreateChatApi(ChatApi.Options options)

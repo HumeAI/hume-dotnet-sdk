@@ -14,16 +14,22 @@ namespace Hume.Tts;
 public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
 {
     /// <summary>
+    /// Event handler for SnippetAudioChunk.
+    /// Use SnippetAudioChunk.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<SnippetAudioChunk> SnippetAudioChunk = new();
+
+    /// <summary>
     /// Event handler for TimestampMessage.
     /// Use TimestampMessage.Subscribe(...) to receive messages.
     /// </summary>
     public readonly Event<TimestampMessage> TimestampMessage = new();
 
     /// <summary>
-    /// Event handler for SnippetAudioChunk.
-    /// Use SnippetAudioChunk.Subscribe(...) to receive messages.
+    /// Default constructor
     /// </summary>
-    public readonly Event<SnippetAudioChunk> SnippetAudioChunk = new();
+    public StreamInputApi()
+        : this(new StreamInputApi.Options()) { }
 
     /// <summary>
     /// Constructor with options
@@ -61,7 +67,10 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
             );
     }
 
-    public AudioFormatType FormatType
+    /// <summary>
+    /// The format to be used for audio generation.
+    /// </summary>
+    public AudioFormatType? FormatType
     {
         get => ApiOptions.FormatType;
         set =>
@@ -123,7 +132,10 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
             );
     }
 
-    public OctaveVersion Version
+    /// <summary>
+    /// The version of the Octave Model to use. 1 for the legacy model, 2 for the new model.
+    /// </summary>
+    public OctaveVersion? Version
     {
         get => ApiOptions.Version;
         set =>
@@ -190,17 +202,17 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
 
         // deserialize the message to find the correct event
         {
-            if (JsonUtils.TryDeserialize(json, out TimestampMessage? message))
+            if (JsonUtils.TryDeserialize(json, out SnippetAudioChunk? message))
             {
-                await TimestampMessage.RaiseEvent(message!).ConfigureAwait(false);
+                await SnippetAudioChunk.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
 
         {
-            if (JsonUtils.TryDeserialize(json, out SnippetAudioChunk? message))
+            if (JsonUtils.TryDeserialize(json, out TimestampMessage? message))
             {
-                await SnippetAudioChunk.RaiseEvent(message!).ConfigureAwait(false);
+                await TimestampMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
@@ -215,8 +227,8 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
     /// </summary>
     protected override void DisposeEvents()
     {
-        TimestampMessage.Dispose();
         SnippetAudioChunk.Dispose();
+        TimestampMessage.Dispose();
     }
 
     /// <summary>
@@ -251,7 +263,10 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
         /// </summary>
         public string? ContextGenerationId { get; set; }
 
-        public required AudioFormatType FormatType { get; set; }
+        /// <summary>
+        /// The format to be used for audio generation.
+        /// </summary>
+        public AudioFormatType? FormatType { get; set; }
 
         /// <summary>
         /// The set of timestamp types to include in the response.
@@ -273,7 +288,10 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
         /// </summary>
         public bool? StripHeaders { get; set; }
 
-        public required OctaveVersion Version { get; set; }
+        /// <summary>
+        /// The version of the Octave Model to use. 1 for the legacy model, 2 for the new model.
+        /// </summary>
+        public OctaveVersion? Version { get; set; }
 
         /// <summary>
         /// API key used for authenticating the client. If not provided, an `access_token` must be provided to authenticate.

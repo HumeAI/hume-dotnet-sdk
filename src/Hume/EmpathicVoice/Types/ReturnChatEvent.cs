@@ -80,6 +80,12 @@ public record ReturnChatEvent : IJsonOnDeserialized
     [JsonPropertyName("metadata")]
     public string? Metadata { get; set; }
 
+    /// <summary>
+    /// Identifier for a related chat event. Currently only seen on ASSISTANT_PROSODY events, to point back to the ASSISTANT_MESSAGE that generated these prosody scores
+    /// </summary>
+    [JsonPropertyName("related_event_id")]
+    public string? RelatedEventId { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

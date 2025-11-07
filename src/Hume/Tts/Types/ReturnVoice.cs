@@ -35,6 +35,9 @@ public record ReturnVoice : IJsonOnDeserialized
     [JsonPropertyName("provider")]
     public VoiceProvider? Provider { get; set; }
 
+    [JsonPropertyName("compatible_octave_models")]
+    public IEnumerable<string>? CompatibleOctaveModels { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
