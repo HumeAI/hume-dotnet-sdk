@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -49,7 +47,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/evi/prompts",
                     Query = _query,
@@ -124,13 +122,13 @@ public partial class PromptsClient
                 request,
                 options,
                 ListPromptsInternalAsync,
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.PromptsPage?.ToList(),
+                response => response.PromptsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -163,7 +161,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/evi/prompts",
                     Body = request,
@@ -247,7 +245,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/prompts/{0}",
@@ -323,7 +321,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "v0/evi/prompts/{0}",
@@ -391,7 +389,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "v0/evi/prompts/{0}",
@@ -452,7 +450,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "v0/evi/prompts/{0}",
@@ -513,7 +511,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/prompts/{0}/version/{1}",
@@ -584,7 +582,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "v0/evi/prompts/{0}/version/{1}",
@@ -651,7 +649,7 @@ public partial class PromptsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "v0/evi/prompts/{0}/version/{1}",

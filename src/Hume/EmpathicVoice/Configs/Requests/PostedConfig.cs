@@ -8,31 +8,27 @@ namespace Hume.EmpathicVoice;
 public record PostedConfig
 {
     /// <summary>
+    /// List of built-in tools associated with this Config.
+    /// </summary>
+    [JsonPropertyName("builtin_tools")]
+    public IEnumerable<PostedBuiltinTool>? BuiltinTools { get; set; }
+
+    /// <summary>
+    /// The eLLM setup associated with this Config.
+    ///
+    /// Hume's eLLM (empathic Large Language Model) is a multimodal language model that takes into account both expression measures and language. The eLLM generates short, empathic language responses and guides text-to-speech (TTS) prosody.
+    /// </summary>
+    [JsonPropertyName("ellm_model")]
+    public PostedEllmModel? EllmModel { get; set; }
+
+    [JsonPropertyName("event_messages")]
+    public PostedEventMessageSpecs? EventMessages { get; set; }
+
+    /// <summary>
     /// EVI version to use. Only versions `3` and `4-mini` are supported.
     /// </summary>
     [JsonPropertyName("evi_version")]
     public required string EviVersion { get; set; }
-
-    /// <summary>
-    /// Name applied to all versions of a particular Config.
-    /// </summary>
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    /// <summary>
-    /// An optional description of the Config version.
-    /// </summary>
-    [JsonPropertyName("version_description")]
-    public string? VersionDescription { get; set; }
-
-    [JsonPropertyName("prompt")]
-    public PostedConfigPromptSpec? Prompt { get; set; }
-
-    /// <summary>
-    /// A voice specification associated with this Config.
-    /// </summary>
-    [JsonPropertyName("voice")]
-    public OneOf<VoiceId, VoiceName>? Voice { get; set; }
 
     /// <summary>
     /// The supplemental language model associated with this Config.
@@ -43,12 +39,22 @@ public record PostedConfig
     public PostedLanguageModel? LanguageModel { get; set; }
 
     /// <summary>
-    /// The eLLM setup associated with this Config.
-    ///
-    /// Hume's eLLM (empathic Large Language Model) is a multimodal language model that takes into account both expression measures and language. The eLLM generates short, empathic language responses and guides text-to-speech (TTS) prosody.
+    /// Name applied to all versions of a particular Config.
     /// </summary>
-    [JsonPropertyName("ellm_model")]
-    public PostedEllmModel? EllmModel { get; set; }
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Configures nudges, brief audio prompts that can guide conversations when users pause or need encouragement to continue speaking. Nudges help create more natural, flowing interactions by providing gentle conversational cues.
+    /// </summary>
+    [JsonPropertyName("nudges")]
+    public PostedNudgeSpec? Nudges { get; set; }
+
+    [JsonPropertyName("prompt")]
+    public PostedConfigPromptSpec? Prompt { get; set; }
+
+    [JsonPropertyName("timeouts")]
+    public PostedTimeoutSpecs? Timeouts { get; set; }
 
     /// <summary>
     /// List of user-defined tools associated with this Config.
@@ -57,22 +63,16 @@ public record PostedConfig
     public IEnumerable<PostedUserDefinedToolSpec>? Tools { get; set; }
 
     /// <summary>
-    /// List of built-in tools associated with this Config.
+    /// An optional description of the Config version.
     /// </summary>
-    [JsonPropertyName("builtin_tools")]
-    public IEnumerable<PostedBuiltinTool>? BuiltinTools { get; set; }
-
-    [JsonPropertyName("event_messages")]
-    public PostedEventMessageSpecs? EventMessages { get; set; }
+    [JsonPropertyName("version_description")]
+    public string? VersionDescription { get; set; }
 
     /// <summary>
-    /// Configures nudges, brief audio prompts that can guide conversations when users pause or need encouragement to continue speaking. Nudges help create more natural, flowing interactions by providing gentle conversational cues.
+    /// A voice specification associated with this Config.
     /// </summary>
-    [JsonPropertyName("nudges")]
-    public PostedNudgeSpec? Nudges { get; set; }
-
-    [JsonPropertyName("timeouts")]
-    public PostedTimeoutSpecs? Timeouts { get; set; }
+    [JsonPropertyName("voice")]
+    public OneOf<VoiceId, VoiceName>? Voice { get; set; }
 
     /// <summary>
     /// Webhook config specifications for each subscriber.

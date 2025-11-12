@@ -16,38 +16,16 @@ public record ReturnChatAudioReconstruction : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Identifier for the chat. Formatted as a UUID.
-    /// </summary>
-    [JsonPropertyName("id")]
-    public required string Id { get; set; }
-
-    /// <summary>
-    /// Identifier for the user that owns this chat. Formatted as a UUID.
-    /// </summary>
-    [JsonPropertyName("user_id")]
-    public required string UserId { get; set; }
-
-    /// <summary>
-    /// Indicates the current state of the audio reconstruction job. There are five possible statuses:
-    ///
-    /// - `QUEUED`: The reconstruction job is waiting to be processed.
-    ///
-    /// - `IN_PROGRESS`: The reconstruction is currently being processed.
-    ///
-    /// - `COMPLETE`: The audio reconstruction is finished and ready for download.
-    ///
-    /// - `ERROR`: An error occurred during the reconstruction process.
-    ///
-    /// - `CANCELED`: The reconstruction job has been canceled.
-    /// </summary>
-    [JsonPropertyName("status")]
-    public required ReturnChatAudioReconstructionStatus Status { get; set; }
-
-    /// <summary>
     /// Name of the chat audio reconstruction file.
     /// </summary>
     [JsonPropertyName("filename")]
     public string? Filename { get; set; }
+
+    /// <summary>
+    /// Identifier for the chat. Formatted as a UUID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
 
     /// <summary>
     /// The timestamp of the most recent status change for this audio reconstruction, formatted milliseconds since the Unix epoch.
@@ -66,6 +44,28 @@ public record ReturnChatAudioReconstruction : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("signed_url_expiration_timestamp_millis")]
     public long? SignedUrlExpirationTimestampMillis { get; set; }
+
+    /// <summary>
+    /// Indicates the current state of the audio reconstruction job. There are five possible statuses:
+    ///
+    /// - `QUEUED`: The reconstruction job is waiting to be processed.
+    ///
+    /// - `IN_PROGRESS`: The reconstruction is currently being processed.
+    ///
+    /// - `COMPLETE`: The audio reconstruction is finished and ready for download.
+    ///
+    /// - `ERROR`: An error occurred during the reconstruction process.
+    ///
+    /// - `CANCELED`: The reconstruction job has been canceled.
+    /// </summary>
+    [JsonPropertyName("status")]
+    public required ReturnChatAudioReconstructionStatus Status { get; set; }
+
+    /// <summary>
+    /// Identifier for the user that owns this chat. Formatted as a UUID.
+    /// </summary>
+    [JsonPropertyName("user_id")]
+    public required string UserId { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

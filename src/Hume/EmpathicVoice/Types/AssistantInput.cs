@@ -36,7 +36,11 @@ public record AssistantInput : IJsonOnDeserialized
     public string Type
     {
         get => "assistant_input";
-        set => value.Assert(value == "assistant_input", "'Type' must be " + "assistant_input");
+        set =>
+            value.Assert(
+                value == "assistant_input",
+                "'[object Object]' must be " + "assistant_input"
+            );
     }
 
     [JsonIgnore]

@@ -22,16 +22,16 @@ public record PostedConfigPromptSpec : IJsonOnDeserialized
     public string? Id { get; set; }
 
     /// <summary>
-    /// Version number for a Prompt. Version numbers should be integers. The combination of configId and version number is unique.
-    /// </summary>
-    [JsonPropertyName("version")]
-    public int? Version { get; set; }
-
-    /// <summary>
     /// Text used to create a new prompt for a particular config.
     /// </summary>
     [JsonPropertyName("text")]
     public string? Text { get; set; }
+
+    /// <summary>
+    /// Version number for a Prompt. Version numbers should be integers. The combination of configId and version number is unique.
+    /// </summary>
+    [JsonPropertyName("version")]
+    public int? Version { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

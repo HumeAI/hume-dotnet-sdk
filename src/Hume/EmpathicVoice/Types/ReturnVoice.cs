@@ -15,6 +15,9 @@ public record ReturnVoice : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    [JsonPropertyName("compatible_octave_models")]
+    public IEnumerable<string>? CompatibleOctaveModels { get; set; }
+
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 

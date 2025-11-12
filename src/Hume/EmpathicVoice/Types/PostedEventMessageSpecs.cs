@@ -18,12 +18,6 @@ public record PostedEventMessageSpecs : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Specifies the initial message EVI provides when a new chat is started, such as a greeting or welcome message.
-    /// </summary>
-    [JsonPropertyName("on_new_chat")]
-    public PostedEventMessageSpec? OnNewChat { get; set; }
-
-    /// <summary>
     /// Specifies the message EVI provides when the chat is about to be disconnected due to a user inactivity timeout, such as a message mentioning a lack of user input for a period of time.
     ///
     /// Enabling an inactivity message allows developers to use this message event for "checking in" with the user if they are not responding to see if they are still active.
@@ -40,6 +34,12 @@ public record PostedEventMessageSpecs : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("on_max_duration_timeout")]
     public PostedEventMessageSpec? OnMaxDurationTimeout { get; set; }
+
+    /// <summary>
+    /// Specifies the initial message EVI provides when a new chat is started, such as a greeting or welcome message.
+    /// </summary>
+    [JsonPropertyName("on_new_chat")]
+    public PostedEventMessageSpec? OnNewChat { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -30,7 +30,8 @@ public record AssistantEnd : IJsonOnDeserialized
     public string Type
     {
         get => "assistant_end";
-        set => value.Assert(value == "assistant_end", "'Type' must be " + "assistant_end");
+        set =>
+            value.Assert(value == "assistant_end", "'[object Object]' must be " + "assistant_end");
     }
 
     [JsonIgnore]

@@ -16,6 +16,12 @@ public record ReturnChatGroupPagedEvents : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// List of Chat Events for the specified `page_number` and `page_size`.
+    /// </summary>
+    [JsonPropertyName("events_page")]
+    public IEnumerable<ReturnChatEvent> EventsPage { get; set; } = new List<ReturnChatEvent>();
+
+    /// <summary>
     /// Identifier for the Chat Group. Any Chat resumed from this Chat Group will have the same `chat_group_id`. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("id")]
@@ -38,12 +44,6 @@ public record ReturnChatGroupPagedEvents : IJsonOnDeserialized
     public required int PageSize { get; set; }
 
     /// <summary>
-    /// The total number of pages in the collection.
-    /// </summary>
-    [JsonPropertyName("total_pages")]
-    public required int TotalPages { get; set; }
-
-    /// <summary>
     /// Indicates the order in which the paginated results are presented, based on their creation date.
     ///
     /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
@@ -52,10 +52,10 @@ public record ReturnChatGroupPagedEvents : IJsonOnDeserialized
     public required ReturnChatGroupPagedEventsPaginationDirection PaginationDirection { get; set; }
 
     /// <summary>
-    /// List of Chat Events for the specified `page_number` and `page_size`.
+    /// The total number of pages in the collection.
     /// </summary>
-    [JsonPropertyName("events_page")]
-    public IEnumerable<ReturnChatEvent> EventsPage { get; set; } = new List<ReturnChatEvent>();
+    [JsonPropertyName("total_pages")]
+    public required int TotalPages { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

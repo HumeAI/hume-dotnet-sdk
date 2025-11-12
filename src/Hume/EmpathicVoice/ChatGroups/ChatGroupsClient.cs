@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -45,7 +43,7 @@ public partial class ChatGroupsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/evi/chat_groups",
                     Query = _query,
@@ -118,7 +116,7 @@ public partial class ChatGroupsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/chat_groups/{0}/events",
@@ -200,13 +198,13 @@ public partial class ChatGroupsClient
                 request,
                 options,
                 ListChatGroupsInternalAsync,
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.ChatGroupsPage?.ToList(),
+                response => response.ChatGroupsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -252,7 +250,7 @@ public partial class ChatGroupsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/chat_groups/{0}",
@@ -270,6 +268,95 @@ public partial class ChatGroupsClient
             try
             {
                 return JsonUtils.Deserialize<ReturnChatGroupPagedChats>(responseBody)!;
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientException("Failed to deserialize response", e);
+            }
+        }
+
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    /// <summary>
+    /// Fetches a paginated list of audio for each **Chat** within the specified **Chat Group**. For more details, see our guide on audio reconstruction [here](/docs/speech-to-speech-evi/faq#can-i-access-the-audio-of-previous-conversations-with-evi).
+    /// </summary>
+    /// <example><code>
+    /// await client.EmpathicVoice.ChatGroups.GetAudioAsync(
+    ///     "369846cf-6ad5-404d-905e-a8acb5cdfc78",
+    ///     new ChatGroupsGetAudioRequest
+    ///     {
+    ///         PageNumber = 0,
+    ///         PageSize = 10,
+    ///         AscendingOrder = true,
+    ///     }
+    /// );
+    /// </code></example>
+    public async System.Threading.Tasks.Task<ReturnChatGroupPagedAudioReconstructions> GetAudioAsync(
+        string id,
+        ChatGroupsGetAudioRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _query = new Dictionary<string, object>();
+        if (request.PageNumber != null)
+        {
+            _query["page_number"] = request.PageNumber.Value.ToString();
+        }
+        if (request.PageSize != null)
+        {
+            _query["page_size"] = request.PageSize.Value.ToString();
+        }
+        if (request.AscendingOrder != null)
+        {
+            _query["ascending_order"] = JsonUtils.Serialize(request.AscendingOrder.Value);
+        }
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "v0/evi/chat_groups/{0}/audio",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Query = _query,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                return JsonUtils.Deserialize<ReturnChatGroupPagedAudioReconstructions>(
+                    responseBody
+                )!;
             }
             catch (JsonException e)
             {
@@ -336,106 +423,17 @@ public partial class ChatGroupsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListChatGroupEventsInternalAsync(id, request, options, cancellationToken),
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.EventsPage?.ToList(),
+                response => response.EventsPage?.ToList(),
                 null,
                 cancellationToken
             )
             .ConfigureAwait(false);
         return pager;
-    }
-
-    /// <summary>
-    /// Fetches a paginated list of audio for each **Chat** within the specified **Chat Group**. For more details, see our guide on audio reconstruction [here](/docs/speech-to-speech-evi/faq#can-i-access-the-audio-of-previous-conversations-with-evi).
-    /// </summary>
-    /// <example><code>
-    /// await client.EmpathicVoice.ChatGroups.GetAudioAsync(
-    ///     "369846cf-6ad5-404d-905e-a8acb5cdfc78",
-    ///     new ChatGroupsGetAudioRequest
-    ///     {
-    ///         PageNumber = 0,
-    ///         PageSize = 10,
-    ///         AscendingOrder = true,
-    ///     }
-    /// );
-    /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnChatGroupPagedAudioReconstructions> GetAudioAsync(
-        string id,
-        ChatGroupsGetAudioRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        var _query = new Dictionary<string, object>();
-        if (request.PageNumber != null)
-        {
-            _query["page_number"] = request.PageNumber.Value.ToString();
-        }
-        if (request.PageSize != null)
-        {
-            _query["page_size"] = request.PageSize.Value.ToString();
-        }
-        if (request.AscendingOrder != null)
-        {
-            _query["ascending_order"] = JsonUtils.Serialize(request.AscendingOrder.Value);
-        }
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.BaseUrl,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "v0/evi/chat_groups/{0}/audio",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Query = _query,
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnChatGroupPagedAudioReconstructions>(
-                    responseBody
-                )!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
     }
 }

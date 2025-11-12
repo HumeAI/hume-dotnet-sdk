@@ -39,6 +39,12 @@ public record UserMessage : IJsonOnDeserialized
     public required bool Interim { get; set; }
 
     /// <summary>
+    /// Detected language of the message text.
+    /// </summary>
+    [JsonPropertyName("language")]
+    public string? Language { get; set; }
+
+    /// <summary>
     /// Transcript of the message.
     /// </summary>
     [JsonPropertyName("message")]
@@ -65,7 +71,7 @@ public record UserMessage : IJsonOnDeserialized
     public string Type
     {
         get => "user_message";
-        set => value.Assert(value == "user_message", "'Type' must be " + "user_message");
+        set => value.Assert(value == "user_message", "'[object Object]' must be " + "user_message");
     }
 
     [JsonIgnore]

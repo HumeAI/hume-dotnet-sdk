@@ -11,6 +11,8 @@ public readonly record struct PostedWebhookEventType : IStringEnum
 
     public static readonly PostedWebhookEventType ChatEnded = new(Values.ChatEnded);
 
+    public static readonly PostedWebhookEventType ToolCall = new(Values.ToolCall);
+
     public PostedWebhookEventType(string value)
     {
         Value = value;
@@ -61,5 +63,7 @@ public readonly record struct PostedWebhookEventType : IStringEnum
         public const string ChatStarted = "chat_started";
 
         public const string ChatEnded = "chat_ended";
+
+        public const string ToolCall = "tool_call";
     }
 }

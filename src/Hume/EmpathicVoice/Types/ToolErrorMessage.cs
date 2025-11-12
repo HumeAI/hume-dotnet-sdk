@@ -68,7 +68,7 @@ public record ToolErrorMessage : IJsonOnDeserialized
     public string Type
     {
         get => "tool_error";
-        set => value.Assert(value == "tool_error", "'Type' must be " + "tool_error");
+        set => value.Assert(value == "tool_error", "'[object Object]' must be " + "tool_error");
     }
 
     [JsonIgnore]

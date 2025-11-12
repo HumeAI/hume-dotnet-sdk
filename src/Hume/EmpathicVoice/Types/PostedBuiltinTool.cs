@@ -16,6 +16,12 @@ public record PostedBuiltinTool : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Optional text passed to the supplemental LLM in place of the tool call result. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation if the Tool errors.
+    /// </summary>
+    [JsonPropertyName("fallback_content")]
+    public string? FallbackContent { get; set; }
+
+    /// <summary>
     /// Name of the built-in tool to use. Hume supports the following built-in tools:
     ///
     /// - **web_search:** enables EVI to search the web for up-to-date information when applicable.
@@ -25,12 +31,6 @@ public record PostedBuiltinTool : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("name")]
     public required PostedBuiltinToolName Name { get; set; }
-
-    /// <summary>
-    /// Optional text passed to the supplemental LLM in place of the tool call result. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation if the Tool errors.
-    /// </summary>
-    [JsonPropertyName("fallback_content")]
-    public string? FallbackContent { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

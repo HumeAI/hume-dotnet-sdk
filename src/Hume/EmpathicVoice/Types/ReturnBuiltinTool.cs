@@ -16,10 +16,10 @@ public record ReturnBuiltinTool : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Type of Tool. Either `BUILTIN` for natively implemented tools, like web search, or `FUNCTION` for user-defined tools.
+    /// Optional text passed to the supplemental LLM in place of the tool call result. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation if the Tool errors.
     /// </summary>
-    [JsonPropertyName("tool_type")]
-    public required ReturnBuiltinToolToolType ToolType { get; set; }
+    [JsonPropertyName("fallback_content")]
+    public string? FallbackContent { get; set; }
 
     /// <summary>
     /// Name applied to all versions of a particular Tool.
@@ -28,10 +28,10 @@ public record ReturnBuiltinTool : IJsonOnDeserialized
     public required string Name { get; set; }
 
     /// <summary>
-    /// Optional text passed to the supplemental LLM in place of the tool call result. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation if the Tool errors.
+    /// Type of Tool. Either `BUILTIN` for natively implemented tools, like web search, or `FUNCTION` for user-defined tools.
     /// </summary>
-    [JsonPropertyName("fallback_content")]
-    public string? FallbackContent { get; set; }
+    [JsonPropertyName("tool_type")]
+    public required ReturnBuiltinToolToolType ToolType { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

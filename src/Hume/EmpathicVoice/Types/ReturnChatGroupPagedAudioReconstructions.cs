@@ -16,16 +16,17 @@ public record ReturnChatGroupPagedAudioReconstructions : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// List of chat audio reconstructions returned for the specified page number and page size.
+    /// </summary>
+    [JsonPropertyName("audio_reconstructions_page")]
+    public IEnumerable<ReturnChatAudioReconstruction> AudioReconstructionsPage { get; set; } =
+        new List<ReturnChatAudioReconstruction>();
+
+    /// <summary>
     /// Identifier for the chat group. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
-
-    /// <summary>
-    /// Identifier for the user that owns this chat. Formatted as a UUID.
-    /// </summary>
-    [JsonPropertyName("user_id")]
-    public required string UserId { get; set; }
 
     /// <summary>
     /// Total number of chats in this chatgroup
@@ -50,12 +51,6 @@ public record ReturnChatGroupPagedAudioReconstructions : IJsonOnDeserialized
     public required int PageSize { get; set; }
 
     /// <summary>
-    /// The total number of pages in the collection.
-    /// </summary>
-    [JsonPropertyName("total_pages")]
-    public required int TotalPages { get; set; }
-
-    /// <summary>
     /// Indicates the order in which the paginated results are presented, based on their creation date.
     ///
     /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
@@ -64,11 +59,16 @@ public record ReturnChatGroupPagedAudioReconstructions : IJsonOnDeserialized
     public required ReturnChatGroupPagedAudioReconstructionsPaginationDirection PaginationDirection { get; set; }
 
     /// <summary>
-    /// List of chat audio reconstructions returned for the specified page number and page size.
+    /// The total number of pages in the collection.
     /// </summary>
-    [JsonPropertyName("audio_reconstructions_page")]
-    public IEnumerable<ReturnChatAudioReconstruction> AudioReconstructionsPage { get; set; } =
-        new List<ReturnChatAudioReconstruction>();
+    [JsonPropertyName("total_pages")]
+    public required int TotalPages { get; set; }
+
+    /// <summary>
+    /// Identifier for the user that owns this chat. Formatted as a UUID.
+    /// </summary>
+    [JsonPropertyName("user_id")]
+    public required string UserId { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

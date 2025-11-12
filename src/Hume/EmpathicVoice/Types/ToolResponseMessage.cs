@@ -58,7 +58,8 @@ public record ToolResponseMessage : IJsonOnDeserialized
     public string Type
     {
         get => "tool_response";
-        set => value.Assert(value == "tool_response", "'Type' must be " + "tool_response");
+        set =>
+            value.Assert(value == "tool_response", "'[object Object]' must be " + "tool_response");
     }
 
     [JsonIgnore]

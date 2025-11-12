@@ -39,6 +39,10 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.ClaudeSonnet4520250929
     );
 
+    public static readonly LanguageModelType ClaudeHaiku4520251001 = new(
+        Values.ClaudeHaiku4520251001
+    );
+
     public static readonly LanguageModelType UsAnthropicClaude35Haiku20241022V10 = new(
         Values.UsAnthropicClaude35Haiku20241022V10
     );
@@ -233,6 +237,8 @@ public readonly record struct LanguageModelType : IStringEnum
         public const string ClaudeSonnet420250514 = "claude-sonnet-4-20250514";
 
         public const string ClaudeSonnet4520250929 = "claude-sonnet-4-5-20250929";
+
+        public const string ClaudeHaiku4520251001 = "claude-haiku-4-5-20251001";
 
         public const string UsAnthropicClaude35Haiku20241022V10 =
             "us.anthropic.claude-3-5-haiku-20241022-v1:0";

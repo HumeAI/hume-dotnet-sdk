@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -49,7 +47,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/evi/configs",
                     Query = _query,
@@ -126,7 +124,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/configs/{0}",
@@ -204,13 +202,13 @@ public partial class ConfigsClient
                 request,
                 options,
                 ListConfigsInternalAsync,
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.ConfigsPage?.ToList(),
+                response => response.ConfigsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -264,7 +262,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/evi/configs",
                     Body = request,
@@ -343,13 +341,13 @@ public partial class ConfigsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListConfigVersionsInternalAsync(id, request, options, cancellationToken),
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.ConfigsPage?.ToList(),
+                response => response.ConfigsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -406,7 +404,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "v0/evi/configs/{0}",
@@ -474,7 +472,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "v0/evi/configs/{0}",
@@ -535,7 +533,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "v0/evi/configs/{0}",
@@ -596,7 +594,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/configs/{0}/version/{1}",
@@ -667,7 +665,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "v0/evi/configs/{0}/version/{1}",
@@ -734,7 +732,7 @@ public partial class ConfigsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "v0/evi/configs/{0}/version/{1}",

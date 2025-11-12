@@ -12,9 +12,15 @@ public record Timestamp : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The word or phoneme text that the timestamp corresponds to.
+    /// </summary>
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 
+    /// <summary>
+    /// The start and end timestamps for the word or phoneme in milliseconds.
+    /// </summary>
     [JsonPropertyName("time")]
     public required MillisecondInterval Time { get; set; }
 
