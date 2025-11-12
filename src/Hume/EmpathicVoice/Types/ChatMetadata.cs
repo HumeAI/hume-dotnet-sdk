@@ -52,7 +52,8 @@ public record ChatMetadata : IJsonOnDeserialized
     public string Type
     {
         get => "chat_metadata";
-        set => value.Assert(value == "chat_metadata", "'Type' must be " + "chat_metadata");
+        set =>
+            value.Assert(value == "chat_metadata", "'[object Object]' must be " + "chat_metadata");
     }
 
     [JsonIgnore]

@@ -96,7 +96,11 @@ public record SessionSettings : IJsonOnDeserialized
     public string Type
     {
         get => "session_settings";
-        set => value.Assert(value == "session_settings", "'Type' must be " + "session_settings");
+        set =>
+            value.Assert(
+                value == "session_settings",
+                "'[object Object]' must be " + "session_settings"
+            );
     }
 
     /// <summary>

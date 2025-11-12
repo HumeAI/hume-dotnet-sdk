@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -53,7 +51,7 @@ public partial class BatchClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/batch/jobs",
                     Query = _query,
@@ -107,7 +105,7 @@ public partial class BatchClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/batch/jobs",
                     Body = request,
@@ -156,7 +154,7 @@ public partial class BatchClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/batch/jobs/{0}",
@@ -208,7 +206,7 @@ public partial class BatchClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/batch/jobs/{0}/predictions",
@@ -257,7 +255,7 @@ public partial class BatchClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/batch/jobs/{0}/artifacts",
@@ -285,6 +283,11 @@ public partial class BatchClient
     /// <summary>
     /// Start a new batch inference job.
     /// </summary>
+    /// <example><code>
+    /// await client.ExpressionMeasurement.Batch.StartInferenceJobFromLocalFileAsync(
+    ///     new BatchStartInferenceJobFromLocalFileRequest()
+    /// );
+    /// </code></example>
     public async System.Threading.Tasks.Task<JobId> StartInferenceJobFromLocalFileAsync(
         BatchStartInferenceJobFromLocalFileRequest request,
         RequestOptions? options = null,
@@ -293,7 +296,7 @@ public partial class BatchClient
     {
         var multipartFormRequest_ = new MultipartFormRequest
         {
-            BaseUrl = _client.Options.BaseUrl,
+            BaseUrl = _client.Options.Environment.Base,
             Method = HttpMethod.Post,
             Path = "v0/batch/jobs",
             Options = options,

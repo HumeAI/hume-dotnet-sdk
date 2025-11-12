@@ -183,16 +183,135 @@ service:
                 voice:
                   name: Male English Actor
                   provider: HUME_AI
+    convertVoiceFile:
+      path: /v0/tts/voice_conversion/file
+      method: POST
+      source:
+        openapi: tts-openapi.json
+      display-name: Voice Conversion (Streamed File)
+      request:
+        name: ConvertVoiceFileRequest
+        body:
+          properties:
+            strip_headers:
+              type: optional<boolean>
+              docs: >-
+                If enabled, the audio for all the chunks of a generation, once
+                concatenated together, will constitute a single audio file.
+                Otherwise, if disabled, each chunk's audio will be its own audio
+                file, each with its own headers (if applicable).
+            audio: file
+            context:
+              type: optional<PostedContext>
+              docs: >-
+                Utterances to use as context for generating consistent speech
+                style and prosody across multiple requests. These will not be
+                converted to speech output.
+            voice: optional<PostedUtteranceVoice>
+            format:
+              type: optional<Format>
+              docs: Specifies the output audio file format.
+            include_timestamp_types:
+              type: optional<list<TimestampType>>
+              docs: The set of timestamp types to include in the response.
+        content-type: multipart/form-data
+      response:
+        docs: Successful Response
+        type: file
+        status-code: 200
+      errors:
+        - UnprocessableEntityError
+    convertVoiceJson:
+      path: /v0/tts/voice_conversion/json
+      method: POST
+      source:
+        openapi: tts-openapi.json
+      display-name: Voice Conversion (Streamed JSON)
+      request:
+        name: ConvertVoiceJsonRequest
+        body:
+          properties:
+            strip_headers:
+              type: optional<boolean>
+              docs: >-
+                If enabled, the audio for all the chunks of a generation, once
+                concatenated together, will constitute a single audio file.
+                Otherwise, if disabled, each chunk's audio will be its own audio
+                file, each with its own headers (if applicable).
+            audio: optional<file>
+            context:
+              type: optional<PostedContext>
+              docs: >-
+                Utterances to use as context for generating consistent speech
+                style and prosody across multiple requests. These will not be
+                converted to speech output.
+            voice: optional<PostedUtteranceVoice>
+            format:
+              type: optional<Format>
+              docs: Specifies the output audio file format.
+            include_timestamp_types:
+              type: optional<list<TimestampType>>
+              docs: The set of timestamp types to include in the response.
+        content-type: multipart/form-data
+      response-stream:
+        docs: Successful Response
+        type: TtsOutput
+        format: json
+      errors:
+        - UnprocessableEntityError
+      examples:
+        - request: {}
+          response:
+            stream:
+              - audio: audio
+                audio_format: mp3
+                chunk_index: 1
+                generation_id: generation_id
+                is_last_chunk: true
+                request_id: request_id
+                snippet:
+                  audio: audio
+                  generation_id: generation_id
+                  id: id
+                  text: text
+                  timestamps:
+                    - text: text
+                      time:
+                        begin: 1
+                        end: 1
+                      type: word
+                  transcribed_text: transcribed_text
+                  utterance_index: 1
+                snippet_id: snippet_id
+                text: text
+                transcribed_text: transcribed_text
+                type: audio
+                utterance_index: 1
   source:
     openapi: tts-openapi.json
 types:
-  TtsOutput:
+  PostedContext:
     discriminated: false
+    docs: >-
+      Utterances to use as context for generating consistent speech style and
+      prosody across multiple requests. These will not be converted to speech
+      output.
     union:
-      - type: TimestampMessage
-      - type: SnippetAudioChunk
+      - type: PostedContextWithGenerationId
+      - type: PostedContextWithUtterances
     source:
       openapi: tts-openapi.json
+    inline: true
+  Format:
+    discriminated: false
+    docs: Specifies the output audio file format.
+    union:
+      - type: FormatMp3
+      - type: FormatPcm
+      - type: FormatWav
+    source:
+      openapi: tts-openapi.json
+    inline: true
   AudioFormatType:
     enum:
       - mp3
@@ -276,8 +395,7 @@ types:
       timestamp:
         type: Timestamp
         docs: A word or phoneme level timestamp for the generated audio.
-      type:
-        type: literal<"timestamp">
+      type: literal<"timestamp">
     source:
       openapi: tts-openapi.json
   SnippetAudioChunk:
@@ -318,8 +436,7 @@ types:
           The transcribed text of the generated audio of the parent snippet that
           this chunk corresponds to. It is only present if `instant_mode` is set
           to `false`.
-      type:
-        type: literal<"audio">
+      type: literal<"audio">
       utterance_index:
         type: optional<integer>
         docs: >-
@@ -329,9 +446,12 @@ types:
       openapi: tts-openapi.json
   Timestamp:
     properties:
-      text: string
+      text:
+        type: string
+        docs: The word or phoneme text that the timestamp corresponds to.
       time:
         type: MillisecondInterval
+        docs: The start and end timestamps for the word or phoneme in milliseconds.
       type:
         type: TimestampType
     source:
@@ -419,6 +539,59 @@ types:
         name: One
       - value: '2'
         name: Two
+    docs: >-
+      Selects the Octave model version used to synthesize speech for this
+      request. If you omit this field, Hume automatically routes the request to
+      the most appropriate model. Setting a specific version ensures stable and
+      repeatable behavior across requests.
+
+
+      Use `2` to opt into the latest Octave capabilities. When you specify
+      version `2`, you must also provide a `voice`. Requests that set `version:
+      2` without a voice will be rejected.
+
+
+      For a comparison of Octave versions, see the [Octave
+      versions](/docs/text-to-speech-tts/overview#octave-versions) section in
+      the TTS overview.
+    source:
+      openapi: tts-openapi.json
+  TtsOutput:
+    discriminated: false
+    union:
+      - type: SnippetAudioChunk
+      - type: TimestampMessage
+    source:
+      openapi: tts-openapi.json
+  Snippet:
+    properties:
+      audio:
+        type: string
+        docs: >-
+          The segmented audio output in the requested format, encoded as a
+          base64 string.
+      generation_id:
+        type: string
+        docs: The generation ID this snippet corresponds to.
+      id:
+        type: string
+        docs: A unique ID associated with this **Snippet**.
+      text:
+        type: string
+        docs: The text for this **Snippet**.
+      timestamps:
+        docs: >-
+          A list of word or phoneme level timestamps for the generated audio.
+          Timestamps are only returned for Octave 2 requests.
+        type: list<Timestamp>
+      transcribed_text:
+        type: optional<string>
+        docs: >-
+          The transcribed text of the generated audio. It is only present if
+          `instant_mode` is set to `false`.
+      utterance_index:
+        type: optional<integer>
+        docs: The index of the utterance in the request this snippet corresponds to.
     source:
       openapi: tts-openapi.json
   PostedContextWithGenerationId:
@@ -450,6 +623,13 @@ types:
         docs: >-
           The sample rate (`Hz`) of the generated audio. The default sample rate
           is `48000 Hz`.
+    source:
+      openapi: tts-openapi.json
+  ErrorResponse:
+    properties:
+      code: optional<string>
+      error: optional<string>
+      message: optional<string>
     source:
       openapi: tts-openapi.json
   ReturnGeneration:
@@ -493,28 +673,6 @@ types:
       type: literal<"mp3">
     source:
       openapi: tts-openapi.json
-  PostedContext:
-    discriminated: false
-    docs: >-
-      Utterances to use as context for generating consistent speech style and
-      prosody across multiple requests. These will not be converted to speech
-      output.
-    union:
-      - type: PostedContextWithGenerationId
-      - type: PostedContextWithUtterances
-    source:
-      openapi: tts-openapi.json
-    inline: true
-  Format:
-    discriminated: false
-    docs: Specifies the output audio file format.
-    union:
-      - type: FormatMp3
-      - type: FormatPcm
-      - type: FormatWav
-    source:
-      openapi: tts-openapi.json
-    inline: true
   PostedTts:
     properties:
       context:
@@ -528,10 +686,20 @@ types:
         docs: Specifies the output audio file format.
       include_timestamp_types:
         type: optional<list<TimestampType>>
-        docs: The set of timestamp types to include in the response.
+        docs: >-
+          The set of timestamp types to include in the response. Only supported
+          for Octave 2 requests.
       num_generations:
         type: optional<integer>
-        docs: Number of generations of the audio to produce.
+        docs: >-
+          Number of audio generations to produce from the input utterances.
+
+
+          Using `num_generations` enables faster processing than issuing
+          multiple sequential requests. Additionally, specifying
+          `num_generations` allows prosody continuation across all generations
+          without repeating context, ensuring each generation sounds slightly
+          different while maintaining contextual consistency.
         default: 1
         validation:
           min: 1
@@ -579,8 +747,20 @@ types:
       version:
         type: optional<OctaveVersion>
         docs: >-
-          The version of the Octave Model to use. 1 for the legacy model, 2 for
-          the new model.
+          Selects the Octave model version used to synthesize speech for this
+          request. If you omit this field, Hume automatically routes the request
+          to the most appropriate model. Setting a specific version ensures
+          stable and repeatable behavior across requests.
+
+
+          Use `2` to opt into the latest Octave capabilities. When you specify
+          version `2`, you must also provide a `voice`. Requests that set
+          `version: 2` without a voice will be rejected.
+
+
+          For a comparison of Octave versions, see the [Octave
+          versions](/docs/text-to-speech-tts/overview#octave-versions) section
+          in the TTS overview.
       instant_mode:
         type: optional<boolean>
         docs: >-
@@ -620,6 +800,7 @@ types:
   ReturnVoice:
     docs: An Octave voice available for text-to-speech
     properties:
+      compatible_octave_models: optional<list<string>>
       id:
         type: optional<string>
         docs: ID of the voice in the `Voice Library`.
@@ -639,35 +820,6 @@ types:
   FormatPcm:
     properties:
       type: literal<"pcm">
-    source:
-      openapi: tts-openapi.json
-  Snippet:
-    properties:
-      audio:
-        type: string
-        docs: >-
-          The segmented audio output in the requested format, encoded as a
-          base64 string.
-      generation_id:
-        type: string
-        docs: The generation ID this snippet corresponds to.
-      id:
-        type: string
-        docs: A unique ID associated with this **Snippet**.
-      text:
-        type: string
-        docs: The text for this **Snippet**.
-      timestamps:
-        docs: A list of word or phoneme level timestamps for the generated audio.
-        type: list<Timestamp>
-      transcribed_text:
-        type: optional<string>
-        docs: >-
-          The transcribed text of the generated audio. It is only present if
-          `instant_mode` is set to `false`.
-      utterance_index:
-        type: optional<integer>
-        docs: The index of the utterance in the request this snippet corresponds to.
     source:
       openapi: tts-openapi.json
   PostedUtterance:
@@ -743,13 +895,6 @@ types:
   FormatWav:
     properties:
       type: literal<"wav">
-    source:
-      openapi: tts-openapi.json
-  ErrorResponse:
-    properties:
-      error: optional<string>
-      message: optional<string>
-      code: optional<string>
     source:
       openapi: tts-openapi.json
   ReturnPagedVoices:

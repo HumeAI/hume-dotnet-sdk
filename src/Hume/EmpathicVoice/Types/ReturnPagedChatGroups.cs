@@ -16,6 +16,12 @@ public record ReturnPagedChatGroups : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// List of Chat Groups and their metadata returned for the specified `page_number` and `page_size`.
+    /// </summary>
+    [JsonPropertyName("chat_groups_page")]
+    public IEnumerable<ReturnChatGroup> ChatGroupsPage { get; set; } = new List<ReturnChatGroup>();
+
+    /// <summary>
     /// The page number of the returned list.
     ///
     /// This value corresponds to the `page_number` parameter specified in the request. Pagination uses zero-based indexing.
@@ -32,12 +38,6 @@ public record ReturnPagedChatGroups : IJsonOnDeserialized
     public required int PageSize { get; set; }
 
     /// <summary>
-    /// The total number of pages in the collection.
-    /// </summary>
-    [JsonPropertyName("total_pages")]
-    public required int TotalPages { get; set; }
-
-    /// <summary>
     /// Indicates the order in which the paginated results are presented, based on their creation date.
     ///
     /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
@@ -46,10 +46,10 @@ public record ReturnPagedChatGroups : IJsonOnDeserialized
     public required ReturnPagedChatGroupsPaginationDirection PaginationDirection { get; set; }
 
     /// <summary>
-    /// List of Chat Groups and their metadata returned for the specified `page_number` and `page_size`.
+    /// The total number of pages in the collection.
     /// </summary>
-    [JsonPropertyName("chat_groups_page")]
-    public IEnumerable<ReturnChatGroup> ChatGroupsPage { get; set; } = new List<ReturnChatGroup>();
+    [JsonPropertyName("total_pages")]
+    public required int TotalPages { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

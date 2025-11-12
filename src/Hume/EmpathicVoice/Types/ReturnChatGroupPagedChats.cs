@@ -16,16 +16,28 @@ public record ReturnChatGroupPagedChats : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Identifier for the Chat Group. Any Chat resumed from this Chat Group will have the same `chat_group_id`. Formatted as a UUID.
+    /// Denotes whether there is an active Chat associated with this Chat Group.
     /// </summary>
-    [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    [JsonPropertyName("active")]
+    public bool? Active { get; set; }
+
+    /// <summary>
+    /// List of Chats for the specified `page_number` and `page_size`.
+    /// </summary>
+    [JsonPropertyName("chats_page")]
+    public IEnumerable<ReturnChat> ChatsPage { get; set; } = new List<ReturnChat>();
 
     /// <summary>
     /// Time at which the first Chat in this Chat Group was created. Measured in seconds since the Unix epoch.
     /// </summary>
     [JsonPropertyName("first_start_timestamp")]
     public required long FirstStartTimestamp { get; set; }
+
+    /// <summary>
+    /// Identifier for the Chat Group. Any Chat resumed from this Chat Group will have the same `chat_group_id`. Formatted as a UUID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
 
     /// <summary>
     /// Time at which the most recent Chat in this Chat Group was created. Measured in seconds since the Unix epoch.
@@ -56,12 +68,6 @@ public record ReturnChatGroupPagedChats : IJsonOnDeserialized
     public required int PageSize { get; set; }
 
     /// <summary>
-    /// The total number of pages in the collection.
-    /// </summary>
-    [JsonPropertyName("total_pages")]
-    public required int TotalPages { get; set; }
-
-    /// <summary>
     /// Indicates the order in which the paginated results are presented, based on their creation date.
     ///
     /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
@@ -70,16 +76,10 @@ public record ReturnChatGroupPagedChats : IJsonOnDeserialized
     public required ReturnChatGroupPagedChatsPaginationDirection PaginationDirection { get; set; }
 
     /// <summary>
-    /// List of Chats for the specified `page_number` and `page_size`.
+    /// The total number of pages in the collection.
     /// </summary>
-    [JsonPropertyName("chats_page")]
-    public IEnumerable<ReturnChat> ChatsPage { get; set; } = new List<ReturnChat>();
-
-    /// <summary>
-    /// Denotes whether there is an active Chat associated with this Chat Group.
-    /// </summary>
-    [JsonPropertyName("active")]
-    public bool? Active { get; set; }
+    [JsonPropertyName("total_pages")]
+    public required int TotalPages { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

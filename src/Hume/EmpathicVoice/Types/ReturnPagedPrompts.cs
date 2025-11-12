@@ -32,16 +32,16 @@ public record ReturnPagedPrompts : IJsonOnDeserialized
     public required int PageSize { get; set; }
 
     /// <summary>
-    /// The total number of pages in the collection.
-    /// </summary>
-    [JsonPropertyName("total_pages")]
-    public required int TotalPages { get; set; }
-
-    /// <summary>
     /// List of prompts returned for the specified `page_number` and `page_size`.
     /// </summary>
     [JsonPropertyName("prompts_page")]
     public IEnumerable<ReturnPrompt> PromptsPage { get; set; } = new List<ReturnPrompt>();
+
+    /// <summary>
+    /// The total number of pages in the collection.
+    /// </summary>
+    [JsonPropertyName("total_pages")]
+    public required int TotalPages { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

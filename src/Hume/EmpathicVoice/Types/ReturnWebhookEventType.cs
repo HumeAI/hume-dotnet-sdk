@@ -11,6 +11,8 @@ public readonly record struct ReturnWebhookEventType : IStringEnum
 
     public static readonly ReturnWebhookEventType ChatEnded = new(Values.ChatEnded);
 
+    public static readonly ReturnWebhookEventType ToolCall = new(Values.ToolCall);
+
     public ReturnWebhookEventType(string value)
     {
         Value = value;
@@ -61,5 +63,7 @@ public readonly record struct ReturnWebhookEventType : IStringEnum
         public const string ChatStarted = "chat_started";
 
         public const string ChatEnded = "chat_ended";
+
+        public const string ToolCall = "tool_call";
     }
 }

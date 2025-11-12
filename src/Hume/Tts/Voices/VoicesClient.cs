@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -42,7 +40,7 @@ public partial class VoicesClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/tts/voices",
                     Query = _query,
@@ -115,13 +113,13 @@ public partial class VoicesClient
                 request,
                 options,
                 ListInternalAsync,
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.VoicesPage?.ToList(),
+                response => response.VoicesPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -149,7 +147,7 @@ public partial class VoicesClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Post,
                     Path = "v0/tts/voices",
                     Body = request,
@@ -214,7 +212,7 @@ public partial class VoicesClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Delete,
                     Path = "v0/tts/voices",
                     Query = _query,

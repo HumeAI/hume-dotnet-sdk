@@ -16,16 +16,16 @@ public record PostedTimeoutSpec : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Boolean indicating if this event message is enabled.
-    /// </summary>
-    [JsonPropertyName("enabled")]
-    public required bool Enabled { get; set; }
-
-    /// <summary>
     /// Duration in seconds for the timeout.
     /// </summary>
     [JsonPropertyName("duration_secs")]
     public int? DurationSecs { get; set; }
+
+    /// <summary>
+    /// Boolean indicating if this event message is enabled.
+    /// </summary>
+    [JsonPropertyName("enabled")]
+    public required bool Enabled { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

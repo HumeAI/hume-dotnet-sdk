@@ -17,6 +17,8 @@ public readonly record struct Role : IStringEnum
 
     public static readonly Role Tool = new(Values.Tool);
 
+    public static readonly Role Context = new(Values.Context);
+
     public Role(string value)
     {
         Value = value;
@@ -71,5 +73,7 @@ public readonly record struct Role : IStringEnum
         public const string All = "all";
 
         public const string Tool = "tool";
+
+        public const string Context = "context";
     }
 }

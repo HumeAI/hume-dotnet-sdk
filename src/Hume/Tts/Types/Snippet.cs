@@ -37,7 +37,7 @@ public record Snippet : IJsonOnDeserialized
     public required string Text { get; set; }
 
     /// <summary>
-    /// A list of word or phoneme level timestamps for the generated audio.
+    /// A list of word or phoneme level timestamps for the generated audio. Timestamps are only returned for Octave 2 requests.
     /// </summary>
     [JsonPropertyName("timestamps")]
     public IEnumerable<Timestamp> Timestamps { get; set; } = new List<Timestamp>();

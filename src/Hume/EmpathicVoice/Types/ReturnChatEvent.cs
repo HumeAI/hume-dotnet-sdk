@@ -16,22 +16,42 @@ public record ReturnChatEvent : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Identifier for a Chat Event. Formatted as a UUID.
-    /// </summary>
-    [JsonPropertyName("id")]
-    public required string Id { get; set; }
-
-    /// <summary>
     /// Identifier for the Chat this event occurred in. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("chat_id")]
     public required string ChatId { get; set; }
 
     /// <summary>
-    /// Time at which the Chat Event occurred. Measured in seconds since the Unix epoch.
+    /// Stringified JSON containing the prosody model inference results.
+    ///
+    /// EVI uses the prosody model to measure 48 expressions related to speech and vocal characteristics. These results contain a detailed emotional and tonal analysis of the audio. Scores typically range from 0 to 1, with higher values indicating a stronger confidence level in the measured attribute.
     /// </summary>
-    [JsonPropertyName("timestamp")]
-    public required long Timestamp { get; set; }
+    [JsonPropertyName("emotion_features")]
+    public string? EmotionFeatures { get; set; }
+
+    /// <summary>
+    /// Identifier for a Chat Event. Formatted as a UUID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    /// <summary>
+    /// The text of the Chat Event. This field contains the message content for each event type listed in the `type` field.
+    /// </summary>
+    [JsonPropertyName("message_text")]
+    public string? MessageText { get; set; }
+
+    /// <summary>
+    /// Stringified JSON with additional metadata about the chat event.
+    /// </summary>
+    [JsonPropertyName("metadata")]
+    public string? Metadata { get; set; }
+
+    /// <summary>
+    /// Identifier for a related chat event. Currently only seen on ASSISTANT_PROSODY events, to point back to the ASSISTANT_MESSAGE that generated these prosody scores
+    /// </summary>
+    [JsonPropertyName("related_event_id")]
+    public string? RelatedEventId { get; set; }
 
     /// <summary>
     /// The role of the entity which generated the Chat Event. There are four possible values:
@@ -42,6 +62,12 @@ public record ReturnChatEvent : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("role")]
     public required ReturnChatEventRole Role { get; set; }
+
+    /// <summary>
+    /// Time at which the Chat Event occurred. Measured in seconds since the Unix epoch.
+    /// </summary>
+    [JsonPropertyName("timestamp")]
+    public required long Timestamp { get; set; }
 
     /// <summary>
     /// Type of Chat Event. There are eleven Chat Event types:
@@ -59,26 +85,6 @@ public record ReturnChatEvent : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("type")]
     public required ReturnChatEventType Type { get; set; }
-
-    /// <summary>
-    /// The text of the Chat Event. This field contains the message content for each event type listed in the `type` field.
-    /// </summary>
-    [JsonPropertyName("message_text")]
-    public string? MessageText { get; set; }
-
-    /// <summary>
-    /// Stringified JSON containing the prosody model inference results.
-    ///
-    /// EVI uses the prosody model to measure 48 expressions related to speech and vocal characteristics. These results contain a detailed emotional and tonal analysis of the audio. Scores typically range from 0 to 1, with higher values indicating a stronger confidence level in the measured attribute.
-    /// </summary>
-    [JsonPropertyName("emotion_features")]
-    public string? EmotionFeatures { get; set; }
-
-    /// <summary>
-    /// Stringified JSON with additional metadata about the chat event.
-    /// </summary>
-    [JsonPropertyName("metadata")]
-    public string? Metadata { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

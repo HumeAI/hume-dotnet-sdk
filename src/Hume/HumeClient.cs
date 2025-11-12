@@ -18,6 +18,7 @@ public partial class HumeClient
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "Hume" },
                 { "X-Fern-SDK-Version", Version.Current },
+                { "User-Agent", "Hume/0.2.3" },
             }
         );
         clientOptions ??= new ClientOptions();
@@ -29,14 +30,14 @@ public partial class HumeClient
             }
         }
         _client = new RawClient(clientOptions);
-        Tts = new TtsClient(_client);
         EmpathicVoice = new EmpathicVoiceClient(_client);
+        Tts = new TtsClient(_client);
         ExpressionMeasurement = new ExpressionMeasurementClient(_client);
     }
 
-    public TtsClient Tts { get; }
-
     public EmpathicVoiceClient EmpathicVoice { get; }
+
+    public TtsClient Tts { get; }
 
     public ExpressionMeasurementClient ExpressionMeasurement { get; }
 }

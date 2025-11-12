@@ -33,7 +33,7 @@ public record PauseAssistantMessage : IJsonOnDeserialized
         set =>
             value.Assert(
                 value == "pause_assistant_message",
-                "'Type' must be " + "pause_assistant_message"
+                "'[object Object]' must be " + "pause_assistant_message"
             );
     }
 

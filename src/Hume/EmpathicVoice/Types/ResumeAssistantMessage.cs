@@ -33,7 +33,7 @@ public record ResumeAssistantMessage : IJsonOnDeserialized
         set =>
             value.Assert(
                 value == "resume_assistant_message",
-                "'Type' must be " + "resume_assistant_message"
+                "'[object Object]' must be " + "resume_assistant_message"
             );
     }
 

@@ -46,7 +46,7 @@ public record AudioOutput : IJsonOnDeserialized
     public string Type
     {
         get => "audio_output";
-        set => value.Assert(value == "audio_output", "'Type' must be " + "audio_output");
+        set => value.Assert(value == "audio_output", "'[object Object]' must be " + "audio_output");
     }
 
     [JsonIgnore]

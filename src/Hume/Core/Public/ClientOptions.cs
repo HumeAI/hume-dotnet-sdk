@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Net.Http;
 using Hume.Core;
 
 namespace Hume;
@@ -13,15 +11,15 @@ public partial class ClientOptions
     internal Headers Headers { get; init; } = new();
 
     /// <summary>
-    /// The Base URL for the API.
+    /// The Environment for the API.
     /// </summary>
-    public string BaseUrl { get;
+    public HumeClientEnvironment Environment { get;
 #if NET5_0_OR_GREATER
         init;
 #else
         set;
 #endif
-    } = HumeClientEnvironment.Production;
+    } = HumeClientEnvironment.Prod;
 
     /// <summary>
     /// The http client used to make requests.
@@ -75,7 +73,7 @@ public partial class ClientOptions
     {
         return new ClientOptions
         {
-            BaseUrl = BaseUrl,
+            Environment = Environment,
             HttpClient = HttpClient,
             MaxRetries = MaxRetries,
             Timeout = Timeout,

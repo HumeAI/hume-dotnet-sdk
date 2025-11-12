@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -45,7 +43,7 @@ public partial class ChatsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/evi/chats",
                     Query = _query,
@@ -118,7 +116,7 @@ public partial class ChatsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/chats/{0}",
@@ -199,13 +197,13 @@ public partial class ChatsClient
                 request,
                 options,
                 ListChatsInternalAsync,
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.ChatsPage?.ToList(),
+                response => response.ChatsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -248,13 +246,13 @@ public partial class ChatsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListChatEventsInternalAsync(id, request, options, cancellationToken),
-                request => request?.PageNumber ?? 0,
+                request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response?.EventsPage?.ToList(),
+                response => response.EventsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -278,7 +276,7 @@ public partial class ChatsClient
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
+                    BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "v0/evi/chats/{0}/audio",

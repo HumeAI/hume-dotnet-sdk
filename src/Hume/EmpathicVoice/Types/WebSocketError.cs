@@ -54,7 +54,7 @@ public record WebSocketError : IJsonOnDeserialized
     public string Type
     {
         get => "error";
-        set => value.Assert(value == "error", "'Type' must be " + "error");
+        set => value.Assert(value == "error", "'[object Object]' must be " + "error");
     }
 
     [JsonIgnore]

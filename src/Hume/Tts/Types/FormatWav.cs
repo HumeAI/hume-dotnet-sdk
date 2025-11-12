@@ -16,7 +16,7 @@ public record FormatWav : IJsonOnDeserialized
     public string Type
     {
         get => "wav";
-        set => value.Assert(value == "wav", "'Type' must be " + "wav");
+        set => value.Assert(value == "wav", "'[object Object]' must be " + "wav");
     }
 
     [JsonIgnore]

@@ -32,17 +32,17 @@ public record ReturnPagedUserDefinedTools : IJsonOnDeserialized
     public required int PageSize { get; set; }
 
     /// <summary>
-    /// The total number of pages in the collection.
-    /// </summary>
-    [JsonPropertyName("total_pages")]
-    public required int TotalPages { get; set; }
-
-    /// <summary>
     /// List of tools returned for the specified `page_number` and `page_size`.
     /// </summary>
     [JsonPropertyName("tools_page")]
     public IEnumerable<ReturnUserDefinedTool> ToolsPage { get; set; } =
         new List<ReturnUserDefinedTool>();
+
+    /// <summary>
+    /// The total number of pages in the collection.
+    /// </summary>
+    [JsonPropertyName("total_pages")]
+    public required int TotalPages { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
