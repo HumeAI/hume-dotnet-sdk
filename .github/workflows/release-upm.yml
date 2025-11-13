@@ -40,32 +40,32 @@ jobs:
 
       - name: Generate Unity SDK
         run: |
-          output=$(npx fern-api/make-unity-sdk --sln ./main/src/HumeApi.sln --target ./Packages/com.humeai.unity --package ./)
+          output=$(npx fern-api/make-unity-sdk --sln ./main/src/Hume.sln --target ./Packages/com.humeai.unity --package ./)
           echo "$output"
 
           upmversion=$(echo "$output" | grep 'UPM Version:' | awk '{print $NF}')
           upmpackage=$(echo "$output" | grep 'Created package:' | awk '{print $NF}')
-          
+
           # Validate that version was extracted
           if [ -z "$upmversion" ]; then
             echo "Error: Failed to extract UPM version from output"
             echo "Output was: $output"
             exit 1
           fi
-          
+
           # Validate that package path was extracted
           if [ -z "$upmpackage" ]; then
             echo "Error: Failed to extract UPM package path from output"
             echo "Output was: $output"
             exit 1
           fi
-          
+
           # Validate that package file exists
           if [ ! -f "$upmpackage" ]; then
             echo "Error: UPM package file not found at: $upmpackage"
             exit 1
           fi
-          
+
           echo "UPM_VERSION=$upmversion" >> $GITHUB_ENV
           echo "UPM_PACKAGE=$upmpackage" >> $GITHUB_ENV
           echo "Successfully extracted version: $upmversion"
@@ -81,12 +81,12 @@ jobs:
             echo "Error: UPM_VERSION environment variable is not set"
             exit 1
           fi
-          
+
           if [ -z "${{ env.UPM_PACKAGE }}" ]; then
             echo "Error: UPM_PACKAGE environment variable is not set"
             exit 1
           fi
-          
+
           git add ./Packages/com.humeai.unity
           if git diff --staged --quiet; then
             echo "No changes to commit"
@@ -102,7 +102,7 @@ jobs:
             echo "Error: UPM_VERSION environment variable is not set"
             exit 1
           fi
-          
+
           git tag "upm-v${{ env.UPM_VERSION }}"
           git push origin "upm-v${{ env.UPM_VERSION }}"
           echo "Successfully created and pushed tag: upm-v${{ env.UPM_VERSION }}"
@@ -117,9 +117,9 @@ jobs:
           release_name: Unity SDK UPM Package v${{ env.UPM_VERSION }}
           body: |
             Unity SDK UPM Package Release
-            
+
             Version: ${{ env.UPM_VERSION }}
-            
+
             This release contains the Unity Package Manager (UPM) package for the Hume AI Unity SDK.
           draft: false
           prerelease: false
@@ -132,4 +132,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.UPM_PACKAGE }}
           asset_name: com.humeai.unity-${{ env.UPM_VERSION }}.tgz
-          asset_content_type: application/gzip 
+          asset_content_type: application/gzip
