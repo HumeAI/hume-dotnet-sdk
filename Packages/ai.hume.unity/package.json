@@ -1,7 +1,7 @@
 {
   "name": "ai.hume.unity",
   "displayName": "Hume",
-  "version": "0.1.0",
+  "version": "0.2.3",
   "description": "Unity SDK for HumeAI",
   "author": "hello@hume.ai",
   "license": "MIT",
