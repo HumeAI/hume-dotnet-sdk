@@ -46,10 +46,10 @@ jobs:
           license: 'MIT'
           changelogUrl: 'https://github.com/HumeAI/hume-dotnet-sdk/releases'
           documentationUrl: 'https://github.com/HumeAI/hume-dotnet-sdk/blob/HEAD/./reference.md'
-          packageScope: 'com.humeai'
+          packageScope: 'ai.hume'
           repoUrl: 'https://github.com/HumeAI/hume-dotnet-sdk'
         run: |
-          output=$(npx fern-api/make-unity-sdk --sln ./main/src/Hume.sln --target ./Packages/com.humeai.unity --package ./)
+          output=$(npx fern-api/make-unity-sdk --sln ./main/src/Hume.sln --target ./Packages/ai.hume.unity --package ./)
           echo "$output"
 
           upmversion=$(echo "$output" | grep 'UPM Version:' | awk '{print $NF}')
@@ -96,7 +96,7 @@ jobs:
             exit 1
           fi
 
-          git add ./Packages/com.humeai.unity
+          git add ./Packages/ai.hume.unity
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
@@ -140,5 +140,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.UPM_PACKAGE }}
-          asset_name: com.humeai.unity-${{ env.UPM_VERSION }}.tgz
+          asset_name: ai.hume.unity-${{ env.UPM_VERSION }}.tgz
           asset_content_type: application/gzip
