@@ -39,6 +39,15 @@ jobs:
         run: git worktree add ./main main
 
       - name: Generate Unity SDK
+        env:
+          company: 'Hume AI'
+          description: 'The Hume C# library provides convenient access to the Hume APIs from C#'
+          author: 'Hume AI'
+          license: 'MIT'
+          changelogUrl: 'https://github.com/HumeAI/hume-dotnet-sdk/releases'
+          documentationUrl: 'https://github.com/HumeAI/hume-dotnet-sdk/blob/HEAD/./reference.md'
+          packageScope: 'com.humeai'
+          repoUrl: 'https://github.com/HumeAI/hume-dotnet-sdk'
         run: |
           output=$(npx fern-api/make-unity-sdk --sln ./main/src/Hume.sln --target ./Packages/com.humeai.unity --package ./)
           echo "$output"
