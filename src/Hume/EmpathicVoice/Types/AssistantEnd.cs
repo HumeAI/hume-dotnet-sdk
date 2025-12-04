@@ -6,7 +6,7 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is an assistant end message.
+/// **Indicates the conclusion of the assistant's response**, signaling that the assistant has finished speaking for the current conversational turn.
 /// </summary>
 [Serializable]
 public record AssistantEnd : IJsonOnDeserialized
@@ -30,8 +30,7 @@ public record AssistantEnd : IJsonOnDeserialized
     public string Type
     {
         get => "assistant_end";
-        set =>
-            value.Assert(value == "assistant_end", "'[object Object]' must be " + "assistant_end");
+        set => value.Assert(value == "assistant_end", "'Type' must be " + "assistant_end");
     }
 
     [JsonIgnore]

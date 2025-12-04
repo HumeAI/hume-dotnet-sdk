@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -198,13 +200,13 @@ public partial class ChatGroupsClient
                 request,
                 options,
                 ListChatGroupsInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.ChatGroupsPage?.ToList(),
+                response => response?.ChatGroupsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -423,13 +425,13 @@ public partial class ChatGroupsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListChatGroupEventsInternalAsync(id, request, options, cancellationToken),
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.EventsPage?.ToList(),
+                response => response?.EventsPage?.ToList(),
                 null,
                 cancellationToken
             )

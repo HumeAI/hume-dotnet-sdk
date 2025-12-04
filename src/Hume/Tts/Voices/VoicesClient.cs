@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -113,13 +115,13 @@ public partial class VoicesClient
                 request,
                 options,
                 ListInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.VoicesPage?.ToList(),
+                response => response?.VoicesPage?.ToList(),
                 null,
                 cancellationToken
             )

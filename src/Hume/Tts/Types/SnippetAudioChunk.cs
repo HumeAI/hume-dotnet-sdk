@@ -76,7 +76,7 @@ public record SnippetAudioChunk : IJsonOnDeserialized
     public string Type
     {
         get => "audio";
-        set => value.Assert(value == "audio", "'[object Object]' must be " + "audio");
+        set => value.Assert(value == "audio", "'Type' must be " + "audio");
     }
 
     /// <summary>

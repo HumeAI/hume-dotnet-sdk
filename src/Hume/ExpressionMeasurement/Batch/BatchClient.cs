@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -283,11 +285,6 @@ public partial class BatchClient
     /// <summary>
     /// Start a new batch inference job.
     /// </summary>
-    /// <example><code>
-    /// await client.ExpressionMeasurement.Batch.StartInferenceJobFromLocalFileAsync(
-    ///     new BatchStartInferenceJobFromLocalFileRequest()
-    /// );
-    /// </code></example>
     public async System.Threading.Tasks.Task<JobId> StartInferenceJobFromLocalFileAsync(
         BatchStartInferenceJobFromLocalFileRequest request,
         RequestOptions? options = null,
