@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is a user message.
+/// **Transcript of the user's message.** Contains the message role and content, along with a `from_text` field indicating if this message was inserted into the conversation as text from a `UserInput` message.
+///
+/// Includes an `interim` field indicating whether the transcript is provisional (words may be repeated or refined in subsequent `UserMessage` responses as additional audio is processed) or final and complete. Interim transcripts are only sent when the `verbose_transcription` query parameter is set to true in the initial handshake.
 /// </summary>
 [Serializable]
 public record UserMessage : IJsonOnDeserialized
@@ -71,7 +73,7 @@ public record UserMessage : IJsonOnDeserialized
     public string Type
     {
         get => "user_message";
-        set => value.Assert(value == "user_message", "'[object Object]' must be " + "user_message");
+        set => value.Assert(value == "user_message", "'Type' must be " + "user_message");
     }
 
     [JsonIgnore]

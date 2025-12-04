@@ -5,6 +5,19 @@
 
 The Hume C# library provides convenient access to the Hume APIs from C#.
 
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Reference](#reference)
+- [Usage](#usage)
+- [Exception Handling](#exception-handling)
+- [Pagination](#pagination)
+- [Advanced](#advanced)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+- [Contributing](#contributing)
+
 ## Requirements
 
 This SDK requires:
@@ -24,13 +37,12 @@ A full reference for this library is available [here](https://github.com/HumeAI/
 Instantiate and use the client with the following:
 
 ```csharp
-using Hume.EmpathicVoice;
+using Hume.Tts;
 using Hume;
 
 var client = new HumeClient("API_KEY");
-await client.EmpathicVoice.ControlPlane.SendAsync(
-    "chat_id",
-    new SessionSettings { Type = "session_settings" }
+await client.Tts.Voices.CreateAsync(
+    new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
 );
 ```
 
@@ -43,7 +55,7 @@ will be thrown.
 using Hume;
 
 try {
-    var response = await client.EmpathicVoice.ControlPlane.SendAsync(...);
+    var response = await client.Tts.Voices.CreateAsync(...);
 } catch (HumeClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -55,18 +67,12 @@ try {
 List endpoints are paginated. The SDK provides an async enumerable so that you can simply loop over the items:
 
 ```csharp
-using Hume.EmpathicVoice;
+using Hume.Tts;
 using Hume;
 
 var client = new HumeClient("API_KEY");
-var items = await client.EmpathicVoice.ChatGroups.ListChatGroupsAsync(
-    new ChatGroupsListChatGroupsRequest
-    {
-        PageNumber = 0,
-        PageSize = 1,
-        AscendingOrder = true,
-        ConfigId = "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
-    }
+var items = await client.Tts.Voices.ListAsync(
+    new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
 );
 
 await foreach (var item in items)
@@ -92,7 +98,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.EmpathicVoice.ControlPlane.SendAsync(
+var response = await client.Tts.Voices.CreateAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -105,41 +111,12 @@ var response = await client.EmpathicVoice.ControlPlane.SendAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.EmpathicVoice.ControlPlane.SendAsync(
+var response = await client.Tts.Voices.CreateAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
     }
 );
-```
-
-### Forward Compatible Enums
-
-This SDK uses forward-compatible enums that can handle unknown values gracefully.
-
-```csharp
-using Hume.EmpathicVoice;
-
-// Using a built-in value
-var builtInTool = BuiltInTool.WebSearch;
-
-// Using a custom value
-var customBuiltInTool = BuiltInTool.FromCustom("custom-value");
-
-// Using in a switch statement
-switch (builtInTool.Value)
-{
-    case BuiltInTool.Values.WebSearch:
-        Console.WriteLine("WebSearch");
-        break;
-    default:
-        Console.WriteLine($"Unknown value: {builtInTool.Value}");
-        break;
-}
-
-// Explicit casting
-string builtInToolString = (string)BuiltInTool.WebSearch;
-BuiltInTool builtInToolFromString = (BuiltInTool)"web_search";
 ```
 
 ## Contributing

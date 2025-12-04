@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is a tool call.
+/// **Indicates that the supplemental LLM has detected a need to invoke the specified tool.** This message is only received for user-defined function tools.
+///
+/// Contains the tool name, parameters (as a stringified JSON schema), whether a response is required from the developer (either in the form of a `ToolResponseMessage` or a `ToolErrorMessage`), the unique tool call ID for tracking the request and response, and the tool type. See our [Tool Use Guide](/docs/speech-to-speech-evi/features/tool-use) for further details.
 /// </summary>
 [Serializable]
 public record ToolCallMessage : IJsonOnDeserialized
@@ -28,13 +30,15 @@ public record ToolCallMessage : IJsonOnDeserialized
     public required string Name { get; set; }
 
     /// <summary>
-    /// Parameters of the tool call. Is a stringified JSON schema.
+    /// Parameters of the tool.
+    ///
+    /// These parameters define the inputs needed for the tool's execution, including the expected data type and description for each input field. Structured as a stringified JSON schema, this format ensures the tool receives data in the expected format.
     /// </summary>
     [JsonPropertyName("parameters")]
     public required string Parameters { get; set; }
 
     /// <summary>
-    /// Indicates whether a response to the tool call is required from the developer, either in the form of a [Tool Response message](/reference/empathic-voice-interface-evi/chat/chat#send.Tool%20Response%20Message.type) or a [Tool Error message](/reference/empathic-voice-interface-evi/chat/chat#send.Tool%20Error%20Message.type).
+    /// Indicates whether a response to the tool call is required from the developer, either in the form of a [Tool Response message](/reference/speech-to-speech-evi/chat#send.ToolResponseMessage) or a [Tool Error message](/reference/speech-to-speech-evi/chat#send.ToolErrorMessage).
     /// </summary>
     [JsonPropertyName("response_required")]
     public required bool ResponseRequired { get; set; }
@@ -51,7 +55,7 @@ public record ToolCallMessage : IJsonOnDeserialized
     /// Type of tool called. Either `builtin` for natively implemented tools, like web search, or `function` for user-defined tools.
     /// </summary>
     [JsonPropertyName("tool_type")]
-    public required ToolType ToolType { get; set; }
+    public ToolType? ToolType { get; set; }
 
     /// <summary>
     /// The type of message sent through the socket; for a Tool Call message, this must be `tool_call`.
@@ -59,7 +63,11 @@ public record ToolCallMessage : IJsonOnDeserialized
     /// This message indicates that the supplemental LLM has detected a need to invoke the specified tool.
     /// </summary>
     [JsonPropertyName("type")]
-    public string? Type { get; set; }
+    public string Type
+    {
+        get => "tool_call";
+        set => value.Assert(value == "tool_call", "'Type' must be " + "tool_call");
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

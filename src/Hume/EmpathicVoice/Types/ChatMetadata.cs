@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is a chat metadata message.
+/// **The first message received after establishing a connection with EVI**, containing important identifiers for the current Chat session.
+///
+/// Includes the Chat ID (which allows the Chat session to be tracked and referenced) and the Chat Group ID (used to resume a Chat when passed in the `resumed_chat_group_id` query parameter of a subsequent connection request, allowing EVI to continue the conversation from where it left off within the Chat Group).
 /// </summary>
 [Serializable]
 public record ChatMetadata : IJsonOnDeserialized
@@ -52,8 +54,7 @@ public record ChatMetadata : IJsonOnDeserialized
     public string Type
     {
         get => "chat_metadata";
-        set =>
-            value.Assert(value == "chat_metadata", "'[object Object]' must be " + "chat_metadata");
+        set => value.Assert(value == "chat_metadata", "'Type' must be " + "chat_metadata");
     }
 
     [JsonIgnore]

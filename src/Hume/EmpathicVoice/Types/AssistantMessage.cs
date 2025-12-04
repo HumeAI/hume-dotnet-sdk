@@ -6,7 +6,7 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is an assistant message.
+/// **Transcript of the assistant's message.** Contains the message role, content, and optionally tool call information including the tool name, parameters, response requirement status, tool call ID, and tool type.
 /// </summary>
 [Serializable]
 public record AssistantMessage : IJsonOnDeserialized
@@ -60,11 +60,7 @@ public record AssistantMessage : IJsonOnDeserialized
     public string Type
     {
         get => "assistant_message";
-        set =>
-            value.Assert(
-                value == "assistant_message",
-                "'[object Object]' must be " + "assistant_message"
-            );
+        set => value.Assert(value == "assistant_message", "'Type' must be " + "assistant_message");
     }
 
     [JsonIgnore]

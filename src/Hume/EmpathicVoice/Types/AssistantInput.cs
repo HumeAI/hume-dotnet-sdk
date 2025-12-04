@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the input is spoken by EVI.
+/// **Assistant text to synthesize into spoken audio and insert into the conversation.** EVI uses this text to generate spoken audio using our proprietary expressive text-to-speech model.
+///
+/// Our model adds appropriate emotional inflections and tones to the text based on the user's expressions and the context of the conversation. The synthesized audio is streamed back to the user as an Assistant Message.
 /// </summary>
 [Serializable]
 public record AssistantInput : IJsonOnDeserialized
@@ -36,11 +38,7 @@ public record AssistantInput : IJsonOnDeserialized
     public string Type
     {
         get => "assistant_input";
-        set =>
-            value.Assert(
-                value == "assistant_input",
-                "'[object Object]' must be " + "assistant_input"
-            );
+        set => value.Assert(value == "assistant_input", "'Type' must be " + "assistant_input");
     }
 
     [JsonIgnore]

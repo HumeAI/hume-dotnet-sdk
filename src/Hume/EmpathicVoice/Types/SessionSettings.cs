@@ -7,7 +7,9 @@ using OneOf;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// Settings for this chat session.
+/// **Settings for this chat session.** Session settings are temporary and apply only to the current Chat session.
+///
+/// These settings can be adjusted dynamically based on the requirements of each session to ensure optimal performance and user experience. See our [Session Settings Guide](/docs/speech-to-speech-evi/configuration/session-settings) for a complete list of configurable settings.
 /// </summary>
 [Serializable]
 public record SessionSettings : IJsonOnDeserialized
@@ -96,11 +98,7 @@ public record SessionSettings : IJsonOnDeserialized
     public string Type
     {
         get => "session_settings";
-        set =>
-            value.Assert(
-                value == "session_settings",
-                "'[object Object]' must be " + "session_settings"
-            );
+        set => value.Assert(value == "session_settings", "'Type' must be " + "session_settings");
     }
 
     /// <summary>

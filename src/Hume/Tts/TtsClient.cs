@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 using OneOf;
@@ -402,9 +406,6 @@ public partial class TtsClient
         }
     }
 
-    /// <example><code>
-    /// client.Tts.ConvertVoiceJsonAsync(new ConvertVoiceJsonRequest());
-    /// </code></example>
     public async IAsyncEnumerable<OneOf<SnippetAudioChunk, TimestampMessage>> ConvertVoiceJsonAsync(
         ConvertVoiceJsonRequest request,
         RequestOptions? options = null,

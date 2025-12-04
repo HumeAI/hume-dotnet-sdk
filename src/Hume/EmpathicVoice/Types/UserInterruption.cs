@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is an interruption.
+/// **Indicates the user has interrupted the assistant's response.** EVI detects the interruption in real-time and sends this message to signal the interruption event.
+///
+/// This message allows the system to stop the current audio playback, clear the audio queue, and prepare to handle new user input. Contains a Unix timestamp of when the user interruption was detected. For more details, see our [Interruptibility Guide](/docs/speech-to-speech-evi/features/interruptibility)
 /// </summary>
 [Serializable]
 public record UserInterruption : IJsonOnDeserialized
@@ -36,11 +38,7 @@ public record UserInterruption : IJsonOnDeserialized
     public string Type
     {
         get => "user_interruption";
-        set =>
-            value.Assert(
-                value == "user_interruption",
-                "'[object Object]' must be " + "user_interruption"
-            );
+        set => value.Assert(value == "user_interruption", "'Type' must be " + "user_interruption");
     }
 
     [JsonIgnore]

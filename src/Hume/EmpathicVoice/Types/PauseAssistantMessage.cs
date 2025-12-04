@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// Pause responses from EVI. Chat history is still saved and sent after resuming.
+/// **Pause responses from EVI.** Chat history is still saved and sent after resuming. Once this message is sent, EVI will not respond until a Resume Assistant message is sent.
+///
+/// When paused, EVI won't respond, but transcriptions of your audio inputs will still be recorded. See our [Pause Response Guide](/docs/speech-to-speech-evi/features/pause-responses) for further details.
 /// </summary>
 [Serializable]
 public record PauseAssistantMessage : IJsonOnDeserialized
@@ -33,7 +35,7 @@ public record PauseAssistantMessage : IJsonOnDeserialized
         set =>
             value.Assert(
                 value == "pause_assistant_message",
-                "'[object Object]' must be " + "pause_assistant_message"
+                "'Type' must be " + "pause_assistant_message"
             );
     }
 

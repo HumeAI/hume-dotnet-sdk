@@ -1055,9 +1055,9 @@ public class MultipartFormTests
                 .Value?.Trim('"') ?? throw new global::System.Exception("Boundary not found");
     }
 
-    private static Hume.Core.MultipartFormRequest CreateMultipartFormRequest()
+    private static MultipartFormRequest CreateMultipartFormRequest()
     {
-        return new Hume.Core.MultipartFormRequest
+        return new MultipartFormRequest
         {
             BaseUrl = "https://localhost",
             Method = HttpMethod.Post,
