@@ -1,4 +1,0 @@
-# Specify files that shouldn't be modified by Fern
-src/HumeApi.Test/Unit/MockServer/Tts/SynthesizeJsonStreamingTest.cs
-.github/workflows/release-upm.yml
-.github/workflows/release-nuget.yml
