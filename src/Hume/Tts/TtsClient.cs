@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 using OneOf;
@@ -257,6 +261,135 @@ public partial class TtsClient
         }
     }
 
+    public async System.Threading.Tasks.Task<object> TtsConversionStreamFileV0TtsStreamFileMultipartPostAsync(
+        TtsConversionStreamFileV0TtsStreamFileMultipartPostRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _query = new Dictionary<string, object>();
+        if (request.AccessToken != null)
+        {
+            _query["access_token"] = request.AccessToken;
+        }
+        var multipartFormRequest_ = new MultipartFormRequest
+        {
+            BaseUrl = _client.Options.Environment.Base,
+            Method = HttpMethod.Post,
+            Path = "v0/tts/stream/file/multipart",
+            Query = _query,
+            Options = options,
+        };
+        multipartFormRequest_.AddStringPart("context[generation_id]", request.ContextGenerationId);
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][description]",
+            request.ContextUtterancesNDescription
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][speed]",
+            request.ContextUtterancesNSpeed
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][text]",
+            request.ContextUtterancesNText
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][trailing_silence]",
+            request.ContextUtterancesNTrailingSilence
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][voice][id]",
+            request.ContextUtterancesNVoiceId
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][voice][name]",
+            request.ContextUtterancesNVoiceName
+        );
+        multipartFormRequest_.AddJsonPart(
+            "context[utterances][<n>][voice][provider]",
+            request.ContextUtterancesNVoiceProvider
+        );
+        multipartFormRequest_.AddStringPart("expand_description", request.ExpandDescription);
+        multipartFormRequest_.AddStringPart("filter_generations", request.FilterGenerations);
+        multipartFormRequest_.AddStringPart("format[type]", request.FormatType);
+        multipartFormRequest_.AddJsonPart(
+            "include_timestamp_types[<n>]",
+            request.IncludeTimestampTypesN
+        );
+        multipartFormRequest_.AddStringPart("instant_mode", request.InstantMode);
+        multipartFormRequest_.AddStringPart("model", request.Model);
+        multipartFormRequest_.AddStringPart("multi_speaker", request.MultiSpeaker);
+        multipartFormRequest_.AddStringPart("no_binary", request.NoBinary);
+        multipartFormRequest_.AddStringPart("num_generations", request.NumGenerations);
+        multipartFormRequest_.AddStringPart("split_utterances", request.SplitUtterances);
+        multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
+        multipartFormRequest_.AddFileParameterPart(
+            "utterances[<n>][audio]",
+            request.UtterancesNAudio
+        );
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][description]",
+            request.UtterancesNDescription
+        );
+        multipartFormRequest_.AddStringPart("utterances[<n>][speed]", request.UtterancesNSpeed);
+        multipartFormRequest_.AddStringPart("utterances[<n>][text]", request.UtterancesNText);
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][trailing_silence]",
+            request.UtterancesNTrailingSilence
+        );
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][voice][id]",
+            request.UtterancesNVoiceId
+        );
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][voice][name]",
+            request.UtterancesNVoiceName
+        );
+        multipartFormRequest_.AddJsonPart(
+            "utterances[<n>][voice][provider]",
+            request.UtterancesNVoiceProvider
+        );
+        multipartFormRequest_.AddJsonPart("version", request.Version);
+        var response = await _client
+            .SendRequestAsync(multipartFormRequest_, cancellationToken)
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                return JsonUtils.Deserialize<object>(responseBody)!;
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientException("Failed to deserialize response", e);
+            }
+        }
+
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
     /// <summary>
     /// Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
     ///
@@ -349,6 +482,139 @@ public partial class TtsClient
         }
     }
 
+    public async System.Threading.Tasks.Task<
+        OneOf<SnippetAudioChunk, TimestampMessage>
+    > TtsConversionStreamJsonV0TtsStreamJsonMultipartPostAsync(
+        TtsConversionStreamJsonV0TtsStreamJsonMultipartPostRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _query = new Dictionary<string, object>();
+        if (request.AccessToken != null)
+        {
+            _query["access_token"] = request.AccessToken;
+        }
+        var multipartFormRequest_ = new MultipartFormRequest
+        {
+            BaseUrl = _client.Options.Environment.Base,
+            Method = HttpMethod.Post,
+            Path = "v0/tts/stream/json/multipart",
+            Query = _query,
+            Options = options,
+        };
+        multipartFormRequest_.AddStringPart("context[generation_id]", request.ContextGenerationId);
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][description]",
+            request.ContextUtterancesNDescription
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][speed]",
+            request.ContextUtterancesNSpeed
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][text]",
+            request.ContextUtterancesNText
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][trailing_silence]",
+            request.ContextUtterancesNTrailingSilence
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][voice][id]",
+            request.ContextUtterancesNVoiceId
+        );
+        multipartFormRequest_.AddStringPart(
+            "context[utterances][<n>][voice][name]",
+            request.ContextUtterancesNVoiceName
+        );
+        multipartFormRequest_.AddJsonPart(
+            "context[utterances][<n>][voice][provider]",
+            request.ContextUtterancesNVoiceProvider
+        );
+        multipartFormRequest_.AddStringPart("expand_description", request.ExpandDescription);
+        multipartFormRequest_.AddStringPart("filter_generations", request.FilterGenerations);
+        multipartFormRequest_.AddStringPart("format[type]", request.FormatType);
+        multipartFormRequest_.AddJsonPart(
+            "include_timestamp_types[<n>]",
+            request.IncludeTimestampTypesN
+        );
+        multipartFormRequest_.AddStringPart("instant_mode", request.InstantMode);
+        multipartFormRequest_.AddStringPart("model", request.Model);
+        multipartFormRequest_.AddStringPart("multi_speaker", request.MultiSpeaker);
+        multipartFormRequest_.AddStringPart("no_binary", request.NoBinary);
+        multipartFormRequest_.AddStringPart("num_generations", request.NumGenerations);
+        multipartFormRequest_.AddStringPart("split_utterances", request.SplitUtterances);
+        multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
+        multipartFormRequest_.AddFileParameterPart(
+            "utterances[<n>][audio]",
+            request.UtterancesNAudio
+        );
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][description]",
+            request.UtterancesNDescription
+        );
+        multipartFormRequest_.AddStringPart("utterances[<n>][speed]", request.UtterancesNSpeed);
+        multipartFormRequest_.AddStringPart("utterances[<n>][text]", request.UtterancesNText);
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][trailing_silence]",
+            request.UtterancesNTrailingSilence
+        );
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][voice][id]",
+            request.UtterancesNVoiceId
+        );
+        multipartFormRequest_.AddStringPart(
+            "utterances[<n>][voice][name]",
+            request.UtterancesNVoiceName
+        );
+        multipartFormRequest_.AddJsonPart(
+            "utterances[<n>][voice][provider]",
+            request.UtterancesNVoiceProvider
+        );
+        multipartFormRequest_.AddJsonPart("version", request.Version);
+        var response = await _client
+            .SendRequestAsync(multipartFormRequest_, cancellationToken)
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                return JsonUtils.Deserialize<OneOf<SnippetAudioChunk, TimestampMessage>>(
+                    responseBody
+                )!;
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientException("Failed to deserialize response", e);
+            }
+        }
+
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
     public async System.Threading.Tasks.Task<System.IO.Stream> ConvertVoiceFileAsync(
         ConvertVoiceFileRequest request,
         RequestOptions? options = null,
@@ -402,9 +668,6 @@ public partial class TtsClient
         }
     }
 
-    /// <example><code>
-    /// client.Tts.ConvertVoiceJsonAsync(new ConvertVoiceJsonRequest());
-    /// </code></example>
     public async IAsyncEnumerable<OneOf<SnippetAudioChunk, TimestampMessage>> ConvertVoiceJsonAsync(
         ConvertVoiceJsonRequest request,
         RequestOptions? options = null,

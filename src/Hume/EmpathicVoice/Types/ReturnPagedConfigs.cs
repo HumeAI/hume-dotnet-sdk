@@ -16,15 +16,13 @@ public record ReturnPagedConfigs : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// List of configs returned for the specified `page_number` and `page_size`.
+    /// List of prompts returned for the specified page number and page size.
     /// </summary>
     [JsonPropertyName("configs_page")]
     public IEnumerable<ReturnConfig>? ConfigsPage { get; set; }
 
     /// <summary>
-    /// The page number of the returned list.
-    ///
-    /// This value corresponds to the `page_number` parameter specified in the request. Pagination uses zero-based indexing.
+    /// The page number of the returned results.
     /// </summary>
     [JsonPropertyName("page_number")]
     public int? PageNumber { get; set; }

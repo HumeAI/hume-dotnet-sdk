@@ -15,26 +15,23 @@ public record ReturnChatGroup : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Denotes whether there is an active Chat associated with this Chat Group.
-    /// </summary>
     [JsonPropertyName("active")]
     public bool? Active { get; set; }
 
     /// <summary>
-    /// Time at which the first Chat in this Chat Group was created. Measured in seconds since the Unix epoch.
+    /// The timestamp when the first chat in this chat group started, formatted as a Unix epoch milliseconds.
     /// </summary>
     [JsonPropertyName("first_start_timestamp")]
     public required long FirstStartTimestamp { get; set; }
 
     /// <summary>
-    /// Identifier for the Chat Group. Any Chat resumed from this Chat Group will have the same `chat_group_id`. Formatted as a UUID.
+    /// Identifier for the chat group. Any chat resumed from this chat will have the same chat_group_id. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
     /// <summary>
-    /// The `chat_id` of the most recent Chat in this Chat Group. Formatted as a UUID.
+    /// The chat_id of the most recent chat in this chat group. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("most_recent_chat_id")]
     public string? MostRecentChatId { get; set; }
@@ -43,13 +40,13 @@ public record ReturnChatGroup : IJsonOnDeserialized
     public ReturnConfigSpec? MostRecentConfig { get; set; }
 
     /// <summary>
-    /// Time at which the most recent Chat in this Chat Group was created. Measured in seconds since the Unix epoch.
+    /// The timestamp when the most recent chat in this chat group started, formatted as a Unix epoch milliseconds.
     /// </summary>
     [JsonPropertyName("most_recent_start_timestamp")]
     public required long MostRecentStartTimestamp { get; set; }
 
     /// <summary>
-    /// The total number of Chats in this Chat Group.
+    /// The total number of chats in this chat group.
     /// </summary>
     [JsonPropertyName("num_chats")]
     public required int NumChats { get; set; }

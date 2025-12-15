@@ -16,16 +16,14 @@ public record ReturnWebhookSpec : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The list of events the specified URL is subscribed to.
-    ///
-    /// See our [webhooks guide](/docs/speech-to-speech-evi/configuration/build-a-configuration#supported-events) for more information on supported events.
+    /// Events this URL is subscribed to
     /// </summary>
     [JsonPropertyName("events")]
     public IEnumerable<ReturnWebhookEventType> Events { get; set; } =
         new List<ReturnWebhookEventType>();
 
     /// <summary>
-    /// The URL where event payloads will be sent. This must be a valid https URL to ensure secure communication. The server at this URL must accept POST requests with a JSON payload.
+    /// Webhook URL to send the event updates to
     /// </summary>
     [JsonPropertyName("url")]
     public required string Url { get; set; }

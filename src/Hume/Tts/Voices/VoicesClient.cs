@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -14,7 +16,7 @@ public partial class VoicesClient
     }
 
     /// <summary>
-    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://platform.hume.ai/tts/voice-library).
+    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
     /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedVoices> ListInternalAsync(
         VoicesListRequest request,
@@ -24,6 +26,7 @@ public partial class VoicesClient
     {
         var _query = new Dictionary<string, object>();
         _query["provider"] = request.Provider.Stringify();
+        _query["filter_tag"] = request.FilterTag;
         if (request.PageNumber != null)
         {
             _query["page_number"] = request.PageNumber.Value.ToString();
@@ -87,7 +90,7 @@ public partial class VoicesClient
     }
 
     /// <summary>
-    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://platform.hume.ai/tts/voice-library).
+    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
     /// </summary>
     /// <example><code>
     /// await client.Tts.Voices.ListAsync(
@@ -113,13 +116,13 @@ public partial class VoicesClient
                 request,
                 options,
                 ListInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.VoicesPage?.ToList(),
+                response => response?.VoicesPage?.ToList(),
                 null,
                 cancellationToken
             )

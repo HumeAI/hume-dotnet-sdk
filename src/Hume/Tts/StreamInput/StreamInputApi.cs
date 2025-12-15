@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
@@ -80,7 +81,7 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
     }
 
     /// <summary>
-    /// The set of timestamp types to include in the response.
+    /// The set of timestamp types to include in the response. Only supported for Octave 2 requests.
     /// </summary>
     public TimestampType? IncludeTimestampTypes
     {
@@ -268,7 +269,7 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
         public AudioFormatType? FormatType { get; set; }
 
         /// <summary>
-        /// The set of timestamp types to include in the response.
+        /// The set of timestamp types to include in the response. Only supported for Octave 2 requests.
         /// </summary>
         public TimestampType? IncludeTimestampTypes { get; set; }
 
