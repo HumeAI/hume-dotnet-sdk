@@ -9,7 +9,7 @@ public record VoicesListRequest
     /// <summary>
     /// Specify the voice provider to filter voices returned by the endpoint:
     ///
-    /// - **`HUME_AI`**: Lists preset, shared voices from Hume's [Voice Library](https://platform.hume.ai/tts/voice-library).
+    /// - **`HUME_AI`**: Lists preset, shared voices from Hume's [Voice Library](https://app.hume.ai/voices).
     /// - **`CUSTOM_VOICE`**: Lists custom voices created and saved to your account.
     /// </summary>
     [JsonIgnore]
@@ -33,6 +33,9 @@ public record VoicesListRequest
 
     [JsonIgnore]
     public bool? AscendingOrder { get; set; }
+
+    [JsonIgnore]
+    public IEnumerable<string> FilterTag { get; set; } = new List<string>();
 
     /// <inheritdoc />
     public override string ToString()

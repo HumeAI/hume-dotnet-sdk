@@ -6,7 +6,7 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// The Config associated with this Chat.
+/// An id/version number for a specific config version
 /// </summary>
 [Serializable]
 public record ReturnConfigSpec : IJsonOnDeserialized
@@ -22,11 +22,7 @@ public record ReturnConfigSpec : IJsonOnDeserialized
     public required string Id { get; set; }
 
     /// <summary>
-    /// Version number for a Config.
-    ///
-    /// Configs, Prompts, Custom Voices, and Tools are versioned. This versioning system supports iterative development, allowing you to progressively refine configurations and revert to previous versions if needed.
-    ///
-    /// Version numbers are integer values representing different iterations of the Config. Each update to the Config increments its version number.
+    /// Version number for a Config. Version numbers should be integers. The combination of configId and version number is unique.
     /// </summary>
     [JsonPropertyName("version")]
     public int? Version { get; set; }

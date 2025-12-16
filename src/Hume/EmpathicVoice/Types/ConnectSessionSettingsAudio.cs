@@ -18,19 +18,19 @@ public record ConnectSessionSettingsAudio : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Sets number of audio channels for audio input.
+    /// Number of audio channels.
     /// </summary>
     [JsonPropertyName("channels")]
     public int? Channels { get; set; }
 
     /// <summary>
-    /// Sets encoding format of the audio input, such as `linear16`.
+    /// Encoding format of the audio input, such as `linear16`.
     /// </summary>
     [JsonPropertyName("encoding")]
     public string? Encoding { get; set; }
 
     /// <summary>
-    /// Sets the sample rate for audio input. (Number of samples per second in the audio input, measured in Hertz.)
+    /// Audio sample rate. Number of samples per second in the audio input, measured in Hertz.
     /// </summary>
     [JsonPropertyName("sample_rate")]
     public int? SampleRate { get; set; }

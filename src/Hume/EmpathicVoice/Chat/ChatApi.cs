@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
@@ -80,6 +81,12 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
     public readonly Event<ToolErrorMessage> ToolErrorMessage = new();
 
     /// <summary>
+    /// Event handler for SessionSettings.
+    /// Use SessionSettings.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<SessionSettings> SessionSettings = new();
+
+    /// <summary>
     /// Constructor with options
     /// </summary>
     public ChatApi(ChatApi.Options options)
@@ -118,9 +125,9 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
     /// <summary>
     /// The unique identifier for an EVI configuration.
     ///
-    /// Include this ID in your connection request to equip EVI with the Prompt, Language Model, Voice, and Tools associated with the specified configuration. If omitted, EVI will apply [default configuration settings](/docs/speech-to-speech-evi/configuration/build-a-configuration#default-configuration).
+    /// Include this ID in your connection request to equip EVI with the Prompt, Language Model, Voice, and Tools associated with the specified configuration. If omitted, EVI will apply [default configuration settings](/docs/empathic-voice-interface-evi/configuration#default-configuration).
     ///
-    /// For help obtaining this ID, see our [Configuration Guide](/docs/speech-to-speech-evi/configuration).
+    /// For help obtaining this ID, see our [Configuration Guide](/docs/empathic-voice-interface-evi/configuration).
     /// </summary>
     public string? ConfigId
     {
@@ -171,11 +178,11 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
     ///
     /// There are three ways to obtain the Chat Group ID:
     ///
-    /// - [Chat Metadata](/reference/speech-to-speech-evi/chat#receive.ChatMetadata): Upon establishing a WebSocket connection with EVI, the user receives a Chat Metadata message. This message contains a `chat_group_id`, which can be used to resume conversations within this chat group in future sessions.
+    /// - [Chat Metadata](/reference/empathic-voice-interface-evi/chat/chat#receive.Chat%20Metadata.type): Upon establishing a WebSocket connection with EVI, the user receives a Chat Metadata message. This message contains a `chat_group_id`, which can be used to resume conversations within this chat group in future sessions.
     ///
-    /// - [List Chats endpoint](/reference/speech-to-speech-evi/chats/list-chats): Use the GET `/v0/evi/chats` endpoint to obtain the Chat Group ID of individual Chat sessions. This endpoint lists all available Chat sessions and their associated Chat Group ID.
+    /// - [List Chats endpoint](/reference/empathic-voice-interface-evi/chats/list-chats): Use the GET `/v0/evi/chats` endpoint to obtain the Chat Group ID of individual Chat sessions. This endpoint lists all available Chat sessions and their associated Chat Group ID.
     ///
-    /// - [List Chat Groups endpoint](/reference/speech-to-speech-evi/chat-groups/list-chat-groups): Use the GET `/v0/evi/chat_groups` endpoint to obtain the Chat Group IDs of all Chat Groups associated with an API key. This endpoint returns a list of all available chat groups.
+    /// - [List Chat Groups endpoint](/reference/empathic-voice-interface-evi/chat-groups/list-chat-groups): Use the GET `/v0/evi/chat_groups` endpoint to obtain the Chat Group IDs of all Chat Groups associated with an API key. This endpoint returns a list of all available chat groups.
     /// </summary>
     public string? ResumedChatGroupId
     {
@@ -188,7 +195,7 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
     }
 
     /// <summary>
-    /// A flag to enable verbose transcription. Set this query parameter to `true` to have unfinalized user transcripts be sent to the client as interim UserMessage messages. The [interim](/reference/speech-to-speech-evi/chat#receive.UserMessage.interim) field on a [UserMessage](/reference/speech-to-speech-evi/chat#receive.UserMessage) denotes whether the message is "interim" or "final."
+    /// A flag to enable verbose transcription. Set this query parameter to `"true"` to have unfinalized user transcripts be sent to the client as interim `UserMessage` messages.
     /// </summary>
     public bool? VerboseTranscription
     {
@@ -200,11 +207,6 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
             );
     }
 
-    /// <summary>
-    /// API key used for authenticating the client. If not provided, an `access_token` must be provided to authenticate.
-    ///
-    /// For more details, refer to the [Authentication Strategies Guide](/docs/introduction/api-key#authentication-strategies).
-    /// </summary>
     public string? ApiKey
     {
         get => ApiOptions.ApiKey;
@@ -354,6 +356,14 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
             }
         }
 
+        {
+            if (JsonUtils.TryDeserialize(json, out SessionSettings? message))
+            {
+                await SessionSettings.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
         await ExceptionOccurred
             .RaiseEvent(new Exception($"Unknown message: {json.ToString()}"))
             .ConfigureAwait(false);
@@ -375,6 +385,7 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
         ToolCallMessage.Dispose();
         ToolResponseMessage.Dispose();
         ToolErrorMessage.Dispose();
+        SessionSettings.Dispose();
     }
 
     /// <summary>
@@ -423,9 +434,9 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
         /// <summary>
         /// The unique identifier for an EVI configuration.
         ///
-        /// Include this ID in your connection request to equip EVI with the Prompt, Language Model, Voice, and Tools associated with the specified configuration. If omitted, EVI will apply [default configuration settings](/docs/speech-to-speech-evi/configuration/build-a-configuration#default-configuration).
+        /// Include this ID in your connection request to equip EVI with the Prompt, Language Model, Voice, and Tools associated with the specified configuration. If omitted, EVI will apply [default configuration settings](/docs/empathic-voice-interface-evi/configuration#default-configuration).
         ///
-        /// For help obtaining this ID, see our [Configuration Guide](/docs/speech-to-speech-evi/configuration).
+        /// For help obtaining this ID, see our [Configuration Guide](/docs/empathic-voice-interface-evi/configuration).
         /// </summary>
         public string? ConfigId { get; set; }
 
@@ -452,24 +463,19 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
         ///
         /// There are three ways to obtain the Chat Group ID:
         ///
-        /// - [Chat Metadata](/reference/speech-to-speech-evi/chat#receive.ChatMetadata): Upon establishing a WebSocket connection with EVI, the user receives a Chat Metadata message. This message contains a `chat_group_id`, which can be used to resume conversations within this chat group in future sessions.
+        /// - [Chat Metadata](/reference/empathic-voice-interface-evi/chat/chat#receive.Chat%20Metadata.type): Upon establishing a WebSocket connection with EVI, the user receives a Chat Metadata message. This message contains a `chat_group_id`, which can be used to resume conversations within this chat group in future sessions.
         ///
-        /// - [List Chats endpoint](/reference/speech-to-speech-evi/chats/list-chats): Use the GET `/v0/evi/chats` endpoint to obtain the Chat Group ID of individual Chat sessions. This endpoint lists all available Chat sessions and their associated Chat Group ID.
+        /// - [List Chats endpoint](/reference/empathic-voice-interface-evi/chats/list-chats): Use the GET `/v0/evi/chats` endpoint to obtain the Chat Group ID of individual Chat sessions. This endpoint lists all available Chat sessions and their associated Chat Group ID.
         ///
-        /// - [List Chat Groups endpoint](/reference/speech-to-speech-evi/chat-groups/list-chat-groups): Use the GET `/v0/evi/chat_groups` endpoint to obtain the Chat Group IDs of all Chat Groups associated with an API key. This endpoint returns a list of all available chat groups.
+        /// - [List Chat Groups endpoint](/reference/empathic-voice-interface-evi/chat-groups/list-chat-groups): Use the GET `/v0/evi/chat_groups` endpoint to obtain the Chat Group IDs of all Chat Groups associated with an API key. This endpoint returns a list of all available chat groups.
         /// </summary>
         public string? ResumedChatGroupId { get; set; }
 
         /// <summary>
-        /// A flag to enable verbose transcription. Set this query parameter to `true` to have unfinalized user transcripts be sent to the client as interim UserMessage messages. The [interim](/reference/speech-to-speech-evi/chat#receive.UserMessage.interim) field on a [UserMessage](/reference/speech-to-speech-evi/chat#receive.UserMessage) denotes whether the message is "interim" or "final."
+        /// A flag to enable verbose transcription. Set this query parameter to `"true"` to have unfinalized user transcripts be sent to the client as interim `UserMessage` messages.
         /// </summary>
         public bool? VerboseTranscription { get; set; }
 
-        /// <summary>
-        /// API key used for authenticating the client. If not provided, an `access_token` must be provided to authenticate.
-        ///
-        /// For more details, refer to the [Authentication Strategies Guide](/docs/introduction/api-key#authentication-strategies).
-        /// </summary>
         public string? ApiKey { get; set; }
 
         public required ConnectSessionSettings SessionSettings { get; set; }

@@ -36,11 +36,7 @@ public record UserInterruption : IJsonOnDeserialized
     public string Type
     {
         get => "user_interruption";
-        set =>
-            value.Assert(
-                value == "user_interruption",
-                "'[object Object]' must be " + "user_interruption"
-            );
+        set => value.Assert(value == "user_interruption", "'Type' must be " + "user_interruption");
     }
 
     [JsonIgnore]

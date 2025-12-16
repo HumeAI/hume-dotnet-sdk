@@ -30,36 +30,27 @@ public record ToolResponseMessage : IJsonOnDeserialized
     /// <summary>
     /// The unique identifier for a specific tool call instance.
     ///
-    /// This ID is used to track the request and response of a particular tool invocation, ensuring that the correct response is linked to the appropriate request. The specified `tool_call_id` must match the one received in the [Tool Call message](/reference/speech-to-speech-evi/chat#receive.ToolCallMessage.tool_call_id).
+    /// This ID is used to track the request and response of a particular tool invocation, ensuring that the correct response is linked to the appropriate request. The specified `tool_call_id` must match the one received in the [Tool Call message](/reference/empathic-voice-interface-evi/chat/chat#receive.Tool%20Call%20Message.tool_call_id).
     /// </summary>
     [JsonPropertyName("tool_call_id")]
     public required string ToolCallId { get; set; }
 
-    /// <summary>
-    /// Name of the tool.
-    ///
-    /// Include this optional field to help the supplemental LLM identify which tool generated the response. The specified `tool_name` must match the one received in the [Tool Call message](/reference/speech-to-speech-evi/chat#receive.ToolCallMessage).
-    /// </summary>
     [JsonPropertyName("tool_name")]
     public string? ToolName { get; set; }
 
-    /// <summary>
-    /// Type of tool called. Either `builtin` for natively implemented tools, like web search, or `function` for user-defined tools.
-    /// </summary>
     [JsonPropertyName("tool_type")]
     public ToolType? ToolType { get; set; }
 
     /// <summary>
     /// The type of message sent through the socket; for a Tool Response message, this must be `tool_response`.
     ///
-    /// Upon receiving a [Tool Call message](/reference/speech-to-speech-evi/chat#receive.ToolCallMessage) and successfully invoking the function, this message is sent to convey the result of the function call back to EVI.
+    /// Upon receiving a [Tool Call message](/reference/empathic-voice-interface-evi/chat/chat#receive.Tool%20Call%20Message.type) and successfully invoking the function, this message is sent to convey the result of the function call back to EVI.
     /// </summary>
     [JsonPropertyName("type")]
     public string Type
     {
         get => "tool_response";
-        set =>
-            value.Assert(value == "tool_response", "'[object Object]' must be " + "tool_response");
+        set => value.Assert(value == "tool_response", "'Type' must be " + "tool_response");
     }
 
     [JsonIgnore]
