@@ -1,6 +1,6 @@
 ﻿// ReSharper disable All
 #pragma warning disable
-namespace Hume.Core.Async.Exceptions;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// Custom exception related to WebSocket connection operations.

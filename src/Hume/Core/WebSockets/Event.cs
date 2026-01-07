@@ -1,5 +1,5 @@
 // ReSharper disable UnusedMember.Global
-namespace Hume.Core.Async.Events;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// Wraps an event that can be subscribed to and can be invoked.
