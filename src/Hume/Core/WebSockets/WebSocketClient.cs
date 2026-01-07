@@ -7,7 +7,7 @@ namespace Hume.Core.WebSockets;
 /// <summary>
 /// A WebSocket client that handles connection management, message sending, and event handling.
 /// </summary>
-public sealed class WebSocketClient : IAsyncDisposable, IDisposable, INotifyPropertyChanged
+internal sealed class WebSocketClient : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
     private ConnectionStatus _status = ConnectionStatus.Disconnected;
     private WebSocketConnection? _webSocket;
