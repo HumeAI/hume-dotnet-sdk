@@ -1,9 +1,7 @@
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
-using Hume.Core.Async;
-using Hume.Core.Async.Events;
-using Hume.Core.Async.Models;
+using Hume.Core.WebSockets;
 
 namespace Hume.ExpressionMeasurement.Stream;
 
@@ -44,12 +42,10 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// </summary>
     protected override Uri CreateUri()
     {
-        var uri = new UriBuilder(BaseUrl);
+        var uri = new UriBuilder(ApiOptions.BaseUrl);
         uri.Path = $"{uri.Path.TrimEnd('/')}/models";
         return uri.Uri;
     }
-
-    protected override void SetConnectionOptions(ClientWebSocketOptions options) { }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
@@ -116,11 +112,11 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// <summary>
     /// Options for the API client
     /// </summary>
-    public class Options : AsyncApiOptions
+    public class Options
     {
         /// <summary>
         /// The Websocket URL for the API connection.
         /// </summary>
-        override public string BaseUrl { get; set; } = "wss://api.hume.ai/v0/stream";
+        public string BaseUrl { get; set; } = "wss://api.hume.ai/v0/stream";
     }
 }

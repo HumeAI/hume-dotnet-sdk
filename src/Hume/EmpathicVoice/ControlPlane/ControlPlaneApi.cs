@@ -1,9 +1,7 @@
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
-using Hume.Core.Async;
-using Hume.Core.Async.Events;
-using Hume.Core.Async.Models;
+using Hume.Core.WebSockets;
 using OneOf;
 
 namespace Hume.EmpathicVoice;
@@ -86,49 +84,17 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
         : base(options) { }
 
     /// <summary>
-    /// The ID of the chat to connect to.
-    /// </summary>
-    public string ChatId
-    {
-        get => ApiOptions.ChatId;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.ChatId),
-                ApiOptions.ChatId = value
-            );
-    }
-
-    /// <summary>
-    /// Access token used for authenticating the client. If not provided, an `api_key` must be provided to authenticate.
-    ///
-    /// The access token is generated using both an API key and a Secret key, which provides an additional layer of security compared to using just an API key.
-    ///
-    /// For more details, refer to the [Authentication Strategies Guide](/docs/introduction/api-key#authentication-strategies).
-    /// </summary>
-    public string? AccessToken
-    {
-        get => ApiOptions.AccessToken;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.AccessToken),
-                ApiOptions.AccessToken = value
-            );
-    }
-
-    /// <summary>
     /// Creates the Uri for the websocket connection from the BaseUrl and parameters
     /// </summary>
     protected override Uri CreateUri()
     {
-        var uri = new UriBuilder(BaseUrl)
+        var uri = new UriBuilder(ApiOptions.BaseUrl)
         {
-            Query = new Query() { { "access_token", AccessToken } },
+            Query = new Query() { { "access_token", ApiOptions.AccessToken } },
         };
-        uri.Path = $"{uri.Path.TrimEnd('/')}/chat/{Uri.EscapeDataString(ChatId)}/connect";
+        uri.Path = $"{uri.Path.TrimEnd('/')}/chat/{Uri.EscapeDataString(ApiOptions.ChatId)}/connect";
         return uri.Uri;
     }
-
-    protected override void SetConnectionOptions(ClientWebSocketOptions options) { }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
@@ -277,12 +243,12 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
     /// <summary>
     /// Options for the API client
     /// </summary>
-    public class Options : AsyncApiOptions
+    public class Options
     {
         /// <summary>
         /// The Websocket URL for the API connection.
         /// </summary>
-        override public string BaseUrl { get; set; } = "evi";
+        public string BaseUrl { get; set; } = "evi";
 
         /// <summary>
         /// Access token used for authenticating the client. If not provided, an `api_key` must be provided to authenticate.

@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Hume.Core.Async;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// Represents a collection of query parameters that can be used to build URL query strings.

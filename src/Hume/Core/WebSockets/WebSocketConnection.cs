@@ -2,14 +2,11 @@
 #pragma warning disable
 using System.Net.WebSockets;
 using System.Text;
-using Hume.Core.Async.Exceptions;
-using Hume.Core.Async.Models;
-using Hume.Core.Async.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IO;
 
-namespace Hume.Core.Async;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// A simple websocket client with built-in reconnection and error handling

@@ -1,23 +1,18 @@
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
-using Hume.Core.Async.Events;
-using Hume.Core.Async.Models;
 
-namespace Hume.Core.Async;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// Abstract base class for asynchronous API implementations that use WebSocket connections.
 /// Provides common functionality for connection management, message sending, and event handling.
 /// </summary>
-/// <typeparam name="T">The type of API options that must inherit from AsyncApiOptions.</typeparam>
+/// <typeparam name="T">The type of API options.</typeparam>
 public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyPropertyChanged
-    where T : AsyncApiOptions
 {
-    private T _apiOptions;
-    private WebSocketConnection? _webSocket;
     private ConnectionStatus _status = ConnectionStatus.Disconnected;
+    private WebSocketConnection? _webSocket;
 
     /// <summary>
     /// Initializes a new instance of the AsyncApi class with the specified options.
@@ -25,7 +20,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <param name="options">The API configuration options.</param>
     protected internal AsyncApi(T options)
     {
-        _apiOptions = options;
+        ApiOptions = options;
     }
 
     /// <summary>
@@ -41,9 +36,10 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
 
     /// <summary>
     /// Configures the WebSocket connection options before establishing the connection.
+    /// Override this method to customize connection options.
     /// </summary>
     /// <param name="options">The WebSocket client options to configure.</param>
-    protected abstract void SetConnectionOptions(ClientWebSocketOptions options);
+    protected virtual void SetConnectionOptions(ClientWebSocketOptions options) { }
 
     /// <summary>
     /// Handles incoming text messages from the WebSocket connection.
@@ -67,30 +63,9 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     }
 
     /// <summary>
-    /// Gets or sets the API configuration options.
+    /// Gets the API configuration options.
     /// </summary>
-    public T ApiOptions
-    {
-        get => _apiOptions;
-        protected set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<T>.Default.Equals(_apiOptions, value),
-                _apiOptions = value
-            );
-    }
-
-    /// <summary>
-    /// Gets or sets the base URL for the API connection.
-    /// </summary>
-    public string BaseUrl
-    {
-        get => ApiOptions.BaseUrl;
-        protected set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.BaseUrl),
-                ApiOptions.BaseUrl = value
-            );
-    }
+    protected T ApiOptions { get; }
 
     /// <summary>
     /// Gets the current connection status of the WebSocket.
@@ -98,11 +73,25 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     public ConnectionStatus Status
     {
         get => _status;
-        protected set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<ConnectionStatus>.Default.Equals(_status, value),
-                _status = value
-            );
+        private set
+        {
+            if (_status != value)
+            {
+                _status = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Ensures the WebSocket is connected before sending.
+    /// </summary>
+    private void EnsureConnected()
+    {
+        this.Assert(
+            Status == ConnectionStatus.Connected,
+            $"Cannot send message when status is {Status}"
+        );
     }
 
     /// <summary>
@@ -113,10 +102,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
     protected internal Task SendInstant(string message)
     {
-        this.Assert(
-            Status == ConnectionStatus.Connected,
-            $"Cannot send message when status is {Status}"
-        );
+        EnsureConnected();
         return _webSocket!.SendInstant(message);
     }
 
@@ -128,10 +114,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
     protected internal Task SendInstant(Memory<byte> message)
     {
-        this.Assert(
-            Status == ConnectionStatus.Connected,
-            $"Cannot send message when status is {Status}"
-        );
+        EnsureConnected();
         return _webSocket!.SendInstant(message);
     }
 
@@ -143,10 +126,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
     protected internal Task SendInstant(ArraySegment<byte> message)
     {
-        this.Assert(
-            Status == ConnectionStatus.Connected,
-            $"Cannot send message when status is {Status}"
-        );
+        EnsureConnected();
         return _webSocket!.SendInstant(message);
     }
 
@@ -158,10 +138,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
     protected internal Task SendInstant(byte[] message)
     {
-        this.Assert(
-            Status == ConnectionStatus.Connected,
-            $"Cannot send message when status is {Status}"
-        );
+        EnsureConnected();
         return _webSocket!.SendInstant(message);
     }
 
@@ -244,7 +221,6 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
 
         _webSocket?.Dispose();
 
-        // the websocket connection is connecting to the target url
         Status = ConnectionStatus.Connecting;
 
         _webSocket = new WebSocketConnection(
@@ -281,8 +257,6 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
             Status = ConnectionStatus.Disconnected;
             throw;
         }
-
-        // connection has been established
     }
 
     /// <summary>
@@ -302,25 +276,16 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
 
     /// <summary>
     /// Event that is raised when a property value changes.
+    /// Currently only raised for the Status property.
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    /// Notifies subscribers of the PropertyChanged event if the property value has actually changed.
+    /// Raises the PropertyChanged event.
     /// </summary>
-    /// <typeparam name="TValue">The type of the property value.</typeparam>
-    /// <param name="isEqual">True if the old and new values are equal, false otherwise.</param>
-    /// <param name="value">The new property value.</param>
     /// <param name="propertyName">The name of the property that changed. Automatically populated by the compiler.</param>
-    protected void NotifyIfPropertyChanged<TValue>(
-        bool isEqual,
-        TValue value,
-        [CallerMemberName] string? propertyName = null
-    )
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        if (isEqual == false)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

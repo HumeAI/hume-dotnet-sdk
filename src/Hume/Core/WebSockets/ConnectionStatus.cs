@@ -1,4 +1,4 @@
-namespace Hume.Core.Async;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// Represents the current state of an asynchronous connection.

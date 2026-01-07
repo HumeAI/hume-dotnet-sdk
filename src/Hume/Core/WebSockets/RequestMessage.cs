@@ -1,6 +1,6 @@
 ﻿// ReSharper disable All
 // #pragma warning disable
-namespace Hume.Core.Async;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// Abstract base class for WebSocket request messages.
