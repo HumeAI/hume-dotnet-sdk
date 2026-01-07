@@ -5,67 +5,25 @@ using System.Runtime.CompilerServices;
 namespace Hume.Core.WebSockets;
 
 /// <summary>
-/// Abstract base class for asynchronous API implementations that use WebSocket connections.
-/// Provides common functionality for connection management, message sending, and event handling.
+/// A WebSocket client that handles connection management, message sending, and event handling.
 /// </summary>
-/// <typeparam name="T">The type of API options.</typeparam>
-public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyPropertyChanged
+public sealed class WebSocketClient : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
     private ConnectionStatus _status = ConnectionStatus.Disconnected;
     private WebSocketConnection? _webSocket;
+    private readonly Uri _uri;
+    private readonly Func<Stream, Task> _onTextMessage;
 
     /// <summary>
-    /// Initializes a new instance of the AsyncApi class with the specified options.
+    /// Initializes a new instance of the WebSocketClient class.
     /// </summary>
-    /// <param name="options">The API configuration options.</param>
-    protected internal AsyncApi(T options)
+    /// <param name="uri">The WebSocket URI to connect to.</param>
+    /// <param name="onTextMessage">Handler for incoming text messages.</param>
+    public WebSocketClient(Uri uri, Func<Stream, Task> onTextMessage)
     {
-        ApiOptions = options;
+        _uri = uri;
+        _onTextMessage = onTextMessage;
     }
-
-    /// <summary>
-    /// Creates the WebSocket URI for the connection.
-    /// </summary>
-    /// <returns>The URI to connect to.</returns>
-    protected abstract Uri CreateUri();
-
-    /// <summary>
-    /// Disposes any custom events specific to the derived class.
-    /// </summary>
-    protected abstract void DisposeEvents();
-
-    /// <summary>
-    /// Configures the WebSocket connection options before establishing the connection.
-    /// Override this method to customize connection options.
-    /// </summary>
-    /// <param name="options">The WebSocket client options to configure.</param>
-    protected virtual void SetConnectionOptions(ClientWebSocketOptions options) { }
-
-    /// <summary>
-    /// Handles incoming text messages from the WebSocket connection.
-    /// </summary>
-    /// <param name="stream">The stream containing the received text message.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    protected abstract Task OnTextMessage(Stream stream);
-
-    /// <summary>
-    /// Handles incoming binary messages from the WebSocket connection.
-    ///
-    /// Override this method to handle binary message content.
-    /// (Default behavior is to do nothing)
-    /// </summary>
-    /// <param name="stream">The stream containing the received binary message.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    protected virtual Task OnBinaryMessage(Stream stream)
-    {
-        stream.Dispose();
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Gets the API configuration options.
-    /// </summary>
-    protected T ApiOptions { get; }
 
     /// <summary>
     /// Gets the current connection status of the WebSocket.
@@ -100,7 +58,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <param name="message">The text message to send.</param>
     /// <returns>A task representing the asynchronous send operation.</returns>
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
-    protected internal Task SendInstant(string message)
+    public Task SendInstant(string message)
     {
         EnsureConnected();
         return _webSocket!.SendInstant(message);
@@ -112,7 +70,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <param name="message">The binary message to send as a Memory&lt;byte&gt;.</param>
     /// <returns>A task representing the asynchronous send operation.</returns>
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
-    protected internal Task SendInstant(Memory<byte> message)
+    public Task SendInstant(Memory<byte> message)
     {
         EnsureConnected();
         return _webSocket!.SendInstant(message);
@@ -124,7 +82,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <param name="message">The binary message to send as an ArraySegment&lt;byte&gt;.</param>
     /// <returns>A task representing the asynchronous send operation.</returns>
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
-    protected internal Task SendInstant(ArraySegment<byte> message)
+    public Task SendInstant(ArraySegment<byte> message)
     {
         EnsureConnected();
         return _webSocket!.SendInstant(message);
@@ -136,14 +94,14 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// <param name="message">The binary message to send as a byte array.</param>
     /// <returns>A task representing the asynchronous send operation.</returns>
     /// <exception cref="Exception">Thrown when the connection is not in Connected status.</exception>
-    protected internal Task SendInstant(byte[] message)
+    public Task SendInstant(byte[] message)
     {
         EnsureConnected();
         return _webSocket!.SendInstant(message);
     }
 
     /// <summary>
-    /// Asynchronously disposes the AsyncApi instance, closing any active connections and cleaning up resources.
+    /// Asynchronously disposes the WebSocketClient instance, closing any active connections and cleaning up resources.
     /// </summary>
     /// <returns>A ValueTask representing the asynchronous dispose operation.</returns>
     public async ValueTask DisposeAsync()
@@ -164,7 +122,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     }
 
     /// <summary>
-    /// Synchronously disposes the AsyncApi instance, closing any active connections and cleaning up resources.
+    /// Synchronously disposes the WebSocketClient instance, closing any active connections and cleaning up resources.
     /// </summary>
     public void Dispose()
     {
@@ -183,21 +141,20 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     }
 
     /// <summary>
-    /// Disposes all internal events and calls the derived class's DisposeEvents method.
+    /// Disposes all internal events.
     /// </summary>
     private void DisposeEventsInternal()
     {
         ExceptionOccurred.Dispose();
         Closed.Dispose();
         Connected.Dispose();
-        DisposeEvents();
     }
 
     /// <summary>
     /// Asynchronously closes the WebSocket connection with normal closure status.
     /// </summary>
     /// <returns>A task representing the asynchronous close operation.</returns>
-    public virtual async Task CloseAsync()
+    public async Task CloseAsync()
     {
         if (_webSocket != null)
         {
@@ -212,7 +169,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// </summary>
     /// <returns>A task representing the asynchronous connect operation.</returns>
     /// <exception cref="Exception">Thrown when the connection status is not Disconnected or when connection fails.</exception>
-    public virtual async Task ConnectAsync()
+    public async Task ConnectAsync()
     {
         this.Assert(
             Status == ConnectionStatus.Disconnected,
@@ -223,19 +180,15 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
 
         Status = ConnectionStatus.Connecting;
 
-        _webSocket = new WebSocketConnection(
-            CreateUri(),
-            () =>
-            {
-                var socket = new ClientWebSocket();
-                SetConnectionOptions(socket.Options);
-                return socket;
-            }
-        )
+        _webSocket = new WebSocketConnection(_uri, () => new ClientWebSocket())
         {
             ExceptionOccurred = ExceptionOccurred.RaiseEvent,
-            TextMessageReceived = OnTextMessage,
-            BinaryMessageReceived = OnBinaryMessage,
+            TextMessageReceived = _onTextMessage,
+            BinaryMessageReceived = stream =>
+            {
+                stream.Dispose();
+                return Task.CompletedTask;
+            },
             DisconnectionHappened = async d =>
             {
                 await Closed
@@ -284,7 +237,7 @@ public abstract class AsyncApi<T> : IAsyncDisposable, IDisposable, INotifyProper
     /// Raises the PropertyChanged event.
     /// </summary>
     /// <param name="propertyName">The name of the property that changed. Automatically populated by the compiler.</param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

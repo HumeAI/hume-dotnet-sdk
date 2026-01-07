@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
@@ -5,8 +6,11 @@ using Hume.Core.WebSockets;
 
 namespace Hume.ExpressionMeasurement.Stream;
 
-public partial class StreamApi : AsyncApi<StreamApi.Options>
+public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
+    private readonly Options _options;
+    private readonly WebSocketClient _client;
+
     /// <summary>
     /// Event handler for StreamModelPredictions.
     /// Use StreamModelPredictions.Subscribe(...) to receive messages.
@@ -35,22 +39,49 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// Constructor with options
     /// </summary>
     public StreamApi(StreamApi.Options options)
-        : base(options) { }
+    {
+        _options = options;
+
+        var uriBuilder = new UriBuilder(_options.BaseUrl);
+        uriBuilder.Path = $"{uriBuilder.Path.TrimEnd('/')}/models";
+
+        _client = new WebSocketClient(uriBuilder.Uri, OnTextMessage);
+    }
 
     /// <summary>
-    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
+    /// Gets the current connection status of the WebSocket.
     /// </summary>
-    protected override Uri CreateUri()
+    public ConnectionStatus Status => _client.Status;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is successfully established.
+    /// </summary>
+    public Event<Connected> Connected => _client.Connected;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is closed.
+    /// </summary>
+    public Event<Closed> Closed => _client.Closed;
+
+    /// <summary>
+    /// Event that is raised when an exception occurs during WebSocket operations.
+    /// </summary>
+    public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
+
+    /// <summary>
+    /// Event that is raised when a property value changes.
+    /// Currently only raised for the Status property.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged
     {
-        var uri = new UriBuilder(ApiOptions.BaseUrl);
-        uri.Path = $"{uri.Path.TrimEnd('/')}/models";
-        return uri.Uri;
+        add => _client.PropertyChanged += value;
+        remove => _client.PropertyChanged -= value;
     }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    protected async override System.Threading.Tasks.Task OnTextMessage(System.IO.Stream stream)
+    private async Task OnTextMessage(System.IO.Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -92,9 +123,19 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     }
 
     /// <summary>
+    /// Asynchronously establishes a WebSocket connection to the target URI.
+    /// </summary>
+    public Task ConnectAsync() => _client.ConnectAsync();
+
+    /// <summary>
+    /// Asynchronously closes the WebSocket connection with normal closure status.
+    /// </summary>
+    public Task CloseAsync() => _client.CloseAsync();
+
+    /// <summary>
     /// Disposes of event subscriptions
     /// </summary>
-    protected override void DisposeEvents()
+    private void DisposeEvents()
     {
         StreamModelPredictions.Dispose();
         StreamErrorMessage.Dispose();
@@ -102,11 +143,31 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     }
 
     /// <summary>
+    /// Asynchronously disposes the StreamApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _client.DisposeAsync();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Synchronously disposes the StreamApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public void Dispose()
+    {
+        _client.Dispose();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
     /// Sends a StreamModelsEndpointPayload message to the server
     /// </summary>
     public async System.Threading.Tasks.Task Send(StreamModelsEndpointPayload message)
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>

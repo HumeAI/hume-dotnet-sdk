@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
@@ -8,8 +9,11 @@ namespace Hume.Tts;
 /// <summary>
 /// Generate emotionally expressive speech.
 /// </summary>
-public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
+public partial class StreamInputApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
+    private readonly Options _options;
+    private readonly WebSocketClient _client;
+
     /// <summary>
     /// Event handler for SnippetAudioChunk.
     /// Use SnippetAudioChunk.Subscribe(...) to receive messages.
@@ -32,36 +36,63 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
     /// Constructor with options
     /// </summary>
     public StreamInputApi(StreamInputApi.Options options)
-        : base(options) { }
-
-    /// <summary>
-    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
-    /// </summary>
-    protected override Uri CreateUri()
     {
-        var uri = new UriBuilder(ApiOptions.BaseUrl)
+        _options = options;
+
+        var uriBuilder = new UriBuilder(_options.BaseUrl)
         {
             Query = new Query()
             {
-                { "access_token", ApiOptions.AccessToken },
-                { "context_generation_id", ApiOptions.ContextGenerationId },
-                { "format_type", ApiOptions.FormatType },
-                { "include_timestamp_types", ApiOptions.IncludeTimestampTypes },
-                { "instant_mode", ApiOptions.InstantMode },
-                { "no_binary", ApiOptions.NoBinary },
-                { "strip_headers", ApiOptions.StripHeaders },
-                { "version", ApiOptions.Version },
-                { "api_key", ApiOptions.ApiKey },
+                { "access_token", _options.AccessToken },
+                { "context_generation_id", _options.ContextGenerationId },
+                { "format_type", _options.FormatType },
+                { "include_timestamp_types", _options.IncludeTimestampTypes },
+                { "instant_mode", _options.InstantMode },
+                { "no_binary", _options.NoBinary },
+                { "strip_headers", _options.StripHeaders },
+                { "version", _options.Version },
+                { "api_key", _options.ApiKey },
             },
         };
-        uri.Path = $"{uri.Path.TrimEnd('/')}/stream/input";
-        return uri.Uri;
+        uriBuilder.Path = $"{uriBuilder.Path.TrimEnd('/')}/stream/input";
+
+        _client = new WebSocketClient(uriBuilder.Uri, OnTextMessage);
+    }
+
+    /// <summary>
+    /// Gets the current connection status of the WebSocket.
+    /// </summary>
+    public ConnectionStatus Status => _client.Status;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is successfully established.
+    /// </summary>
+    public Event<Connected> Connected => _client.Connected;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is closed.
+    /// </summary>
+    public Event<Closed> Closed => _client.Closed;
+
+    /// <summary>
+    /// Event that is raised when an exception occurs during WebSocket operations.
+    /// </summary>
+    public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
+
+    /// <summary>
+    /// Event that is raised when a property value changes.
+    /// Currently only raised for the Status property.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged
+    {
+        add => _client.PropertyChanged += value;
+        remove => _client.PropertyChanged -= value;
     }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    protected async override System.Threading.Tasks.Task OnTextMessage(Stream stream)
+    private async Task OnTextMessage(Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -95,12 +126,42 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
     }
 
     /// <summary>
+    /// Asynchronously establishes a WebSocket connection to the target URI.
+    /// </summary>
+    public Task ConnectAsync() => _client.ConnectAsync();
+
+    /// <summary>
+    /// Asynchronously closes the WebSocket connection with normal closure status.
+    /// </summary>
+    public Task CloseAsync() => _client.CloseAsync();
+
+    /// <summary>
     /// Disposes of event subscriptions
     /// </summary>
-    protected override void DisposeEvents()
+    private void DisposeEvents()
     {
         SnippetAudioChunk.Dispose();
         TimestampMessage.Dispose();
+    }
+
+    /// <summary>
+    /// Asynchronously disposes the StreamInputApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _client.DisposeAsync();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Synchronously disposes the StreamInputApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public void Dispose()
+    {
+        _client.Dispose();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -108,7 +169,7 @@ public partial class StreamInputApi : AsyncApi<StreamInputApi.Options>
     /// </summary>
     public async System.Threading.Tasks.Task Send(PublishTts message)
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>

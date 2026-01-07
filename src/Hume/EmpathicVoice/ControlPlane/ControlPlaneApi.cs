@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
@@ -9,8 +10,11 @@ namespace Hume.EmpathicVoice;
 /// <summary>
 /// Connects to an in-progress EVI chat session. The original chat must have been started with `allow_connection=true`. The connection can be used to send and receive the same messages as the original chat, with the exception that `audio_input` messages are not allowed.
 /// </summary>
-public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
+public partial class ControlPlaneApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
+    private readonly Options _options;
+    private readonly WebSocketClient _client;
+
     /// <summary>
     /// Event handler for AssistantEnd.
     /// Use AssistantEnd.Subscribe(...) to receive messages.
@@ -81,25 +85,53 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
     /// Constructor with options
     /// </summary>
     public ControlPlaneApi(ControlPlaneApi.Options options)
-        : base(options) { }
+    {
+        _options = options;
+
+        var uriBuilder = new UriBuilder(_options.BaseUrl)
+        {
+            Query = new Query() { { "access_token", _options.AccessToken } },
+        };
+        uriBuilder.Path =
+            $"{uriBuilder.Path.TrimEnd('/')}/chat/{Uri.EscapeDataString(_options.ChatId)}/connect";
+
+        _client = new WebSocketClient(uriBuilder.Uri, OnTextMessage);
+    }
 
     /// <summary>
-    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
+    /// Gets the current connection status of the WebSocket.
     /// </summary>
-    protected override Uri CreateUri()
+    public ConnectionStatus Status => _client.Status;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is successfully established.
+    /// </summary>
+    public Event<Connected> Connected => _client.Connected;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is closed.
+    /// </summary>
+    public Event<Closed> Closed => _client.Closed;
+
+    /// <summary>
+    /// Event that is raised when an exception occurs during WebSocket operations.
+    /// </summary>
+    public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
+
+    /// <summary>
+    /// Event that is raised when a property value changes.
+    /// Currently only raised for the Status property.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged
     {
-        var uri = new UriBuilder(ApiOptions.BaseUrl)
-        {
-            Query = new Query() { { "access_token", ApiOptions.AccessToken } },
-        };
-        uri.Path = $"{uri.Path.TrimEnd('/')}/chat/{Uri.EscapeDataString(ApiOptions.ChatId)}/connect";
-        return uri.Uri;
+        add => _client.PropertyChanged += value;
+        remove => _client.PropertyChanged -= value;
     }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    protected async override System.Threading.Tasks.Task OnTextMessage(Stream stream)
+    private async Task OnTextMessage(Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -205,9 +237,19 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
     }
 
     /// <summary>
+    /// Asynchronously establishes a WebSocket connection to the target URI.
+    /// </summary>
+    public Task ConnectAsync() => _client.ConnectAsync();
+
+    /// <summary>
+    /// Asynchronously closes the WebSocket connection with normal closure status.
+    /// </summary>
+    public Task CloseAsync() => _client.CloseAsync();
+
+    /// <summary>
     /// Disposes of event subscriptions
     /// </summary>
-    protected override void DisposeEvents()
+    private void DisposeEvents()
     {
         AssistantEnd.Dispose();
         AssistantMessage.Dispose();
@@ -220,6 +262,26 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
         ToolCallMessage.Dispose();
         ToolResponseMessage.Dispose();
         ToolErrorMessage.Dispose();
+    }
+
+    /// <summary>
+    /// Asynchronously disposes the ControlPlaneApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _client.DisposeAsync();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Synchronously disposes the ControlPlaneApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public void Dispose()
+    {
+        _client.Dispose();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -237,7 +299,7 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
         > message
     )
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>

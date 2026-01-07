@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
@@ -9,8 +10,11 @@ namespace Hume.EmpathicVoice;
 /// <summary>
 /// Chat with Empathic Voice Interface (EVI)
 /// </summary>
-public partial class ChatApi : AsyncApi<ChatApi.Options>
+public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
+    private readonly Options _options;
+    private readonly WebSocketClient _client;
+
     /// <summary>
     /// Event handler for AssistantEnd.
     /// Use AssistantEnd.Subscribe(...) to receive messages.
@@ -81,36 +85,63 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
     /// Constructor with options
     /// </summary>
     public ChatApi(ChatApi.Options options)
-        : base(options) { }
-
-    /// <summary>
-    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
-    /// </summary>
-    protected override Uri CreateUri()
     {
-        var uri = new UriBuilder(ApiOptions.BaseUrl)
+        _options = options;
+
+        var uriBuilder = new UriBuilder(_options.BaseUrl)
         {
             Query = new Query()
             {
-                { "access_token", ApiOptions.AccessToken },
-                { "allow_connection", ApiOptions.AllowConnection },
-                { "config_id", ApiOptions.ConfigId },
-                { "config_version", ApiOptions.ConfigVersion },
-                { "event_limit", ApiOptions.EventLimit },
-                { "resumed_chat_group_id", ApiOptions.ResumedChatGroupId },
-                { "verbose_transcription", ApiOptions.VerboseTranscription },
-                { "api_key", ApiOptions.ApiKey },
-                { "session_settings", ApiOptions.SessionSettings },
+                { "access_token", _options.AccessToken },
+                { "allow_connection", _options.AllowConnection },
+                { "config_id", _options.ConfigId },
+                { "config_version", _options.ConfigVersion },
+                { "event_limit", _options.EventLimit },
+                { "resumed_chat_group_id", _options.ResumedChatGroupId },
+                { "verbose_transcription", _options.VerboseTranscription },
+                { "api_key", _options.ApiKey },
+                { "session_settings", _options.SessionSettings },
             },
         };
-        uri.Path = $"{uri.Path.TrimEnd('/')}/chat";
-        return uri.Uri;
+        uriBuilder.Path = $"{uriBuilder.Path.TrimEnd('/')}/chat";
+
+        _client = new WebSocketClient(uriBuilder.Uri, OnTextMessage);
+    }
+
+    /// <summary>
+    /// Gets the current connection status of the WebSocket.
+    /// </summary>
+    public ConnectionStatus Status => _client.Status;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is successfully established.
+    /// </summary>
+    public Event<Connected> Connected => _client.Connected;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is closed.
+    /// </summary>
+    public Event<Closed> Closed => _client.Closed;
+
+    /// <summary>
+    /// Event that is raised when an exception occurs during WebSocket operations.
+    /// </summary>
+    public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
+
+    /// <summary>
+    /// Event that is raised when a property value changes.
+    /// Currently only raised for the Status property.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged
+    {
+        add => _client.PropertyChanged += value;
+        remove => _client.PropertyChanged -= value;
     }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    protected async override System.Threading.Tasks.Task OnTextMessage(Stream stream)
+    private async Task OnTextMessage(Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -216,9 +247,19 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
     }
 
     /// <summary>
+    /// Asynchronously establishes a WebSocket connection to the target URI.
+    /// </summary>
+    public Task ConnectAsync() => _client.ConnectAsync();
+
+    /// <summary>
+    /// Asynchronously closes the WebSocket connection with normal closure status.
+    /// </summary>
+    public Task CloseAsync() => _client.CloseAsync();
+
+    /// <summary>
     /// Disposes of event subscriptions
     /// </summary>
-    protected override void DisposeEvents()
+    private void DisposeEvents()
     {
         AssistantEnd.Dispose();
         AssistantMessage.Dispose();
@@ -231,6 +272,26 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
         ToolCallMessage.Dispose();
         ToolResponseMessage.Dispose();
         ToolErrorMessage.Dispose();
+    }
+
+    /// <summary>
+    /// Asynchronously disposes the ChatApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _client.DisposeAsync();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Synchronously disposes the ChatApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public void Dispose()
+    {
+        _client.Dispose();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -249,7 +310,7 @@ public partial class ChatApi : AsyncApi<ChatApi.Options>
         > message
     )
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>
