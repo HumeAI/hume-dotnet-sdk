@@ -16,9 +16,7 @@ public record ReturnEllmModel : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Boolean indicating if the eLLM is allowed to generate short responses.
-    ///
-    /// If omitted, short responses from the eLLM are enabled by default.
+    /// Boolean indicating if the model is allowed to generate short responses.
     /// </summary>
     [JsonPropertyName("allow_short_responses")]
     public required bool AllowShortResponses { get; set; }

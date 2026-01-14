@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -13,9 +15,6 @@ public partial class ChatsClient
         _client = client;
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chats**.
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedChats> ListChatsInternalAsync(
         ChatsListChatsRequest request,
         RequestOptions? options = null,
@@ -38,6 +37,10 @@ public partial class ChatsClient
         if (request.ConfigId != null)
         {
             _query["config_id"] = request.ConfigId;
+        }
+        if (request.Status != null)
+        {
+            _query["status"] = request.Status;
         }
         var response = await _client
             .SendRequestAsync(
@@ -89,9 +92,6 @@ public partial class ChatsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chat** events.
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnChatPagedEvents> ListChatEventsInternalAsync(
         string id,
         ChatsListChatEventsRequest request,
@@ -165,9 +165,6 @@ public partial class ChatsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chats**.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Chats.ListChatsAsync(
     ///     new ChatsListChatsRequest
@@ -197,13 +194,13 @@ public partial class ChatsClient
                 request,
                 options,
                 ListChatsInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.ChatsPage?.ToList(),
+                response => response?.ChatsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -211,9 +208,6 @@ public partial class ChatsClient
         return pager;
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chat** events.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Chats.ListChatEventsAsync(
     ///     "470a49f6-1dec-4afe-8b61-035d3b2d63b0",
@@ -246,13 +240,13 @@ public partial class ChatsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListChatEventsInternalAsync(id, request, options, cancellationToken),
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.EventsPage?.ToList(),
+                response => response?.EventsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -260,9 +254,6 @@ public partial class ChatsClient
         return pager;
     }
 
-    /// <summary>
-    /// Fetches the audio of a previous **Chat**. For more details, see our guide on audio reconstruction [here](/docs/speech-to-speech-evi/faq#can-i-access-the-audio-of-previous-conversations-with-evi).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Chats.GetAudioAsync("470a49f6-1dec-4afe-8b61-035d3b2d63b0");
     /// </code></example>

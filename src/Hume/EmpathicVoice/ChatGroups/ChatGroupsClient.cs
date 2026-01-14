@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -13,9 +15,6 @@ public partial class ChatGroupsClient
         _client = client;
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chat Groups**.
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedChatGroups> ListChatGroupsInternalAsync(
         ChatGroupsListChatGroupsRequest request,
         RequestOptions? options = null,
@@ -89,9 +88,6 @@ public partial class ChatGroupsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chat** events associated with a **Chat Group**.
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnChatGroupPagedEvents> ListChatGroupEventsInternalAsync(
         string id,
         ChatGroupsListChatGroupEventsRequest request,
@@ -165,9 +161,6 @@ public partial class ChatGroupsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chat Groups**.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.ChatGroups.ListChatGroupsAsync(
     ///     new ChatGroupsListChatGroupsRequest
@@ -198,13 +191,13 @@ public partial class ChatGroupsClient
                 request,
                 options,
                 ListChatGroupsInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.ChatGroupsPage?.ToList(),
+                response => response?.ChatGroupsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -212,9 +205,6 @@ public partial class ChatGroupsClient
         return pager;
     }
 
-    /// <summary>
-    /// Fetches a **ChatGroup** by ID, including a paginated list of **Chats** associated with the **ChatGroup**.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.ChatGroups.GetChatGroupAsync(
     ///     "697056f0-6c7e-487d-9bd8-9c19df79f05f",
@@ -234,6 +224,10 @@ public partial class ChatGroupsClient
     )
     {
         var _query = new Dictionary<string, object>();
+        if (request.Status != null)
+        {
+            _query["status"] = request.Status;
+        }
         if (request.PageSize != null)
         {
             _query["page_size"] = request.PageSize.Value.ToString();
@@ -299,9 +293,6 @@ public partial class ChatGroupsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of audio for each **Chat** within the specified **Chat Group**. For more details, see our guide on audio reconstruction [here](/docs/speech-to-speech-evi/faq#can-i-access-the-audio-of-previous-conversations-with-evi).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.ChatGroups.GetAudioAsync(
     ///     "369846cf-6ad5-404d-905e-a8acb5cdfc78",
@@ -388,9 +379,6 @@ public partial class ChatGroupsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Chat** events associated with a **Chat Group**.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.ChatGroups.ListChatGroupEventsAsync(
     ///     "697056f0-6c7e-487d-9bd8-9c19df79f05f",
@@ -423,13 +411,13 @@ public partial class ChatGroupsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListChatGroupEventsInternalAsync(id, request, options, cancellationToken),
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.EventsPage?.ToList(),
+                response => response?.EventsPage?.ToList(),
                 null,
                 cancellationToken
             )

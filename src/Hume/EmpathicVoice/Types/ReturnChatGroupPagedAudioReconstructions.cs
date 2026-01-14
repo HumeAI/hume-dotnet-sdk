@@ -35,9 +35,7 @@ public record ReturnChatGroupPagedAudioReconstructions : IJsonOnDeserialized
     public required int NumChats { get; set; }
 
     /// <summary>
-    /// The page number of the returned list.
-    ///
-    /// This value corresponds to the `page_number` parameter specified in the request. Pagination uses zero-based indexing.
+    /// The page number of the returned results.
     /// </summary>
     [JsonPropertyName("page_number")]
     public required int PageNumber { get; set; }
@@ -50,11 +48,6 @@ public record ReturnChatGroupPagedAudioReconstructions : IJsonOnDeserialized
     [JsonPropertyName("page_size")]
     public required int PageSize { get; set; }
 
-    /// <summary>
-    /// Indicates the order in which the paginated results are presented, based on their creation date.
-    ///
-    /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
-    /// </summary>
     [JsonPropertyName("pagination_direction")]
     public required ReturnChatGroupPagedAudioReconstructionsPaginationDirection PaginationDirection { get; set; }
 

@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -13,11 +15,6 @@ public partial class PromptsClient
         _client = client;
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Prompts**.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedPrompts> ListPromptsInternalAsync(
         PromptsListPromptsRequest request,
         RequestOptions? options = null,
@@ -93,11 +90,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Prompts**.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.ListPromptsAsync(
     ///     new PromptsListPromptsRequest { PageNumber = 0, PageSize = 2 }
@@ -122,13 +114,13 @@ public partial class PromptsClient
                 request,
                 options,
                 ListPromptsInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.PromptsPage?.ToList(),
+                response => response?.PromptsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -136,11 +128,6 @@ public partial class PromptsClient
         return pager;
     }
 
-    /// <summary>
-    /// Creates a **Prompt** that can be added to an [EVI configuration](/reference/speech-to-speech-evi/configs/create-config).
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.CreatePromptAsync(
     ///     new PostedPrompt
@@ -208,11 +195,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a list of a **Prompt's** versions.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.ListPromptVersionsAsync(
     ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
@@ -294,11 +276,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Updates a **Prompt** by creating a new version of the **Prompt**.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.CreatePromptVersionAsync(
     ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
@@ -371,11 +348,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Deletes a **Prompt** and its versions.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.DeletePromptAsync("af699d45-2985-42cc-91b9-af9e5da3bac5");
     /// </code></example>
@@ -428,11 +400,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Updates the name of a **Prompt**.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.UpdatePromptNameAsync(
     ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
@@ -492,11 +459,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a specified version of a **Prompt**.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.GetPromptVersionAsync("af699d45-2985-42cc-91b9-af9e5da3bac5", 0);
     /// </code></example>
@@ -560,11 +522,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Deletes a specified version of a **Prompt**.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.DeletePromptVersionAsync(
     ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
@@ -622,11 +579,6 @@ public partial class PromptsClient
         }
     }
 
-    /// <summary>
-    /// Updates the description of a **Prompt**.
-    ///
-    /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.UpdatePromptDescriptionAsync(
     ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",

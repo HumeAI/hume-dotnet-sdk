@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
@@ -78,6 +79,12 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
     /// Use ToolErrorMessage.Subscribe(...) to receive messages.
     /// </summary>
     public readonly Event<ToolErrorMessage> ToolErrorMessage = new();
+
+    /// <summary>
+    /// Event handler for SessionSettings.
+    /// Use SessionSettings.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<SessionSettings> SessionSettings = new();
 
     /// <summary>
     /// Constructor with options
@@ -233,6 +240,14 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
             }
         }
 
+        {
+            if (JsonUtils.TryDeserialize(json, out SessionSettings? message))
+            {
+                await SessionSettings.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
         await ExceptionOccurred
             .RaiseEvent(new Exception($"Unknown message: {json.ToString()}"))
             .ConfigureAwait(false);
@@ -254,6 +269,7 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
         ToolCallMessage.Dispose();
         ToolResponseMessage.Dispose();
         ToolErrorMessage.Dispose();
+        SessionSettings.Dispose();
     }
 
     /// <summary>
