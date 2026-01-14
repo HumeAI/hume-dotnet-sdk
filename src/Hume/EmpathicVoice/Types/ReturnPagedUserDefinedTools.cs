@@ -16,9 +16,7 @@ public record ReturnPagedUserDefinedTools : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The page number of the returned list.
-    ///
-    /// This value corresponds to the `page_number` parameter specified in the request. Pagination uses zero-based indexing.
+    /// The page number of the returned results.
     /// </summary>
     [JsonPropertyName("page_number")]
     public required int PageNumber { get; set; }
@@ -32,7 +30,7 @@ public record ReturnPagedUserDefinedTools : IJsonOnDeserialized
     public required int PageSize { get; set; }
 
     /// <summary>
-    /// List of tools returned for the specified `page_number` and `page_size`.
+    /// List of tools returned for the specified page number and page size.
     /// </summary>
     [JsonPropertyName("tools_page")]
     public IEnumerable<ReturnUserDefinedTool> ToolsPage { get; set; } =

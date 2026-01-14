@@ -7,6 +7,12 @@ namespace Hume.EmpathicVoice;
 public record ChatGroupsGetChatGroupRequest
 {
     /// <summary>
+    /// Chat status to apply to the chat. String from the ChatStatus enum.
+    /// </summary>
+    [JsonIgnore]
+    public string? Status { get; set; }
+
+    /// <summary>
     /// Specifies the maximum number of results to include per page, enabling pagination. The value must be between 1 and 100, inclusive.
     ///
     /// For example, if `page_size` is set to 10, each page will include up to 10 items. Defaults to 10.
@@ -23,7 +29,7 @@ public record ChatGroupsGetChatGroupRequest
     public int? PageNumber { get; set; }
 
     /// <summary>
-    /// Specifies the sorting order of the results based on their creation date. Set to true for ascending order (chronological, with the oldest records first) and false for descending order (reverse-chronological, with the newest records first). Defaults to true.
+    /// Boolean to indicate if the results should be paginated in chronological order or reverse-chronological order. Defaults to true.
     /// </summary>
     [JsonIgnore]
     public bool? AscendingOrder { get; set; }

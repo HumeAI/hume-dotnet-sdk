@@ -42,11 +42,7 @@ public record AssistantProsody : IJsonOnDeserialized
     public string Type
     {
         get => "assistant_prosody";
-        set =>
-            value.Assert(
-                value == "assistant_prosody",
-                "'[object Object]' must be " + "assistant_prosody"
-            );
+        set => value.Assert(value == "assistant_prosody", "'Type' must be " + "assistant_prosody");
     }
 
     [JsonIgnore]

@@ -22,13 +22,13 @@ public record ReturnVoice : IJsonOnDeserialized
     /// ID of the voice in the `Voice Library`.
     /// </summary>
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    public required string Id { get; set; }
 
     /// <summary>
     /// Name of the voice in the `Voice Library`.
     /// </summary>
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// The provider associated with the created voice.
@@ -36,7 +36,7 @@ public record ReturnVoice : IJsonOnDeserialized
     /// Voices created through this endpoint will always have the provider set to `CUSTOM_VOICE`, indicating a custom voice stored in your account.
     /// </summary>
     [JsonPropertyName("provider")]
-    public VoiceProvider? Provider { get; set; }
+    public required VoiceProvider Provider { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

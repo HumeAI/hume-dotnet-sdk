@@ -7,7 +7,7 @@ namespace Hume.EmpathicVoice;
 public record PostedPromptVersionDescription
 {
     /// <summary>
-    /// An optional description of the Prompt version.
+    /// Description that is appended to a specific version of a Prompt.
     /// </summary>
     [JsonPropertyName("version_description")]
     public string? VersionDescription { get; set; }

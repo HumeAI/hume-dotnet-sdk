@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -13,11 +15,6 @@ public partial class ToolsClient
         _client = client;
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Tools**.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedUserDefinedTools> ListToolsInternalAsync(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
@@ -93,11 +90,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a list of a **Tool's** versions.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedUserDefinedTools> ListToolVersionsInternalAsync(
         string id,
         ToolsListToolVersionsRequest request,
@@ -173,11 +165,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Tools**.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.ListToolsAsync(
     ///     new ToolsListToolsRequest { PageNumber = 0, PageSize = 2 }
@@ -202,13 +189,13 @@ public partial class ToolsClient
                 request,
                 options,
                 ListToolsInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.ToolsPage?.ToList(),
+                response => response?.ToolsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -216,11 +203,6 @@ public partial class ToolsClient
         return pager;
     }
 
-    /// <summary>
-    /// Creates a **Tool** that can be added to an [EVI configuration](/reference/speech-to-speech-evi/configs/create-config).
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.CreateToolAsync(
     ///     new PostedUserDefinedTool
@@ -292,11 +274,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a list of a **Tool's** versions.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.ListToolVersionsAsync(
     ///     "00183a3f-79ba-413d-9f3b-609864268bea",
@@ -324,13 +301,13 @@ public partial class ToolsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListToolVersionsInternalAsync(id, request, options, cancellationToken),
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.ToolsPage?.ToList(),
+                response => response?.ToolsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -338,11 +315,6 @@ public partial class ToolsClient
         return pager;
     }
 
-    /// <summary>
-    /// Updates a **Tool** by creating a new version of the **Tool**.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.CreateToolVersionAsync(
     ///     "00183a3f-79ba-413d-9f3b-609864268bea",
@@ -418,11 +390,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Deletes a **Tool** and its versions.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolAsync("00183a3f-79ba-413d-9f3b-609864268bea");
     /// </code></example>
@@ -475,11 +442,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Updates the name of a **Tool**.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.UpdateToolNameAsync(
     ///     "00183a3f-79ba-413d-9f3b-609864268bea",
@@ -539,11 +501,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a specified version of a **Tool**.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.GetToolVersionAsync("00183a3f-79ba-413d-9f3b-609864268bea", 1);
     /// </code></example>
@@ -607,11 +564,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Deletes a specified version of a **Tool**.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("00183a3f-79ba-413d-9f3b-609864268bea", 1);
     /// </code></example>
@@ -666,11 +618,6 @@ public partial class ToolsClient
         }
     }
 
-    /// <summary>
-    /// Updates the description of a specified **Tool** version.
-    ///
-    /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.UpdateToolDescriptionAsync(
     ///     "00183a3f-79ba-413d-9f3b-609864268bea",

@@ -5,11 +5,6 @@ using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-/// <summary>
-/// Specifies the maximum allowed duration (in seconds) for an EVI WebSocket connection before it is automatically disconnected. Default is 1,800 seconds (30 minutes).
-///
-/// Accepts a minimum value of 30 seconds and a maximum value of 1,800 seconds.
-/// </summary>
 [Serializable]
 public record PostedTimeoutSpecsMaxDuration : IJsonOnDeserialized
 {
@@ -17,17 +12,9 @@ public record PostedTimeoutSpecsMaxDuration : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Duration in seconds for the timeout (e.g. 600 seconds represents 10 minutes).
-    /// </summary>
     [JsonPropertyName("duration_secs")]
     public int? DurationSecs { get; set; }
 
-    /// <summary>
-    /// Boolean indicating if this timeout is enabled.
-    ///
-    /// If set to false, EVI will not timeout due to a specified maximum duration being reached. However, the conversation will eventually disconnect after 1,800 seconds (30 minutes), which is the maximum WebSocket duration limit for EVI.
-    /// </summary>
     [JsonPropertyName("enabled")]
     public required bool Enabled { get; set; }
 

@@ -16,7 +16,7 @@ public record ReturnChat : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Identifier for the Chat Group. Any chat resumed from this Chat will have the same `chat_group_id`. Formatted as a UUID.
+    /// Identifier for the chat group. Any chat resumed from this chat will have the same chat_group_id. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("chat_group_id")]
     public required string ChatGroupId { get; set; }
@@ -25,7 +25,7 @@ public record ReturnChat : IJsonOnDeserialized
     public ReturnConfigSpec? Config { get; set; }
 
     /// <summary>
-    /// Time at which the Chat ended. Measured in seconds since the Unix epoch.
+    /// The timestamp when the chat ended, formatted as a Unix epoch milliseconds.
     /// </summary>
     [JsonPropertyName("end_timestamp")]
     public long? EndTimestamp { get; set; }
@@ -37,7 +37,7 @@ public record ReturnChat : IJsonOnDeserialized
     public long? EventCount { get; set; }
 
     /// <summary>
-    /// Identifier for a Chat. Formatted as a UUID.
+    /// Identifier for a chat. Formatted as a UUID.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
@@ -49,26 +49,11 @@ public record ReturnChat : IJsonOnDeserialized
     public string? Metadata { get; set; }
 
     /// <summary>
-    /// Time at which the Chat started. Measured in seconds since the Unix epoch.
+    /// The timestamp when the chat started, formatted as a Unix epoch milliseconds.
     /// </summary>
     [JsonPropertyName("start_timestamp")]
     public required long StartTimestamp { get; set; }
 
-    /// <summary>
-    /// Indicates the current state of the chat. There are six possible statuses:
-    ///
-    /// - `ACTIVE`: The chat is currently active and ongoing.
-    ///
-    /// - `USER_ENDED`: The chat was manually ended by the user.
-    ///
-    /// - `USER_TIMEOUT`: The chat ended due to a user-defined timeout.
-    ///
-    /// - `MAX_DURATION_TIMEOUT`: The chat ended because it reached the maximum allowed duration.
-    ///
-    /// - `INACTIVITY_TIMEOUT`: The chat ended due to an inactivity timeout.
-    ///
-    /// - `ERROR`: The chat ended unexpectedly due to an error.
-    /// </summary>
     [JsonPropertyName("status")]
     public required ReturnChatStatus Status { get; set; }
 

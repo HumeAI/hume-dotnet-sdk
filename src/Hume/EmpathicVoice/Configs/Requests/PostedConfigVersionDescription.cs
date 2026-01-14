@@ -7,7 +7,7 @@ namespace Hume.EmpathicVoice;
 public record PostedConfigVersionDescription
 {
     /// <summary>
-    /// An optional description of the Config version.
+    /// Description that is appended to a specific version of a Config.
     /// </summary>
     [JsonPropertyName("version_description")]
     public string? VersionDescription { get; set; }

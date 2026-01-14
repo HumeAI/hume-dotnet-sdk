@@ -15,16 +15,13 @@ public record AssistantInput : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Used to manage conversational state, correlate frontend and backend data, and persist conversations across EVI sessions.
-    /// </summary>
     [JsonPropertyName("custom_session_id")]
     public string? CustomSessionId { get; set; }
 
     /// <summary>
     /// Assistant text to synthesize into spoken audio and insert into the conversation.
     ///
-    /// EVI uses this text to generate spoken audio using our proprietary expressive text-to-speech model. Our model adds appropriate emotional inflections and tones to the text based on the user's expressions and the context of the conversation. The synthesized audio is streamed back to the user as an [Assistant Message](/reference/speech-to-speech-evi/chat#receive.AssistantMessage).
+    /// EVI uses this text to generate spoken audio using our proprietary expressive text-to-speech model. Our model adds appropriate emotional inflections and tones to the text based on the user's expressions and the context of the conversation. The synthesized audio is streamed back to the user as an [Assistant Message](/reference/empathic-voice-interface-evi/chat/chat#receive.Assistant%20Message.type).
     /// </summary>
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -36,11 +33,7 @@ public record AssistantInput : IJsonOnDeserialized
     public string Type
     {
         get => "assistant_input";
-        set =>
-            value.Assert(
-                value == "assistant_input",
-                "'[object Object]' must be " + "assistant_input"
-            );
+        set => value.Assert(value == "assistant_input", "'Type' must be " + "assistant_input");
     }
 
     [JsonIgnore]

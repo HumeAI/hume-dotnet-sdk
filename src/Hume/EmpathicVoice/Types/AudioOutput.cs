@@ -39,14 +39,11 @@ public record AudioOutput : IJsonOnDeserialized
     [JsonPropertyName("index")]
     public required int Index { get; set; }
 
-    /// <summary>
-    /// The type of message sent through the socket; for an Audio Output message, this must be `audio_output`.
-    /// </summary>
     [JsonPropertyName("type")]
     public string Type
     {
         get => "audio_output";
-        set => value.Assert(value == "audio_output", "'[object Object]' must be " + "audio_output");
+        set => value.Assert(value == "audio_output", "'Type' must be " + "audio_output");
     }
 
     [JsonIgnore]

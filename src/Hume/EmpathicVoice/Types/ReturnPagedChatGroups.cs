@@ -16,15 +16,13 @@ public record ReturnPagedChatGroups : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// List of Chat Groups and their metadata returned for the specified `page_number` and `page_size`.
+    /// List of chat_groups and their metadata returned for the specified page number and page size.
     /// </summary>
     [JsonPropertyName("chat_groups_page")]
     public IEnumerable<ReturnChatGroup> ChatGroupsPage { get; set; } = new List<ReturnChatGroup>();
 
     /// <summary>
-    /// The page number of the returned list.
-    ///
-    /// This value corresponds to the `page_number` parameter specified in the request. Pagination uses zero-based indexing.
+    /// The page number of the returned results.
     /// </summary>
     [JsonPropertyName("page_number")]
     public required int PageNumber { get; set; }
@@ -37,11 +35,6 @@ public record ReturnPagedChatGroups : IJsonOnDeserialized
     [JsonPropertyName("page_size")]
     public required int PageSize { get; set; }
 
-    /// <summary>
-    /// Indicates the order in which the paginated results are presented, based on their creation date.
-    ///
-    /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
-    /// </summary>
     [JsonPropertyName("pagination_direction")]
     public required ReturnPagedChatGroupsPaginationDirection PaginationDirection { get; set; }
 

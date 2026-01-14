@@ -7,7 +7,7 @@ namespace Hume.EmpathicVoice;
 public record PostedUserDefinedToolVersionDescription
 {
     /// <summary>
-    /// An optional description of the Tool version.
+    /// Description that is appended to a specific version of a Tool.
     /// </summary>
     [JsonPropertyName("version_description")]
     public string? VersionDescription { get; set; }

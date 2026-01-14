@@ -1,4 +1,6 @@
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using Hume;
 using Hume.Core;
 
@@ -13,11 +15,6 @@ public partial class ConfigsClient
         _client = client;
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Configs**.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedConfigs> ListConfigsInternalAsync(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
@@ -93,11 +90,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a list of a **Config's** versions.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     private async System.Threading.Tasks.Task<ReturnPagedConfigs> ListConfigVersionsInternalAsync(
         string id,
         ConfigsListConfigVersionsRequest request,
@@ -173,11 +165,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a paginated list of **Configs**.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.ListConfigsAsync(
     ///     new ConfigsListConfigsRequest { PageNumber = 0, PageSize = 1 }
@@ -202,13 +189,13 @@ public partial class ConfigsClient
                 request,
                 options,
                 ListConfigsInternalAsync,
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.ConfigsPage?.ToList(),
+                response => response?.ConfigsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -216,11 +203,6 @@ public partial class ConfigsClient
         return pager;
     }
 
-    /// <summary>
-    /// Creates a **Config** which can be applied to EVI.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.CreateConfigAsync(
     ///     new PostedConfig
@@ -309,11 +291,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a list of a **Config's** versions.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.ListConfigVersionsAsync(
     ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
@@ -341,13 +318,13 @@ public partial class ConfigsClient
                 options,
                 (request, options, cancellationToken) =>
                     ListConfigVersionsInternalAsync(id, request, options, cancellationToken),
-                request => request.PageNumber ?? 0,
+                request => request?.PageNumber ?? 0,
                 (request, offset) =>
                 {
                     request.PageNumber = offset;
                 },
                 null,
-                response => response.ConfigsPage?.ToList(),
+                response => response?.ConfigsPage?.ToList(),
                 null,
                 cancellationToken
             )
@@ -355,11 +332,6 @@ public partial class ConfigsClient
         return pager;
     }
 
-    /// <summary>
-    /// Updates a **Config** by creating a new version of the **Config**.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.CreateConfigVersionAsync(
     ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
@@ -454,11 +426,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Deletes a **Config** and its versions.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3");
     /// </code></example>
@@ -511,11 +478,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Updates the name of a **Config**.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.UpdateConfigNameAsync(
     ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
@@ -575,11 +537,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Fetches a specified version of a **Config**.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.GetConfigVersionAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3", 1);
     /// </code></example>
@@ -643,11 +600,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Deletes a specified version of a **Config**.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigVersionAsync(
     ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
@@ -705,11 +657,6 @@ public partial class ConfigsClient
         }
     }
 
-    /// <summary>
-    /// Updates the description of a **Config**.
-    ///
-    /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
-    /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.UpdateConfigDescriptionAsync(
     ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",

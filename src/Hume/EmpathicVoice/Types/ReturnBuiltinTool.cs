@@ -16,7 +16,7 @@ public record ReturnBuiltinTool : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Optional text passed to the supplemental LLM in place of the tool call result. The LLM then uses this text to generate a response back to the user, ensuring continuity in the conversation if the Tool errors.
+    /// Text to use if the tool fails to generate content.
     /// </summary>
     [JsonPropertyName("fallback_content")]
     public string? FallbackContent { get; set; }
@@ -27,9 +27,6 @@ public record ReturnBuiltinTool : IJsonOnDeserialized
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
-    /// <summary>
-    /// Type of Tool. Either `BUILTIN` for natively implemented tools, like web search, or `FUNCTION` for user-defined tools.
-    /// </summary>
     [JsonPropertyName("tool_type")]
     public required ReturnBuiltinToolToolType ToolType { get; set; }
 

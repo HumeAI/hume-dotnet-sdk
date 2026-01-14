@@ -23,7 +23,7 @@ public record ChatGroupsGetAudioRequest
     public int? PageSize { get; set; }
 
     /// <summary>
-    /// Specifies the sorting order of the results based on their creation date. Set to true for ascending order (chronological, with the oldest records first) and false for descending order (reverse-chronological, with the newest records first). Defaults to true.
+    /// Boolean to indicate if the results should be paginated in chronological order or reverse-chronological order. Defaults to true.
     /// </summary>
     [JsonIgnore]
     public bool? AscendingOrder { get; set; }

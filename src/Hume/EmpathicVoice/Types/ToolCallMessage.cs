@@ -59,7 +59,11 @@ public record ToolCallMessage : IJsonOnDeserialized
     /// This message indicates that the supplemental LLM has detected a need to invoke the specified tool.
     /// </summary>
     [JsonPropertyName("type")]
-    public string? Type { get; set; }
+    public string Type
+    {
+        get => "tool_call";
+        set => value.Assert(value == "tool_call", "'Type' must be " + "tool_call");
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
