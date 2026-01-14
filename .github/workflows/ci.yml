@@ -169,7 +169,16 @@ jobs:
       - name: Restore dependencies
         working-directory: ./examples/tts/tts-dotnet-quickstart
         run: |
-          dotnet restore --source local-sdk --source https://api.nuget.org/v3/index.json
+          # Restore solution file if it exists, otherwise restore all .csproj files
+          if find . -maxdepth 1 -name "*.sln" -type f | grep -q .; then
+            SOLUTION_FILE=$(find . -maxdepth 1 -name "*.sln" -type f | head -1)
+            echo "Restoring solution: $SOLUTION_FILE"
+            dotnet restore "$SOLUTION_FILE" --source local-sdk --source https://api.nuget.org/v3/index.json
+          else
+            # Restore all .csproj files
+            echo "Restoring all .csproj files"
+            find . -maxdepth 1 -name "*.csproj" -type f -exec dotnet restore {} --source local-sdk --source https://api.nuget.org/v3/index.json \;
+          fi
 
       - name: Run TTS tests
         working-directory: ./examples/tts/tts-dotnet-quickstart
