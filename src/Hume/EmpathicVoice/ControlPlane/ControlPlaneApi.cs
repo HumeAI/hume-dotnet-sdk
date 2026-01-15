@@ -1,9 +1,8 @@
+using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Text.Json;
 using Hume.Core;
-using Hume.Core.Async;
-using Hume.Core.Async.Events;
-using Hume.Core.Async.Models;
+using Hume.Core.WebSockets;
 using OneOf;
 
 namespace Hume.EmpathicVoice;
@@ -11,8 +10,11 @@ namespace Hume.EmpathicVoice;
 /// <summary>
 /// Connects to an in-progress EVI chat session. The original chat must have been started with `allow_connection=true`. The connection can be used to send and receive the same messages as the original chat, with the exception that `audio_input` messages are not allowed.
 /// </summary>
-public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
+public partial class ControlPlaneApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
+    private readonly Options _options;
+    private readonly WebSocketClient _client;
+
     /// <summary>
     /// Event handler for AssistantEnd.
     /// Use AssistantEnd.Subscribe(...) to receive messages.
@@ -83,57 +85,53 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
     /// Constructor with options
     /// </summary>
     public ControlPlaneApi(ControlPlaneApi.Options options)
-        : base(options) { }
-
-    /// <summary>
-    /// The ID of the chat to connect to.
-    /// </summary>
-    public string ChatId
     {
-        get => ApiOptions.ChatId;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.ChatId),
-                ApiOptions.ChatId = value
-            );
-    }
+        _options = options;
 
-    /// <summary>
-    /// Access token used for authenticating the client. If not provided, an `api_key` must be provided to authenticate.
-    ///
-    /// The access token is generated using both an API key and a Secret key, which provides an additional layer of security compared to using just an API key.
-    ///
-    /// For more details, refer to the [Authentication Strategies Guide](/docs/introduction/api-key#authentication-strategies).
-    /// </summary>
-    public string? AccessToken
-    {
-        get => ApiOptions.AccessToken;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.AccessToken),
-                ApiOptions.AccessToken = value
-            );
-    }
-
-    /// <summary>
-    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
-    /// </summary>
-    protected override Uri CreateUri()
-    {
-        var uri = new UriBuilder(BaseUrl)
+        var uriBuilder = new UriBuilder(_options.BaseUrl)
         {
-            Query = new Query() { { "access_token", AccessToken } },
+            Query = new Query() { { "access_token", _options.AccessToken } },
         };
-        uri.Path = $"{uri.Path.TrimEnd('/')}/chat/{Uri.EscapeDataString(ChatId)}/connect";
-        return uri.Uri;
+        uriBuilder.Path =
+            $"{uriBuilder.Path.TrimEnd('/')}/chat/{Uri.EscapeDataString(_options.ChatId)}/connect";
+
+        _client = new WebSocketClient(uriBuilder.Uri, OnTextMessage);
     }
 
-    protected override void SetConnectionOptions(ClientWebSocketOptions options) { }
+    /// <summary>
+    /// Gets the current connection status of the WebSocket.
+    /// </summary>
+    public ConnectionStatus Status => _client.Status;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is successfully established.
+    /// </summary>
+    public Event<Connected> Connected => _client.Connected;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is closed.
+    /// </summary>
+    public Event<Closed> Closed => _client.Closed;
+
+    /// <summary>
+    /// Event that is raised when an exception occurs during WebSocket operations.
+    /// </summary>
+    public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
+
+    /// <summary>
+    /// Event that is raised when a property value changes.
+    /// Currently only raised for the Status property.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged
+    {
+        add => _client.PropertyChanged += value;
+        remove => _client.PropertyChanged -= value;
+    }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    protected async override System.Threading.Tasks.Task OnTextMessage(Stream stream)
+    private async Task OnTextMessage(Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -239,9 +237,19 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
     }
 
     /// <summary>
+    /// Asynchronously establishes a WebSocket connection to the target URI.
+    /// </summary>
+    public Task ConnectAsync() => _client.ConnectAsync();
+
+    /// <summary>
+    /// Asynchronously closes the WebSocket connection with normal closure status.
+    /// </summary>
+    public Task CloseAsync() => _client.CloseAsync();
+
+    /// <summary>
     /// Disposes of event subscriptions
     /// </summary>
-    protected override void DisposeEvents()
+    private void DisposeEvents()
     {
         AssistantEnd.Dispose();
         AssistantMessage.Dispose();
@@ -254,6 +262,26 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
         ToolCallMessage.Dispose();
         ToolResponseMessage.Dispose();
         ToolErrorMessage.Dispose();
+    }
+
+    /// <summary>
+    /// Asynchronously disposes the ControlPlaneApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _client.DisposeAsync();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Synchronously disposes the ControlPlaneApi instance, closing any active connections and cleaning up resources.
+    /// </summary>
+    public void Dispose()
+    {
+        _client.Dispose();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -271,18 +299,18 @@ public partial class ControlPlaneApi : AsyncApi<ControlPlaneApi.Options>
         > message
     )
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Options for the API client
     /// </summary>
-    public class Options : AsyncApiOptions
+    public class Options
     {
         /// <summary>
         /// The Websocket URL for the API connection.
         /// </summary>
-        override public string BaseUrl { get; set; } = "evi";
+        public string BaseUrl { get; set; } = "evi";
 
         /// <summary>
         /// Access token used for authenticating the client. If not provided, an `api_key` must be provided to authenticate.
