@@ -186,3 +186,55 @@ jobs:
           dotnet test tts-csharp-quickstart.tests.csproj --logger "console;verbosity=detailed"
         env:
           TEST_HUME_API_KEY: ${{ secrets.TEST_HUME_API_KEY }}
+
+      - name: Update EVI example to use local SDK
+        working-directory: ./examples/evi/evi-dotnet-quickstart
+        run: |
+          echo "=== Updating Example to Use Local SDK ==="
+          echo "SDK version: $SDK_VERSION"
+          echo "========================================="
+          # Find the main project file (not the test file)
+          PROJECT_FILE=$(find . -name "*.csproj" -not -name "*.tests.csproj" | head -1)
+          if [ -n "$PROJECT_FILE" ]; then
+            echo "Updating $PROJECT_FILE"
+            # Use sed to update the version, or add the package reference if it doesn't exist
+            if grep -q "PackageReference.*Hume" "$PROJECT_FILE"; then
+              sed -i "s|<PackageReference Include=\"Hume\" Version=\"[^\"]*\"|<PackageReference Include=\"Hume\" Version=\"$SDK_VERSION\"|g" "$PROJECT_FILE"
+            else
+              # Add package reference before closing </Project> tag
+              # Use a temporary file to handle newlines properly
+              awk -v version="$SDK_VERSION" '
+                /<\/Project>/ {
+                  print "    <ItemGroup>"
+                  print "      <PackageReference Include=\"Hume\" Version=\"" version "\" />"
+                  print "    </ItemGroup>"
+                }
+                { print }
+              ' "$PROJECT_FILE" > "$PROJECT_FILE.tmp" && mv "$PROJECT_FILE.tmp" "$PROJECT_FILE"
+            fi
+            echo "Updated project file:"
+            cat "$PROJECT_FILE"
+          else
+            echo "Warning: No project file found"
+          fi
+
+      - name: Restore EVI dependencies
+        working-directory: ./examples/evi/evi-dotnet-quickstart
+        run: |
+          # Restore solution file if it exists, otherwise restore all .csproj files
+          if find . -maxdepth 1 -name "*.sln" -type f | grep -q .; then
+            SOLUTION_FILE=$(find . -maxdepth 1 -name "*.sln" -type f | head -1)
+            echo "Restoring solution: $SOLUTION_FILE"
+            dotnet restore "$SOLUTION_FILE" --source local-sdk --source https://api.nuget.org/v3/index.json
+          else
+            # Restore all .csproj files
+            echo "Restoring all .csproj files"
+            find . -maxdepth 1 -name "*.csproj" -type f -exec dotnet restore {} --source local-sdk --source https://api.nuget.org/v3/index.json \;
+          fi
+
+      - name: Run EVI tests
+        working-directory: ./examples/evi/evi-dotnet-quickstart
+        run: |
+          dotnet test evi-csharp-quickstart.tests.csproj --logger "console;verbosity=detailed"
+        env:
+          TEST_HUME_API_KEY: ${{ secrets.TEST_HUME_API_KEY }}
