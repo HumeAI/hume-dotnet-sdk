@@ -1,6 +1,5 @@
 using System.Collections;
 using Hume.EmpathicVoice;
-using OneOf;
 
 namespace Hume.Core.WebSockets;
 
@@ -120,72 +119,28 @@ public class Query : IEnumerable<KeyValuePair<string, string>>
             return;
         }
 
-        // Add each property using deep object notation
-        if (value.SystemPrompt != null)
+        // Use QueryStringConverter to convert to deep object notation
+        var deepObjectParams = QueryStringConverter.ToDeepObject(value);
+        foreach (var kvp in deepObjectParams)
         {
-            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[system_prompt]", value.SystemPrompt));
-        }
-
-        if (value.CustomSessionId != null)
-        {
-            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[custom_session_id]", value.CustomSessionId));
-        }
-
-        if (value.Audio != null)
-        {
-            if (value.Audio.Encoding != null)
+            // Prepend the key to each parameter name
+            // For "system_prompt" -> "session_settings[system_prompt]"
+            // For "variables[userName]" -> "session_settings[variables][userName]"
+            string paramKey;
+            if (string.IsNullOrEmpty(kvp.Key))
             {
-                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[audio][encoding]", value.Audio.Encoding.ToString()!));
+                paramKey = key;
             }
-            if (value.Audio.Channels != null)
+            else if (kvp.Key.Contains('['))
             {
-                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[audio][channels]", value.Audio.Channels.ToString()!));
+                // Handle nested keys: "variables[userName]" -> "session_settings[variables][userName]"
+                paramKey = $"{key}[{kvp.Key.Replace("[", "][")}";
             }
-            if (value.Audio.SampleRate != null)
+            else
             {
-                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[audio][sample_rate]", value.Audio.SampleRate.ToString()!));
+                paramKey = $"{key}[{kvp.Key}]";
             }
-        }
-
-        if (value.Context != null)
-        {
-            if (value.Context.Text != null)
-            {
-                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[context][text]", value.Context.Text));
-            }
-            if (value.Context.Type != null)
-            {
-                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[context][type]", value.Context.Type.ToString()!));
-            }
-        }
-
-        if (value.EventLimit != null)
-        {
-            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[event_limit]", value.EventLimit.ToString()!));
-        }
-
-        if (value.LanguageModelApiKey != null)
-        {
-            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[language_model_api_key]", value.LanguageModelApiKey));
-        }
-
-        if (value.VoiceId != null)
-        {
-            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[voice_id]", value.VoiceId));
-        }
-
-        // Handle variables with nested deep object notation
-        if (value.Variables != null)
-        {
-            foreach (var variable in value.Variables)
-            {
-                var varValue = variable.Value.Match(
-                    str => str,
-                    dbl => dbl.ToString(),
-                    b => b.ToString().ToLower()
-                );
-                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[variables][{variable.Key}]", varValue));
-            }
+            _queryParameters.Add(new KeyValuePair<string, string>(paramKey, kvp.Value));
         }
     }
 
