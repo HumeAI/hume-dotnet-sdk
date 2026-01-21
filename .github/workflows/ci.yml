@@ -1,9 +1,10 @@
 name: ci
 
-on:
-  push:
-  pull_request:
-    types: [synchronize, reopened, ready_for_review]
+on: [push]
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
 
 jobs:
   compile:
@@ -11,43 +12,55 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - uses: actions/checkout@master
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.x
+          dotnet-version: 10.x
+
+      - name: Print .NET info
+        run: dotnet --info
 
       - name: Install tools
-        run: |
-          dotnet tool restore
+        run: dotnet tool restore
+
+      - name: Restore dependencies
+        run: dotnet restore src/Hume/Hume.csproj
 
       - name: Build Release
-        run: dotnet build src -c Release /p:ContinuousIntegrationBuild=true
+        run: dotnet build src/Hume/Hume.csproj -c Release --no-restore
 
   unit-tests:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - uses: actions/checkout@master
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.x
+          dotnet-version: 10.x
+
+      - name: Print .NET info
+        run: dotnet --info
 
       - name: Install tools
         run: |
           dotnet tool restore
 
+      - name: Restore dependencies
+        run: dotnet restore src/Hume.Test/Hume.Test.csproj
+
+      - name: Build Release
+        run: dotnet build src/Hume.Test/Hume.Test.csproj -c Release --no-restore
+
       - name: Run Tests
-        run: |
-          dotnet test src
+        run: dotnet test src/Hume.Test/Hume.Test.csproj -c Release --no-build --no-restore
+
 
   publish:
     needs: [compile]
@@ -56,185 +69,29 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.x
+          dotnet-version: 10.x
+
+      - name: Print .NET info
+        run: dotnet --info
+
+      - name: Install tools
+        run: dotnet tool restore
+
+      - name: Restore dependencies
+        run: dotnet restore src/Hume/Hume.csproj
+
+      - name: Build Release
+        run: dotnet build src/Hume/Hume.csproj -c Release --no-restore
 
       - name: Publish
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
-          dotnet pack src -c Release
+          dotnet pack src/Hume/Hume.csproj -c Release --no-build --no-restore
           dotnet nuget push src/Hume/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source "nuget.org"
 
-  test-examples:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.event_name == 'push'
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout SDK repo (PR branch)
-        uses: actions/checkout@v4
-        with:
-          path: sdk
-          # checkout the PR branch, not main
-          ref: ${{ github.event.pull_request.head.sha || github.head_ref || github.ref }}
-          fetch-depth: 0
-
-      - name: Checkout examples repo
-        uses: actions/checkout@v4
-        with:
-          repository: humeai/hume-api-examples
-          path: examples
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 9.x
-
-      - name: Build SDK
-        working-directory: ./sdk
-        run: |
-          echo "=== SDK Build Info ==="
-          echo "Branch: ${{ github.head_ref || github.ref_name || 'unknown' }}"
-          echo "Ref: ${{ github.event.pull_request.head.sha || github.head_ref || github.ref }}"
-          echo "Commit SHA: $(git rev-parse HEAD)"
-          echo "Branch name: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'detached')"
-          echo "======================"
-          dotnet build src/Hume/Hume.csproj -c Release
-          echo "===================="
-
-      - name: Pack SDK
-        working-directory: ./sdk
-        run: |
-          dotnet pack src/Hume/Hume.csproj -c Release --no-build
-          SDK_PACKAGE_DIR="$GITHUB_WORKSPACE/sdk/src/Hume/bin/Release"
-          echo "SDK_PACKAGE_DIR=$SDK_PACKAGE_DIR" >> $GITHUB_ENV
-          SDK_PACKAGE=$(find "$SDK_PACKAGE_DIR" -name "*.nupkg" | head -1)
-          echo "=== Packed SDK ==="
-          echo "Package: $SDK_PACKAGE"
-          echo "Package directory: $SDK_PACKAGE_DIR"
-          echo "=================="
-
-      - name: Extract SDK version
-        working-directory: ./sdk
-        run: |
-          SDK_VERSION=$(grep -oP '<Version>\K[^<]+' src/Hume/Hume.csproj | head -1)
-          echo "SDK_VERSION=$SDK_VERSION" >> $GITHUB_ENV
-          echo "=== SDK Version ==="
-          echo "Version: $SDK_VERSION"
-          echo "==================="
-
-      - name: Add local NuGet source
-        run: |
-          dotnet nuget add source "$SDK_PACKAGE_DIR" --name local-sdk
-          echo "=== Added Local NuGet Source ==="
-          echo "Source: $SDK_PACKAGE_DIR"
-          echo "================================"
-
-      - name: Update example to use local SDK
-        working-directory: ./examples/tts/tts-dotnet-quickstart
-        run: |
-          echo "=== Updating Example to Use Local SDK ==="
-          echo "SDK version: $SDK_VERSION"
-          echo "========================================="
-          # Find the main project file (not the test file)
-          PROJECT_FILE=$(find . -name "*.csproj" -not -name "*.tests.csproj" | head -1)
-          if [ -n "$PROJECT_FILE" ]; then
-            echo "Updating $PROJECT_FILE"
-            # Use sed to update the version, or add the package reference if it doesn't exist
-            if grep -q "PackageReference.*Hume" "$PROJECT_FILE"; then
-              sed -i "s|<PackageReference Include=\"Hume\" Version=\"[^\"]*\"|<PackageReference Include=\"Hume\" Version=\"$SDK_VERSION\"|g" "$PROJECT_FILE"
-            else
-              # Add package reference before closing </Project> tag
-              # Use a temporary file to handle newlines properly
-              awk -v version="$SDK_VERSION" '
-                /<\/Project>/ {
-                  print "    <ItemGroup>"
-                  print "      <PackageReference Include=\"Hume\" Version=\"" version "\" />"
-                  print "    </ItemGroup>"
-                }
-                { print }
-              ' "$PROJECT_FILE" > "$PROJECT_FILE.tmp" && mv "$PROJECT_FILE.tmp" "$PROJECT_FILE"
-            fi
-            echo "Updated project file:"
-            cat "$PROJECT_FILE"
-          else
-            echo "Warning: No project file found"
-          fi
-
-      - name: Restore dependencies
-        working-directory: ./examples/tts/tts-dotnet-quickstart
-        run: |
-          # Restore solution file if it exists, otherwise restore all .csproj files
-          if find . -maxdepth 1 -name "*.sln" -type f | grep -q .; then
-            SOLUTION_FILE=$(find . -maxdepth 1 -name "*.sln" -type f | head -1)
-            echo "Restoring solution: $SOLUTION_FILE"
-            dotnet restore "$SOLUTION_FILE" --source local-sdk --source https://api.nuget.org/v3/index.json
-          else
-            # Restore all .csproj files
-            echo "Restoring all .csproj files"
-            find . -maxdepth 1 -name "*.csproj" -type f -exec dotnet restore {} --source local-sdk --source https://api.nuget.org/v3/index.json \;
-          fi
-
-      - name: Run TTS tests
-        working-directory: ./examples/tts/tts-dotnet-quickstart
-        run: |
-          dotnet test tts-csharp-quickstart.tests.csproj --logger "console;verbosity=detailed"
-        env:
-          TEST_HUME_API_KEY: ${{ secrets.TEST_HUME_API_KEY }}
-
-      - name: Update EVI example to use local SDK
-        working-directory: ./examples/evi/evi-dotnet-quickstart
-        run: |
-          echo "=== Updating Example to Use Local SDK ==="
-          echo "SDK version: $SDK_VERSION"
-          echo "========================================="
-          # Find the main project file (not the test file)
-          PROJECT_FILE=$(find . -name "*.csproj" -not -name "*.tests.csproj" | head -1)
-          if [ -n "$PROJECT_FILE" ]; then
-            echo "Updating $PROJECT_FILE"
-            # Use sed to update the version, or add the package reference if it doesn't exist
-            if grep -q "PackageReference.*Hume" "$PROJECT_FILE"; then
-              sed -i "s|<PackageReference Include=\"Hume\" Version=\"[^\"]*\"|<PackageReference Include=\"Hume\" Version=\"$SDK_VERSION\"|g" "$PROJECT_FILE"
-            else
-              # Add package reference before closing </Project> tag
-              # Use a temporary file to handle newlines properly
-              awk -v version="$SDK_VERSION" '
-                /<\/Project>/ {
-                  print "    <ItemGroup>"
-                  print "      <PackageReference Include=\"Hume\" Version=\"" version "\" />"
-                  print "    </ItemGroup>"
-                }
-                { print }
-              ' "$PROJECT_FILE" > "$PROJECT_FILE.tmp" && mv "$PROJECT_FILE.tmp" "$PROJECT_FILE"
-            fi
-            echo "Updated project file:"
-            cat "$PROJECT_FILE"
-          else
-            echo "Warning: No project file found"
-          fi
-
-      - name: Restore EVI dependencies
-        working-directory: ./examples/evi/evi-dotnet-quickstart
-        run: |
-          # Restore solution file if it exists, otherwise restore all .csproj files
-          if find . -maxdepth 1 -name "*.sln" -type f | grep -q .; then
-            SOLUTION_FILE=$(find . -maxdepth 1 -name "*.sln" -type f | head -1)
-            echo "Restoring solution: $SOLUTION_FILE"
-            dotnet restore "$SOLUTION_FILE" --source local-sdk --source https://api.nuget.org/v3/index.json
-          else
-            # Restore all .csproj files
-            echo "Restoring all .csproj files"
-            find . -maxdepth 1 -name "*.csproj" -type f -exec dotnet restore {} --source local-sdk --source https://api.nuget.org/v3/index.json \;
-          fi
-
-      - name: Run EVI tests
-        working-directory: ./examples/evi/evi-dotnet-quickstart
-        run: |
-          dotnet test evi-csharp-quickstart.tests.csproj --logger "console;verbosity=detailed"
-        env:
-          TEST_HUME_API_KEY: ${{ secrets.TEST_HUME_API_KEY }}

@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is an error message.
+/// **Indicates a disruption in the WebSocket connection**, such as an unexpected disconnection, protocol error, or data transmission issue.
+///
+/// Contains an error code identifying the type of error encountered, a detailed description of the error, and a short, human-readable identifier and description (slug) for the error.
 /// </summary>
 [Serializable]
 public record WebSocketError : IJsonOnDeserialized
@@ -54,7 +56,7 @@ public record WebSocketError : IJsonOnDeserialized
     public string Type
     {
         get => "error";
-        set => value.Assert(value == "error", "'[object Object]' must be " + "error");
+        set => value.Assert(value == "error", string.Format("'Type' must be {0}", "error"));
     }
 
     [JsonIgnore]

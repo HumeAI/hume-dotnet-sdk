@@ -15,9 +15,6 @@ public record ReturnChatGroup : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Denotes whether there is an active Chat associated with this Chat Group.
-    /// </summary>
     [JsonPropertyName("active")]
     public bool? Active { get; set; }
 
@@ -49,7 +46,7 @@ public record ReturnChatGroup : IJsonOnDeserialized
     public required long MostRecentStartTimestamp { get; set; }
 
     /// <summary>
-    /// The total number of Chats in this Chat Group.
+    /// The total number of Chats associated with this Chat Group.
     /// </summary>
     [JsonPropertyName("num_chats")]
     public required int NumChats { get; set; }

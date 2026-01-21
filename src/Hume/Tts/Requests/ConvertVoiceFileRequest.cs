@@ -27,7 +27,7 @@ public record ConvertVoiceFileRequest
     public OneOf<FormatMp3, FormatPcm, FormatWav>? Format { get; set; }
 
     /// <summary>
-    /// The set of timestamp types to include in the response.
+    /// The set of timestamp types to include in the response. When used in multipart/form-data, specify each value using bracket notation: `include_timestamp_types[0]=word&include_timestamp_types[1]=phoneme`. Only supported for Octave 2 requests.
     /// </summary>
     public IEnumerable<TimestampType>? IncludeTimestampTypes { get; set; }
 

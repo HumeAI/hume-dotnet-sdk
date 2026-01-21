@@ -7,6 +7,12 @@ namespace Hume.EmpathicVoice;
 public record ChatGroupsGetChatGroupRequest
 {
     /// <summary>
+    /// Chat status to apply to the chat. String from the ChatStatus enum.
+    /// </summary>
+    [JsonIgnore]
+    public string? Status { get; set; }
+
+    /// <summary>
     /// Specifies the maximum number of results to include per page, enabling pagination. The value must be between 1 and 100, inclusive.
     ///
     /// For example, if `page_size` is set to 10, each page will include up to 10 items. Defaults to 10.

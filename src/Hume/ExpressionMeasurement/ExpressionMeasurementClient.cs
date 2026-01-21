@@ -4,7 +4,7 @@ using Hume.ExpressionMeasurement.Stream;
 
 namespace Hume.ExpressionMeasurement;
 
-public partial class ExpressionMeasurementClient
+public partial class ExpressionMeasurementClient : IExpressionMeasurementClient
 {
     private RawClient _client;
 

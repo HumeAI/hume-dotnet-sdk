@@ -43,11 +43,6 @@ public record ReturnChatGroupPagedEvents : IJsonOnDeserialized
     [JsonPropertyName("page_size")]
     public required int PageSize { get; set; }
 
-    /// <summary>
-    /// Indicates the order in which the paginated results are presented, based on their creation date.
-    ///
-    /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
-    /// </summary>
     [JsonPropertyName("pagination_direction")]
     public required ReturnChatGroupPagedEventsPaginationDirection PaginationDirection { get; set; }
 

@@ -16,13 +16,13 @@ public record ReturnConfig : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// List of built-in tools associated with this config
+    /// List of built-in tools associated with this Config.
     /// </summary>
     [JsonPropertyName("builtin_tools")]
     public IEnumerable<ReturnBuiltinTool>? BuiltinTools { get; set; }
 
     /// <summary>
-    /// The timestamp when the first version of this config was created.
+    /// Time at which the Config was created. Measured in seconds since the Unix epoch.
     /// </summary>
     [JsonPropertyName("created_on")]
     public long? CreatedOn { get; set; }
@@ -34,7 +34,9 @@ public record ReturnConfig : IJsonOnDeserialized
     public ReturnEventMessageSpecs? EventMessages { get; set; }
 
     /// <summary>
-    /// The version of the EVI used with this config.
+    /// Specifies the EVI version to use. See our [EVI Version  Guide](/docs/speech-to-speech-evi/configuration/evi-version) for differences between versions.
+    ///
+    /// **We're officially sunsetting EVI versions 1 and 2 on August 30, 2025**. To keep things running smoothly, be sure to [migrate to EVI 3](/docs/speech-to-speech-evi/configuration/evi-version#migrating-to-evi-3) before then.
     /// </summary>
     [JsonPropertyName("evi_version")]
     public string? EviVersion { get; set; }
@@ -49,7 +51,7 @@ public record ReturnConfig : IJsonOnDeserialized
     public ReturnLanguageModel? LanguageModel { get; set; }
 
     /// <summary>
-    /// The timestamp when this version of the config was created.
+    /// Time at which the Config was last modified. Measured in seconds since the Unix epoch.
     /// </summary>
     [JsonPropertyName("modified_on")]
     public long? ModifiedOn { get; set; }
@@ -70,19 +72,23 @@ public record ReturnConfig : IJsonOnDeserialized
     public ReturnTimeoutSpecs? Timeouts { get; set; }
 
     /// <summary>
-    /// List of user-defined tools associated with this config.
+    /// List of user-defined tools associated with this Config.
     /// </summary>
     [JsonPropertyName("tools")]
     public IEnumerable<ReturnUserDefinedTool>? Tools { get; set; }
 
     /// <summary>
-    /// Version number for a Config. Version numbers should be integers. The combination of configId and version number is unique.
+    /// Version number for a Config.
+    ///
+    /// Configs, Prompts, Custom Voices, and Tools are versioned. This versioning system supports iterative development, allowing you to progressively refine configurations and revert to previous versions if needed.
+    ///
+    /// Version numbers are integer values representing different iterations of the Config. Each update to the Config increments its version number.
     /// </summary>
     [JsonPropertyName("version")]
     public int? Version { get; set; }
 
     /// <summary>
-    /// Description that is appended to a specific version of a Config.
+    /// An optional description of the Config version.
     /// </summary>
     [JsonPropertyName("version_description")]
     public string? VersionDescription { get; set; }

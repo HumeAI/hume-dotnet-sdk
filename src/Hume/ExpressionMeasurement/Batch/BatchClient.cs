@@ -4,7 +4,7 @@ using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
 
-public partial class BatchClient
+public partial class BatchClient : IBatchClient
 {
     private RawClient _client;
 
@@ -13,13 +13,9 @@ public partial class BatchClient
         _client = client;
     }
 
-    /// <summary>
-    /// Sort and filter jobs.
-    /// </summary>
-    /// <example><code>
-    /// await client.ExpressionMeasurement.Batch.ListJobsAsync(new BatchListJobsRequest());
-    /// </code></example>
-    public async System.Threading.Tasks.Task<IEnumerable<InferenceJob>> ListJobsAsync(
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<IEnumerable<InferenceJob>>
+    > ListJobsAsyncCore(
         BatchListJobsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -65,14 +61,28 @@ public partial class BatchClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<InferenceJob>>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<IEnumerable<InferenceJob>>(responseBody)!;
+                return new WithRawResponse<IEnumerable<InferenceJob>>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             throw new HumeClientApiException(
@@ -83,19 +93,7 @@ public partial class BatchClient
         }
     }
 
-    /// <summary>
-    /// Start a new measurement inference job.
-    /// </summary>
-    /// <example><code>
-    /// await client.ExpressionMeasurement.Batch.StartInferenceJobAsync(
-    ///     new InferenceBaseRequest
-    ///     {
-    ///         Urls = new List&lt;string&gt;() { "https://hume-tutorials.s3.amazonaws.com/faces.zip" },
-    ///         Notify = true,
-    ///     }
-    /// );
-    /// </code></example>
-    public async System.Threading.Tasks.Task<JobId> StartInferenceJobAsync(
+    private async System.Threading.Tasks.Task<WithRawResponse<JobId>> StartInferenceJobAsyncCore(
         InferenceBaseRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -120,14 +118,28 @@ public partial class BatchClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<JobId>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<JobId>(responseBody)!;
+                return new WithRawResponse<JobId>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             throw new HumeClientApiException(
@@ -138,13 +150,7 @@ public partial class BatchClient
         }
     }
 
-    /// <summary>
-    /// Get the request details and state of a given job.
-    /// </summary>
-    /// <example><code>
-    /// await client.ExpressionMeasurement.Batch.GetJobDetailsAsync("job_id");
-    /// </code></example>
-    public async System.Threading.Tasks.Task<InferenceJob> GetJobDetailsAsync(
+    private async System.Threading.Tasks.Task<WithRawResponse<InferenceJob>> GetJobDetailsAsyncCore(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -170,14 +176,28 @@ public partial class BatchClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<InferenceJob>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<InferenceJob>(responseBody)!;
+                return new WithRawResponse<InferenceJob>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             throw new HumeClientApiException(
@@ -188,15 +208,9 @@ public partial class BatchClient
         }
     }
 
-    /// <summary>
-    /// Get the JSON predictions of a completed inference job.
-    /// </summary>
-    /// <example><code>
-    /// await client.ExpressionMeasurement.Batch.GetJobPredictionsAsync("job_id");
-    /// </code></example>
-    public async System.Threading.Tasks.Task<
-        IEnumerable<InferenceSourcePredictResult>
-    > GetJobPredictionsAsync(
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<IEnumerable<InferenceSourcePredictResult>>
+    > GetJobPredictionsAsyncCore(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -222,16 +236,30 @@ public partial class BatchClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<InferenceSourcePredictResult>>(
+                var responseData = JsonUtils.Deserialize<IEnumerable<InferenceSourcePredictResult>>(
                     responseBody
                 )!;
+                return new WithRawResponse<IEnumerable<InferenceSourcePredictResult>>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             throw new HumeClientApiException(
@@ -242,10 +270,9 @@ public partial class BatchClient
         }
     }
 
-    /// <summary>
-    /// Get the artifacts ZIP of a completed inference job.
-    /// </summary>
-    public async System.Threading.Tasks.Task<System.IO.Stream> GetJobArtifactsAsync(
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<System.IO.Stream>
+    > GetJobArtifactsAsyncCore(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -268,7 +295,17 @@ public partial class BatchClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return await response.Raw.Content.ReadAsStreamAsync();
+            var stream = await response.Raw.Content.ReadAsStreamAsync();
+            return new WithRawResponse<System.IO.Stream>()
+            {
+                Data = stream,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
         }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
@@ -280,15 +317,9 @@ public partial class BatchClient
         }
     }
 
-    /// <summary>
-    /// Start a new batch inference job.
-    /// </summary>
-    /// <example><code>
-    /// await client.ExpressionMeasurement.Batch.StartInferenceJobFromLocalFileAsync(
-    ///     new BatchStartInferenceJobFromLocalFileRequest()
-    /// );
-    /// </code></example>
-    public async System.Threading.Tasks.Task<JobId> StartInferenceJobFromLocalFileAsync(
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<JobId>
+    > StartInferenceJobFromLocalFileAsyncCore(
         BatchStartInferenceJobFromLocalFileRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -302,7 +333,7 @@ public partial class BatchClient
             Options = options,
         };
         multipartFormRequest_.AddJsonPart("json", request.Json);
-        multipartFormRequest_.AddFileParameterParts("file", request.File);
+        multipartFormRequest_.AddFileParameterPart("file", request.File);
         var response = await _client
             .SendRequestAsync(multipartFormRequest_, cancellationToken)
             .ConfigureAwait(false);
@@ -311,14 +342,28 @@ public partial class BatchClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<JobId>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<JobId>(responseBody)!;
+                return new WithRawResponse<JobId>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             throw new HumeClientApiException(
@@ -327,5 +372,112 @@ public partial class BatchClient
                 responseBody
             );
         }
+    }
+
+    /// <summary>
+    /// Sort and filter jobs.
+    /// </summary>
+    /// <example><code>
+    /// await client.ExpressionMeasurement.Batch.ListJobsAsync(new BatchListJobsRequest());
+    /// </code></example>
+    public WithRawResponseTask<IEnumerable<InferenceJob>> ListJobsAsync(
+        BatchListJobsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<IEnumerable<InferenceJob>>(
+            ListJobsAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Start a new measurement inference job.
+    /// </summary>
+    /// <example><code>
+    /// await client.ExpressionMeasurement.Batch.StartInferenceJobAsync(
+    ///     new InferenceBaseRequest
+    ///     {
+    ///         Urls = new List&lt;string&gt;() { "https://hume-tutorials.s3.amazonaws.com/faces.zip" },
+    ///         Notify = true,
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<JobId> StartInferenceJobAsync(
+        InferenceBaseRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<JobId>(
+            StartInferenceJobAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Get the request details and state of a given job.
+    /// </summary>
+    /// <example><code>
+    /// await client.ExpressionMeasurement.Batch.GetJobDetailsAsync("job_id");
+    /// </code></example>
+    public WithRawResponseTask<InferenceJob> GetJobDetailsAsync(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<InferenceJob>(
+            GetJobDetailsAsyncCore(id, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Get the JSON predictions of a completed inference job.
+    /// </summary>
+    /// <example><code>
+    /// await client.ExpressionMeasurement.Batch.GetJobPredictionsAsync("job_id");
+    /// </code></example>
+    public WithRawResponseTask<IEnumerable<InferenceSourcePredictResult>> GetJobPredictionsAsync(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<IEnumerable<InferenceSourcePredictResult>>(
+            GetJobPredictionsAsyncCore(id, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Get the artifacts ZIP of a completed inference job.
+    /// </summary>
+    public WithRawResponseTask<System.IO.Stream> GetJobArtifactsAsync(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<System.IO.Stream>(
+            GetJobArtifactsAsyncCore(id, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Start a new batch inference job.
+    /// </summary>
+    /// <example><code>
+    /// await client.ExpressionMeasurement.Batch.StartInferenceJobFromLocalFileAsync(
+    ///     new BatchStartInferenceJobFromLocalFileRequest()
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<JobId> StartInferenceJobFromLocalFileAsync(
+        BatchStartInferenceJobFromLocalFileRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<JobId>(
+            StartInferenceJobFromLocalFileAsyncCore(request, options, cancellationToken)
+        );
     }
 }

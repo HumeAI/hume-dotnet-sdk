@@ -238,12 +238,12 @@ public record StateTraining
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<StateTraining>
     {
-        public override bool CanConvert(global::System.Type typeToConvert) =>
+        public override bool CanConvert(System.Type typeToConvert) =>
             typeof(StateTraining).IsAssignableFrom(typeToConvert);
 
         public override StateTraining Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {

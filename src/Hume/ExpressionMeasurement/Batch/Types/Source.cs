@@ -191,12 +191,12 @@ public record Source
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<Source>
     {
-        public override bool CanConvert(global::System.Type typeToConvert) =>
+        public override bool CanConvert(System.Type typeToConvert) =>
             typeof(Source).IsAssignableFrom(typeToConvert);
 
         public override Source Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {

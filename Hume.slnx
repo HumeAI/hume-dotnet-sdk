@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Hume.Test/Hume.Test.csproj" />
+  <Project Path="src/Hume/Hume.csproj" />
+</Solution>
