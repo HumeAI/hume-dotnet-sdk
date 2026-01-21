@@ -1,4 +1,6 @@
 using System.Collections;
+using Hume.EmpathicVoice;
+using OneOf;
 
 namespace Hume.Core.WebSockets;
 
@@ -106,7 +108,89 @@ public class Query : IEnumerable<KeyValuePair<string, string>>
     }
 
     /// <summary>
-    /// Adds a decimal parameter to the query if both key and value are not null.
+    /// Adds ConnectSessionSettings to the query using deep object notation.
+    /// Example: session_settings[system_prompt]=value, session_settings[variables][name]=John
+    /// </summary>
+    /// <param name="key">The parameter key (e.g., "session_settings").</param>
+    /// <param name="value">The ConnectSessionSettings value.</param>
+    public void Add(string key, ConnectSessionSettings? value)
+    {
+        if (value == null || string.IsNullOrEmpty(key))
+        {
+            return;
+        }
+
+        // Add each property using deep object notation
+        if (value.SystemPrompt != null)
+        {
+            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[system_prompt]", value.SystemPrompt));
+        }
+
+        if (value.CustomSessionId != null)
+        {
+            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[custom_session_id]", value.CustomSessionId));
+        }
+
+        if (value.Audio != null)
+        {
+            if (value.Audio.Encoding != null)
+            {
+                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[audio][encoding]", value.Audio.Encoding.ToString()!));
+            }
+            if (value.Audio.Channels != null)
+            {
+                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[audio][channels]", value.Audio.Channels.ToString()!));
+            }
+            if (value.Audio.SampleRate != null)
+            {
+                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[audio][sample_rate]", value.Audio.SampleRate.ToString()!));
+            }
+        }
+
+        if (value.Context != null)
+        {
+            if (value.Context.Text != null)
+            {
+                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[context][text]", value.Context.Text));
+            }
+            if (value.Context.Type != null)
+            {
+                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[context][type]", value.Context.Type.ToString()!));
+            }
+        }
+
+        if (value.EventLimit != null)
+        {
+            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[event_limit]", value.EventLimit.ToString()!));
+        }
+
+        if (value.LanguageModelApiKey != null)
+        {
+            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[language_model_api_key]", value.LanguageModelApiKey));
+        }
+
+        if (value.VoiceId != null)
+        {
+            _queryParameters.Add(new KeyValuePair<string, string>($"{key}[voice_id]", value.VoiceId));
+        }
+
+        // Handle variables with nested deep object notation
+        if (value.Variables != null)
+        {
+            foreach (var variable in value.Variables)
+            {
+                var varValue = variable.Value.Match(
+                    str => str,
+                    dbl => dbl.ToString(),
+                    b => b.ToString().ToLower()
+                );
+                _queryParameters.Add(new KeyValuePair<string, string>($"{key}[variables][{variable.Key}]", varValue));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds an object parameter to the query if both key and value are not null.
     /// </summary>
     /// <param name="key">The parameter key.</param>
     /// <param name="value">The parameter value.</param>
