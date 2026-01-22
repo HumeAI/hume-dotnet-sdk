@@ -141,30 +141,15 @@ jobs:
           echo "=== Updating Example to Use Local SDK ==="
           echo "SDK version: $SDK_VERSION"
           echo "========================================="
-          # Find the main project file (not the test file)
-          PROJECT_FILE=$(find . -name "*.csproj" -not -name "*.tests.csproj" | head -1)
-          if [ -n "$PROJECT_FILE" ]; then
-            echo "Updating $PROJECT_FILE"
-            # Use sed to update the version, or add the package reference if it doesn't exist
+          # Update ALL project files (including test projects) that reference Hume
+          for PROJECT_FILE in $(find . -name "*.csproj"); do
             if grep -q "PackageReference.*Hume" "$PROJECT_FILE"; then
+              echo "Updating $PROJECT_FILE"
               sed -i "s|<PackageReference Include=\"Hume\" Version=\"[^\"]*\"|<PackageReference Include=\"Hume\" Version=\"$SDK_VERSION\"|g" "$PROJECT_FILE"
-            else
-              # Add package reference before closing </Project> tag
-              # Use a temporary file to handle newlines properly
-              awk -v version="$SDK_VERSION" '
-                /<\/Project>/ {
-                  print "    <ItemGroup>"
-                  print "      <PackageReference Include=\"Hume\" Version=\"" version "\" />"
-                  print "    </ItemGroup>"
-                }
-                { print }
-              ' "$PROJECT_FILE" > "$PROJECT_FILE.tmp" && mv "$PROJECT_FILE.tmp" "$PROJECT_FILE"
+              echo "Updated project file:"
+              cat "$PROJECT_FILE"
             fi
-            echo "Updated project file:"
-            cat "$PROJECT_FILE"
-          else
-            echo "Warning: No project file found"
-          fi
+          done
 
       - name: Restore dependencies
         working-directory: ./examples/tts/tts-dotnet-quickstart
@@ -180,6 +165,36 @@ jobs:
             find . -maxdepth 1 -name "*.csproj" -type f -exec dotnet restore {} --source local-sdk --source https://api.nuget.org/v3/index.json \;
           fi
 
+      - name: Verify TTS SDK version
+        working-directory: ./examples/tts/tts-dotnet-quickstart
+        run: |
+          echo "=== VERIFYING SDK VERSION ==="
+          echo "Expected SDK version: $SDK_VERSION"
+          echo ""
+          echo "=== Checking project files for Hume reference ==="
+          grep -r "Hume" *.csproj || echo "No Hume references found in csproj files"
+          echo ""
+          echo "=== Resolved package versions (from project.assets.json) ==="
+          for ASSETS_FILE in $(find . -name "project.assets.json" 2>/dev/null); do
+            echo "Checking: $ASSETS_FILE"
+            echo "  Searching for Hume in assets file..."
+            grep -i "hume" "$ASSETS_FILE" | head -5 || echo "  No Hume references found"
+            RESOLVED_VERSION=$(grep -o '"Hume/[^"]*"' "$ASSETS_FILE" | head -1 | sed 's/"Hume\///' | sed 's/"//' || echo "")
+            echo "  Resolved Hume version: '$RESOLVED_VERSION'"
+            if [ -z "$RESOLVED_VERSION" ]; then
+              echo "  WARNING: Could not find Hume version in assets file"
+            elif [ "$RESOLVED_VERSION" != "$SDK_VERSION" ]; then
+              echo "  ERROR: Version mismatch! Expected $SDK_VERSION but got $RESOLVED_VERSION"
+              exit 1
+            else
+              echo "  OK: Version matches expected"
+            fi
+          done
+          echo ""
+          echo "=== NuGet package cache check ==="
+          ls -la ~/.nuget/packages/hume/ 2>/dev/null || echo "No Hume packages in cache"
+          echo "================================="
+
       - name: Run TTS tests
         working-directory: ./examples/tts/tts-dotnet-quickstart
         run: |
@@ -193,30 +208,15 @@ jobs:
           echo "=== Updating Example to Use Local SDK ==="
           echo "SDK version: $SDK_VERSION"
           echo "========================================="
-          # Find the main project file (not the test file)
-          PROJECT_FILE=$(find . -name "*.csproj" -not -name "*.tests.csproj" | head -1)
-          if [ -n "$PROJECT_FILE" ]; then
-            echo "Updating $PROJECT_FILE"
-            # Use sed to update the version, or add the package reference if it doesn't exist
+          # Update ALL project files (including test projects) that reference Hume
+          for PROJECT_FILE in $(find . -name "*.csproj"); do
             if grep -q "PackageReference.*Hume" "$PROJECT_FILE"; then
+              echo "Updating $PROJECT_FILE"
               sed -i "s|<PackageReference Include=\"Hume\" Version=\"[^\"]*\"|<PackageReference Include=\"Hume\" Version=\"$SDK_VERSION\"|g" "$PROJECT_FILE"
-            else
-              # Add package reference before closing </Project> tag
-              # Use a temporary file to handle newlines properly
-              awk -v version="$SDK_VERSION" '
-                /<\/Project>/ {
-                  print "    <ItemGroup>"
-                  print "      <PackageReference Include=\"Hume\" Version=\"" version "\" />"
-                  print "    </ItemGroup>"
-                }
-                { print }
-              ' "$PROJECT_FILE" > "$PROJECT_FILE.tmp" && mv "$PROJECT_FILE.tmp" "$PROJECT_FILE"
+              echo "Updated project file:"
+              cat "$PROJECT_FILE"
             fi
-            echo "Updated project file:"
-            cat "$PROJECT_FILE"
-          else
-            echo "Warning: No project file found"
-          fi
+          done
 
       - name: Restore EVI dependencies
         working-directory: ./examples/evi/evi-dotnet-quickstart
@@ -231,6 +231,36 @@ jobs:
             echo "Restoring all .csproj files"
             find . -maxdepth 1 -name "*.csproj" -type f -exec dotnet restore {} --source local-sdk --source https://api.nuget.org/v3/index.json \;
           fi
+
+      - name: Verify EVI SDK version
+        working-directory: ./examples/evi/evi-dotnet-quickstart
+        run: |
+          echo "=== VERIFYING SDK VERSION ==="
+          echo "Expected SDK version: $SDK_VERSION"
+          echo ""
+          echo "=== Checking project files for Hume reference ==="
+          grep -r "Hume" *.csproj || echo "No Hume references found in csproj files"
+          echo ""
+          echo "=== Resolved package versions (from project.assets.json) ==="
+          for ASSETS_FILE in $(find . -name "project.assets.json" 2>/dev/null); do
+            echo "Checking: $ASSETS_FILE"
+            echo "  Searching for Hume in assets file..."
+            grep -i "hume" "$ASSETS_FILE" | head -5 || echo "  No Hume references found"
+            RESOLVED_VERSION=$(grep -o '"Hume/[^"]*"' "$ASSETS_FILE" | head -1 | sed 's/"Hume\///' | sed 's/"//' || echo "")
+            echo "  Resolved Hume version: '$RESOLVED_VERSION'"
+            if [ -z "$RESOLVED_VERSION" ]; then
+              echo "  WARNING: Could not find Hume version in assets file"
+            elif [ "$RESOLVED_VERSION" != "$SDK_VERSION" ]; then
+              echo "  ERROR: Version mismatch! Expected $SDK_VERSION but got $RESOLVED_VERSION"
+              exit 1
+            else
+              echo "  OK: Version matches expected"
+            fi
+          done
+          echo ""
+          echo "=== NuGet package cache check ==="
+          ls -la ~/.nuget/packages/hume/ 2>/dev/null || echo "No Hume packages in cache"
+          echo "================================="
 
       - name: Run EVI tests
         working-directory: ./examples/evi/evi-dotnet-quickstart

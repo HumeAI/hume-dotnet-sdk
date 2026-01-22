@@ -2,3 +2,5 @@
 src/HumeApi.Test/Unit/MockServer/Tts/SynthesizeJsonStreamingTest.cs
 .github/workflows/release-upm.yml
 .github/workflows/release-nuget.yml
+.github/workflows/ci.yml
+src/Hume.sln
