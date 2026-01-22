@@ -171,21 +171,28 @@ jobs:
           echo "=== VERIFYING SDK VERSION ==="
           echo "Expected SDK version: $SDK_VERSION"
           echo ""
+          echo "=== Checking project files for Hume reference ==="
+          grep -r "Hume" *.csproj || echo "No Hume references found in csproj files"
+          echo ""
           echo "=== Resolved package versions (from project.assets.json) ==="
           for ASSETS_FILE in $(find . -name "project.assets.json" 2>/dev/null); do
             echo "Checking: $ASSETS_FILE"
-            RESOLVED_VERSION=$(grep -oP '"Hume/\K[^"]+' "$ASSETS_FILE" | head -1 || echo "not found")
-            echo "  Resolved Hume version: $RESOLVED_VERSION"
-            if [ "$RESOLVED_VERSION" != "$SDK_VERSION" ] && [ "$RESOLVED_VERSION" != "not found" ]; then
+            echo "  Searching for Hume in assets file..."
+            grep -i "hume" "$ASSETS_FILE" | head -5 || echo "  No Hume references found"
+            RESOLVED_VERSION=$(grep -o '"Hume/[^"]*"' "$ASSETS_FILE" | head -1 | sed 's/"Hume\///' | sed 's/"//' || echo "")
+            echo "  Resolved Hume version: '$RESOLVED_VERSION'"
+            if [ -z "$RESOLVED_VERSION" ]; then
+              echo "  WARNING: Could not find Hume version in assets file"
+            elif [ "$RESOLVED_VERSION" != "$SDK_VERSION" ]; then
               echo "  ERROR: Version mismatch! Expected $SDK_VERSION but got $RESOLVED_VERSION"
               exit 1
+            else
+              echo "  OK: Version matches expected"
             fi
           done
           echo ""
           echo "=== NuGet package cache check ==="
-          CACHED_PACKAGE=$(find ~/.nuget/packages/hume -name "*.nuspec" 2>/dev/null | head -5)
-          echo "Cached Hume packages:"
-          echo "$CACHED_PACKAGE"
+          ls -la ~/.nuget/packages/hume/ 2>/dev/null || echo "No Hume packages in cache"
           echo "================================="
 
       - name: Run TTS tests
@@ -231,21 +238,28 @@ jobs:
           echo "=== VERIFYING SDK VERSION ==="
           echo "Expected SDK version: $SDK_VERSION"
           echo ""
+          echo "=== Checking project files for Hume reference ==="
+          grep -r "Hume" *.csproj || echo "No Hume references found in csproj files"
+          echo ""
           echo "=== Resolved package versions (from project.assets.json) ==="
           for ASSETS_FILE in $(find . -name "project.assets.json" 2>/dev/null); do
             echo "Checking: $ASSETS_FILE"
-            RESOLVED_VERSION=$(grep -oP '"Hume/\K[^"]+' "$ASSETS_FILE" | head -1 || echo "not found")
-            echo "  Resolved Hume version: $RESOLVED_VERSION"
-            if [ "$RESOLVED_VERSION" != "$SDK_VERSION" ] && [ "$RESOLVED_VERSION" != "not found" ]; then
-              echo "  WARNING: Version mismatch! Expected $SDK_VERSION but got $RESOLVED_VERSION"
+            echo "  Searching for Hume in assets file..."
+            grep -i "hume" "$ASSETS_FILE" | head -5 || echo "  No Hume references found"
+            RESOLVED_VERSION=$(grep -o '"Hume/[^"]*"' "$ASSETS_FILE" | head -1 | sed 's/"Hume\///' | sed 's/"//' || echo "")
+            echo "  Resolved Hume version: '$RESOLVED_VERSION'"
+            if [ -z "$RESOLVED_VERSION" ]; then
+              echo "  WARNING: Could not find Hume version in assets file"
+            elif [ "$RESOLVED_VERSION" != "$SDK_VERSION" ]; then
+              echo "  ERROR: Version mismatch! Expected $SDK_VERSION but got $RESOLVED_VERSION"
               exit 1
+            else
+              echo "  OK: Version matches expected"
             fi
           done
           echo ""
           echo "=== NuGet package cache check ==="
-          CACHED_PACKAGE=$(find ~/.nuget/packages/hume -name "*.nuspec" 2>/dev/null | head -5)
-          echo "Cached Hume packages:"
-          echo "$CACHED_PACKAGE"
+          ls -la ~/.nuget/packages/hume/ 2>/dev/null || echo "No Hume packages in cache"
           echo "================================="
 
       - name: Run EVI tests
