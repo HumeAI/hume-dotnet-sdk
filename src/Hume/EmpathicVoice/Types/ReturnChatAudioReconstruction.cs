@@ -45,19 +45,6 @@ public record ReturnChatAudioReconstruction : IJsonOnDeserialized
     [JsonPropertyName("signed_url_expiration_timestamp_millis")]
     public long? SignedUrlExpirationTimestampMillis { get; set; }
 
-    /// <summary>
-    /// Indicates the current state of the audio reconstruction job. There are five possible statuses:
-    ///
-    /// - `QUEUED`: The reconstruction job is waiting to be processed.
-    ///
-    /// - `IN_PROGRESS`: The reconstruction is currently being processed.
-    ///
-    /// - `COMPLETE`: The audio reconstruction is finished and ready for download.
-    ///
-    /// - `ERROR`: An error occurred during the reconstruction process.
-    ///
-    /// - `CANCELED`: The reconstruction job has been canceled.
-    /// </summary>
     [JsonPropertyName("status")]
     public required ReturnChatAudioReconstructionStatus Status { get; set; }
 

@@ -2,7 +2,7 @@ using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Stream;
 
-public partial class StreamClient
+public partial class StreamClient : IStreamClient
 {
     private RawClient _client;
 

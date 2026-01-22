@@ -4,7 +4,7 @@ using Hume.Core;
 
 namespace Hume.Tts;
 
-public partial class VoicesClient
+public partial class VoicesClient : IVoicesClient
 {
     private RawClient _client;
 
@@ -14,9 +14,22 @@ public partial class VoicesClient
     }
 
     /// <summary>
-    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://platform.hume.ai/tts/voice-library).
+    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
     /// </summary>
-    private async System.Threading.Tasks.Task<ReturnPagedVoices> ListInternalAsync(
+    private WithRawResponseTask<ReturnPagedVoices> ListInternalAsync(
+        VoicesListRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<ReturnPagedVoices>(
+            ListInternalAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnPagedVoices>
+    > ListInternalAsyncCore(
         VoicesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -24,6 +37,7 @@ public partial class VoicesClient
     {
         var _query = new Dictionary<string, object>();
         _query["provider"] = request.Provider.Stringify();
+        _query["filter_tag"] = request.FilterTag;
         if (request.PageNumber != null)
         {
             _query["page_number"] = request.PageNumber.Value.ToString();
@@ -54,14 +68,28 @@ public partial class VoicesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnPagedVoices>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnPagedVoices>(responseBody)!;
+                return new WithRawResponse<ReturnPagedVoices>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -86,58 +114,7 @@ public partial class VoicesClient
         }
     }
 
-    /// <summary>
-    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://platform.hume.ai/tts/voice-library).
-    /// </summary>
-    /// <example><code>
-    /// await client.Tts.Voices.ListAsync(
-    ///     new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
-    /// );
-    /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnVoice>> ListAsync(
-        VoicesListRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        request = request with { };
-        var pager = await OffsetPager<
-            VoicesListRequest,
-            RequestOptions?,
-            ReturnPagedVoices,
-            int?,
-            object,
-            ReturnVoice
-        >
-            .CreateInstanceAsync(
-                request,
-                options,
-                ListInternalAsync,
-                request => request.PageNumber ?? 0,
-                (request, offset) =>
-                {
-                    request.PageNumber = offset;
-                },
-                null,
-                response => response.VoicesPage?.ToList(),
-                null,
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        return pager;
-    }
-
-    /// <summary>
-    /// Saves a new custom voice to your account using the specified TTS generation ID.
-    ///
-    /// Once saved, this voice can be reused in subsequent TTS requests, ensuring consistent speech style and prosody. For more details on voice creation, see the [Voices Guide](/docs/text-to-speech-tts/voices).
-    /// </summary>
-    /// <example><code>
-    /// await client.Tts.Voices.CreateAsync(
-    ///     new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
-    /// );
-    /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnVoice> CreateAsync(
+    private async System.Threading.Tasks.Task<WithRawResponse<ReturnVoice>> CreateAsyncCore(
         PostedVoice request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -162,14 +139,28 @@ public partial class VoicesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnVoice>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnVoice>(responseBody)!;
+                return new WithRawResponse<ReturnVoice>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -192,6 +183,69 @@ public partial class VoicesClient
                 responseBody
             );
         }
+    }
+
+    /// <summary>
+    /// Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
+    /// </summary>
+    /// <example><code>
+    /// await client.Tts.Voices.ListAsync(
+    ///     new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
+    /// );
+    /// </code></example>
+    public async System.Threading.Tasks.Task<Pager<ReturnVoice>> ListAsync(
+        VoicesListRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        request = request with { };
+        var pager = await OffsetPager<
+            VoicesListRequest,
+            RequestOptions?,
+            ReturnPagedVoices,
+            int?,
+            object,
+            ReturnVoice
+        >
+            .CreateInstanceAsync(
+                request,
+                options,
+                async (request, options, cancellationToken) =>
+                    await ListInternalAsync(request, options, cancellationToken),
+                request => request.PageNumber ?? 0,
+                (request, offset) =>
+                {
+                    request.PageNumber = offset;
+                },
+                null,
+                response => response.VoicesPage?.ToList(),
+                null,
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        return pager;
+    }
+
+    /// <summary>
+    /// Saves a new custom voice to your account using the specified TTS generation ID.
+    ///
+    /// Once saved, this voice can be reused in subsequent TTS requests, ensuring consistent speech style and prosody. For more details on voice creation, see the [Voices Guide](/docs/text-to-speech-tts/voices).
+    /// </summary>
+    /// <example><code>
+    /// await client.Tts.Voices.CreateAsync(
+    ///     new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<ReturnVoice> CreateAsync(
+        PostedVoice request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<ReturnVoice>(
+            CreateAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>

@@ -34,6 +34,12 @@ public record ChatsListChatsRequest
     [JsonIgnore]
     public string? ConfigId { get; set; }
 
+    /// <summary>
+    /// Chat status to apply to the chat. String from the ChatStatus enum.
+    /// </summary>
+    [JsonIgnore]
+    public string? Status { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

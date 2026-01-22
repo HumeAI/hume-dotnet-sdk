@@ -4,7 +4,7 @@ using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-public partial class ChatsClient
+public partial class ChatsClient : IChatsClient
 {
     private RawClient _client;
 
@@ -16,7 +16,20 @@ public partial class ChatsClient
     /// <summary>
     /// Fetches a paginated list of **Chats**.
     /// </summary>
-    private async System.Threading.Tasks.Task<ReturnPagedChats> ListChatsInternalAsync(
+    private WithRawResponseTask<ReturnPagedChats> ListChatsInternalAsync(
+        ChatsListChatsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<ReturnPagedChats>(
+            ListChatsInternalAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnPagedChats>
+    > ListChatsInternalAsyncCore(
         ChatsListChatsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -39,6 +52,10 @@ public partial class ChatsClient
         {
             _query["config_id"] = request.ConfigId;
         }
+        if (request.Status != null)
+        {
+            _query["status"] = request.Status;
+        }
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -57,14 +74,28 @@ public partial class ChatsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnPagedChats>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnPagedChats>(responseBody)!;
+                return new WithRawResponse<ReturnPagedChats>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -92,7 +123,21 @@ public partial class ChatsClient
     /// <summary>
     /// Fetches a paginated list of **Chat** events.
     /// </summary>
-    private async System.Threading.Tasks.Task<ReturnChatPagedEvents> ListChatEventsInternalAsync(
+    private WithRawResponseTask<ReturnChatPagedEvents> ListChatEventsInternalAsync(
+        string id,
+        ChatsListChatEventsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<ReturnChatPagedEvents>(
+            ListChatEventsInternalAsyncCore(id, request, options, cancellationToken)
+        );
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnChatPagedEvents>
+    > ListChatEventsInternalAsyncCore(
         string id,
         ChatsListChatEventsRequest request,
         RequestOptions? options = null,
@@ -133,14 +178,104 @@ public partial class ChatsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnChatPagedEvents>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnChatPagedEvents>(responseBody)!;
+                return new WithRawResponse<ReturnChatPagedEvents>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
 
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnChatAudioReconstruction>
+    > GetAudioAsyncCore(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "v0/evi/chats/{0}/audio",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnChatAudioReconstruction>(
+                    responseBody
+                )!;
+                return new WithRawResponse<ReturnChatAudioReconstruction>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -196,7 +331,8 @@ public partial class ChatsClient
             .CreateInstanceAsync(
                 request,
                 options,
-                ListChatsInternalAsync,
+                async (request, options, cancellationToken) =>
+                    await ListChatsInternalAsync(request, options, cancellationToken),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -244,8 +380,9 @@ public partial class ChatsClient
             .CreateInstanceAsync(
                 request,
                 options,
-                (request, options, cancellationToken) =>
-                    ListChatEventsInternalAsync(id, request, options, cancellationToken),
+                async (request, options, cancellationToken) =>
+                    await ListChatEventsInternalAsync(id, request, options, cancellationToken)
+                        .ConfigureAwait(false),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -266,61 +403,14 @@ public partial class ChatsClient
     /// <example><code>
     /// await client.EmpathicVoice.Chats.GetAudioAsync("470a49f6-1dec-4afe-8b61-035d3b2d63b0");
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnChatAudioReconstruction> GetAudioAsync(
+    public WithRawResponseTask<ReturnChatAudioReconstruction> GetAudioAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "v0/evi/chats/{0}/audio",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnChatAudioReconstruction>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnChatAudioReconstruction>(
+            GetAudioAsyncCore(id, options, cancellationToken)
+        );
     }
 }

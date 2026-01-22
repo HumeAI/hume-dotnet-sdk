@@ -1,9 +1,9 @@
-﻿// ReSharper disable All
+// ReSharper disable All
 #pragma warning disable
 using System.Net.WebSockets;
 using System.Text;
 
-namespace Hume.Core.Async;
+namespace Hume.Core.WebSockets;
 
 internal partial class WebSocketConnection
 {

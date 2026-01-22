@@ -5,7 +5,7 @@ using OneOf;
 
 namespace Hume.EmpathicVoice;
 
-public partial class ControlPlaneClient
+public partial class ControlPlaneClient : IControlPlaneClient
 {
     private RawClient _client;
 

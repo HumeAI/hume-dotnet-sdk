@@ -31,7 +31,8 @@ public record AudioConfiguration : IJsonOnDeserialized
     public string Encoding
     {
         get => "linear16";
-        set => value.Assert(value == "linear16", "'[object Object]' must be " + "linear16");
+        set =>
+            value.Assert(value == "linear16", string.Format("'Encoding' must be {0}", "linear16"));
     }
 
     /// <summary>

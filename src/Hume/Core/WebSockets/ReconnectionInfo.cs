@@ -1,6 +1,6 @@
-﻿// ReSharper disable All
+// ReSharper disable All
 #pragma warning disable
-namespace Hume.Core.Async.Models;
+namespace Hume.Core.WebSockets;
 
 /// <summary>
 /// Contains information about a WebSocket reconnection event.
