@@ -107,58 +107,23 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
     public ChatApi(ChatApi.Options options)
     {
         _options = options;
-        var queryParams = new List<string>();
-        
-        // Add simple query parameters
-        if (!string.IsNullOrEmpty(_options.AccessToken))
-            queryParams.Add($"access_token={Uri.EscapeDataString(_options.AccessToken)}");
-        if (_options.AllowConnection.HasValue)
-            queryParams.Add($"allow_connection={_options.AllowConnection.Value.ToString().ToLower()}");
-        if (!string.IsNullOrEmpty(_options.ConfigId))
-            queryParams.Add($"config_id={Uri.EscapeDataString(_options.ConfigId)}");
-        if (_options.ConfigVersion.HasValue)
-            queryParams.Add($"config_version={_options.ConfigVersion.Value}");
-        if (_options.EventLimit.HasValue)
-            queryParams.Add($"event_limit={_options.EventLimit.Value}");
-        if (!string.IsNullOrEmpty(_options.ResumedChatGroupId))
-            queryParams.Add($"resumed_chat_group_id={Uri.EscapeDataString(_options.ResumedChatGroupId)}");
-        if (_options.VerboseTranscription.HasValue)
-            queryParams.Add($"verbose_transcription={_options.VerboseTranscription.Value.ToString().ToLower()}");
-        if (!string.IsNullOrEmpty(_options.ApiKey))
-            queryParams.Add($"api_key={Uri.EscapeDataString(_options.ApiKey)}");
-        
-        // Add session_settings using deep object notation
-        // Note: Brackets are NOT URL-encoded as the server expects them in raw form
-        if (_options.SessionSettings != null)
-        {
-            var deepObjectParams = QueryStringConverter.ToDeepObject(_options.SessionSettings);
-            foreach (var kvp in deepObjectParams)
-            {
-                // Build key: "session_settings[system_prompt]" or "session_settings[variables][userName]"
-                string paramKey;
-                if (string.IsNullOrEmpty(kvp.Key))
-                {
-                    paramKey = "session_settings";
-                }
-                else if (kvp.Key.Contains('['))
-                {
-                    paramKey = $"session_settings[{kvp.Key.Replace("[", "][")}";
-                }
-                else
-                {
-                    paramKey = $"session_settings[{kvp.Key}]";
-                }
-                // Don't encode brackets in the key - server expects raw brackets
-                queryParams.Add($"{paramKey}={Uri.EscapeDataString(kvp.Value)}");
-            }
-        }
-        
-        // Build the full URL manually (like Python SDK does)
-        var baseUrl = _options.BaseUrl.TrimEnd('/');
-        var queryString = string.Join("&", queryParams);
-        var fullUrl = $"{baseUrl}/chat?{queryString}";
-        
-        _client = new WebSocketClient(new Uri(fullUrl), OnTextMessage);
+
+        // Build query parameters
+        var queryString = new QueryStringBuilder.Builder(capacity: 16)
+            .Add("access_token", _options.AccessToken)
+            .Add("allow_connection", _options.AllowConnection)
+            .Add("config_id", _options.ConfigId)
+            .Add("config_version", _options.ConfigVersion)
+            .Add("event_limit", _options.EventLimit)
+            .Add("resumed_chat_group_id", _options.ResumedChatGroupId)
+            .Add("verbose_transcription", _options.VerboseTranscription)
+            .Add("api_key", _options.ApiKey)
+            .AddDeepObject("session_settings", _options.SessionSettings)
+            .Build();
+
+        var uri = new UriBuilder(_options.BaseUrl) { Query = queryString };
+        uri.Path = $"{uri.Path.TrimEnd('/')}/chat";
+        _client = new WebSocketClient(uri.Uri, OnTextMessage);
     }
 
     /// <summary>
