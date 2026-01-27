@@ -23,7 +23,11 @@ public record PublishTts : IJsonOnDeserialized
     public bool? Close { get; set; }
 
     /// <summary>
-    /// Natural language instructions describing how the text should be spoken by the model (e.g., `"a soft, gentle voice with a strong British accent"`).
+    /// Natural language instructions describing how the synthesized speech should sound, including but not limited to tone, intonation, pacing, and accent.
+    ///
+    /// **This field behaves differently depending on whether a voice is specified**:
+    /// - **Voice specified**: the description will serve as acting directions for delivery. Keep directions concise—100 characters or fewer—for best results. See our guide on [acting instructions](/docs/text-to-speech-tts/acting-instructions).
+    /// - **Voice not specified**: the description will serve as a voice prompt for generating a voice. See our [prompting guide](/docs/text-to-speech-tts/prompting) for design tips.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
@@ -35,13 +39,13 @@ public record PublishTts : IJsonOnDeserialized
     public bool? Flush { get; set; }
 
     /// <summary>
-    /// A relative measure of how fast this utterance should be spoken.
+    /// Speed multiplier for the synthesized speech. Extreme values below 0.75 and above 1.5 may sometimes cause instability to the generated output.
     /// </summary>
     [JsonPropertyName("speed")]
     public double? Speed { get; set; }
 
     /// <summary>
-    /// The input text to be converted to speech output.
+    /// The input text to be synthesized into speech.
     /// </summary>
     [JsonPropertyName("text")]
     public string? Text { get; set; }
@@ -53,7 +57,9 @@ public record PublishTts : IJsonOnDeserialized
     public double? TrailingSilence { get; set; }
 
     /// <summary>
-    /// The name or ID of the voice from the `Voice Library` to be used as the speaker for this and all subsequent utterances, until the `"voice"` field is updated again.
+    /// The `name` or `id` associated with a **Voice** from the **Voice Library** to be used as the speaker for this and all subsequent `utterances`, until the `voice` field is updated again.
+    ///
+    ///  See our [voices guide](/docs/text-to-speech-tts/voices) for more details on generating and specifying **Voices**.
     /// </summary>
     [JsonPropertyName("voice")]
     public OneOf<PostedUtteranceVoiceWithId, PostedUtteranceVoiceWithName>? Voice { get; set; }

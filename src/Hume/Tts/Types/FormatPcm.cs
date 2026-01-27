@@ -16,7 +16,7 @@ public record FormatPcm : IJsonOnDeserialized
     public string Type
     {
         get => "pcm";
-        set => value.Assert(value == "pcm", "'[object Object]' must be " + "pcm");
+        set => value.Assert(value == "pcm", string.Format("'Type' must be {0}", "pcm"));
     }
 
     [JsonIgnore]

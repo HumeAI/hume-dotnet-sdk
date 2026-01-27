@@ -4,7 +4,7 @@ using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-public partial class ToolsClient
+public partial class ToolsClient : IToolsClient
 {
     private RawClient _client;
 
@@ -18,31 +18,32 @@ public partial class ToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    private async System.Threading.Tasks.Task<ReturnPagedUserDefinedTools> ListToolsInternalAsync(
+    private WithRawResponseTask<ReturnPagedUserDefinedTools> ListToolsInternalAsync(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        if (request.PageNumber != null)
-        {
-            _query["page_number"] = request.PageNumber.Value.ToString();
-        }
-        if (request.PageSize != null)
-        {
-            _query["page_size"] = request.PageSize.Value.ToString();
-        }
-        if (request.RestrictToMostRecent != null)
-        {
-            _query["restrict_to_most_recent"] = JsonUtils.Serialize(
-                request.RestrictToMostRecent.Value
-            );
-        }
-        if (request.Name != null)
-        {
-            _query["name"] = request.Name;
-        }
+        return new WithRawResponseTask<ReturnPagedUserDefinedTools>(
+            ListToolsInternalAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnPagedUserDefinedTools>
+    > ListToolsInternalAsyncCore(
+        ToolsListToolsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _queryString = new Hume.Core.QueryStringBuilder.Builder(capacity: 4)
+            .Add("page_number", request.PageNumber)
+            .Add("page_size", request.PageSize)
+            .Add("restrict_to_most_recent", request.RestrictToMostRecent)
+            .Add("name", request.Name)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -50,7 +51,7 @@ public partial class ToolsClient
                     BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/evi/tools",
-                    Query = _query,
+                    QueryString = _queryString,
                     Options = options,
                 },
                 cancellationToken
@@ -61,14 +62,103 @@ public partial class ToolsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnPagedUserDefinedTools>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnPagedUserDefinedTools>(
+                    responseBody
+                )!;
+                return new WithRawResponse<ReturnPagedUserDefinedTools>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
 
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnUserDefinedTool?>
+    > CreateToolAsyncCore(
+        PostedUserDefinedTool request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = "v0/evi/tools",
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
+                return new WithRawResponse<ReturnUserDefinedTool?>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -98,28 +188,33 @@ public partial class ToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    private async System.Threading.Tasks.Task<ReturnPagedUserDefinedTools> ListToolVersionsInternalAsync(
+    private WithRawResponseTask<ReturnPagedUserDefinedTools> ListToolVersionsInternalAsync(
         string id,
         ToolsListToolVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        if (request.PageNumber != null)
-        {
-            _query["page_number"] = request.PageNumber.Value.ToString();
-        }
-        if (request.PageSize != null)
-        {
-            _query["page_size"] = request.PageSize.Value.ToString();
-        }
-        if (request.RestrictToMostRecent != null)
-        {
-            _query["restrict_to_most_recent"] = JsonUtils.Serialize(
-                request.RestrictToMostRecent.Value
-            );
-        }
+        return new WithRawResponseTask<ReturnPagedUserDefinedTools>(
+            ListToolVersionsInternalAsyncCore(id, request, options, cancellationToken)
+        );
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnPagedUserDefinedTools>
+    > ListToolVersionsInternalAsyncCore(
+        string id,
+        ToolsListToolVersionsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _queryString = new Hume.Core.QueryStringBuilder.Builder(capacity: 3)
+            .Add("page_number", request.PageNumber)
+            .Add("page_size", request.PageSize)
+            .Add("restrict_to_most_recent", request.RestrictToMostRecent)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -130,7 +225,7 @@ public partial class ToolsClient
                         "v0/evi/tools/{0}",
                         ValueConvert.ToPathParameterString(id)
                     ),
-                    Query = _query,
+                    QueryString = _queryString,
                     Options = options,
                 },
                 cancellationToken
@@ -141,14 +236,324 @@ public partial class ToolsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnPagedUserDefinedTools>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnPagedUserDefinedTools>(
+                    responseBody
+                )!;
+                return new WithRawResponse<ReturnPagedUserDefinedTools>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
 
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnUserDefinedTool?>
+    > CreateToolVersionAsyncCore(
+        string id,
+        PostedUserDefinedToolVersion request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = string.Format(
+                        "v0/evi/tools/{0}",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
+                return new WithRawResponse<ReturnUserDefinedTool?>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<WithRawResponse<string>> UpdateToolNameAsyncCore(
+        string id,
+        PostedUserDefinedToolName request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethodExtensions.Patch,
+                    Path = string.Format(
+                        "v0/evi/tools/{0}",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            return new WithRawResponse<string>()
+            {
+                Data = responseBody,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnUserDefinedTool?>
+    > GetToolVersionAsyncCore(
+        string id,
+        int version,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "v0/evi/tools/{0}/version/{1}",
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(version)
+                    ),
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
+                return new WithRawResponse<ReturnUserDefinedTool?>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnUserDefinedTool?>
+    > UpdateToolDescriptionAsyncCore(
+        string id,
+        int version,
+        PostedUserDefinedToolVersionDescription request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethodExtensions.Patch,
+                    Path = string.Format(
+                        "v0/evi/tools/{0}/version/{1}",
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(version)
+                    ),
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
+                return new WithRawResponse<ReturnUserDefinedTool?>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -201,7 +606,8 @@ public partial class ToolsClient
             .CreateInstanceAsync(
                 request,
                 options,
-                ListToolsInternalAsync,
+                async (request, options, cancellationToken) =>
+                    await ListToolsInternalAsync(request, options, cancellationToken),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -235,61 +641,15 @@ public partial class ToolsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> CreateToolAsync(
+    public WithRawResponseTask<ReturnUserDefinedTool?> CreateToolAsync(
         PostedUserDefinedTool request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = "v0/evi/tools",
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnUserDefinedTool?>(
+            CreateToolAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -322,8 +682,9 @@ public partial class ToolsClient
             .CreateInstanceAsync(
                 request,
                 options,
-                (request, options, cancellationToken) =>
-                    ListToolVersionsInternalAsync(id, request, options, cancellationToken),
+                async (request, options, cancellationToken) =>
+                    await ListToolVersionsInternalAsync(id, request, options, cancellationToken)
+                        .ConfigureAwait(false),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -357,65 +718,16 @@ public partial class ToolsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> CreateToolVersionAsync(
+    public WithRawResponseTask<ReturnUserDefinedTool?> CreateToolVersionAsync(
         string id,
         PostedUserDefinedToolVersion request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = string.Format(
-                        "v0/evi/tools/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnUserDefinedTool?>(
+            CreateToolVersionAsyncCore(id, request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -486,57 +798,16 @@ public partial class ToolsClient
     ///     new PostedUserDefinedToolName { Name = "get_current_temperature" }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<string> UpdateToolNameAsync(
+    public WithRawResponseTask<string> UpdateToolNameAsync(
         string id,
         PostedUserDefinedToolName request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethodExtensions.Patch,
-                    Path = string.Format(
-                        "v0/evi/tools/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            return responseBody;
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<string>(
+            UpdateToolNameAsyncCore(id, request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -547,64 +818,16 @@ public partial class ToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.GetToolVersionAsync("00183a3f-79ba-413d-9f3b-609864268bea", 1);
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> GetToolVersionAsync(
+    public WithRawResponseTask<ReturnUserDefinedTool?> GetToolVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "v0/evi/tools/{0}/version/{1}",
-                        ValueConvert.ToPathParameterString(id),
-                        ValueConvert.ToPathParameterString(version)
-                    ),
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnUserDefinedTool?>(
+            GetToolVersionAsyncCore(id, version, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -682,7 +905,7 @@ public partial class ToolsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnUserDefinedTool?> UpdateToolDescriptionAsync(
+    public WithRawResponseTask<ReturnUserDefinedTool?> UpdateToolDescriptionAsync(
         string id,
         int version,
         PostedUserDefinedToolVersionDescription request,
@@ -690,58 +913,8 @@ public partial class ToolsClient
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethodExtensions.Patch,
-                    Path = string.Format(
-                        "v0/evi/tools/{0}/version/{1}",
-                        ValueConvert.ToPathParameterString(id),
-                        ValueConvert.ToPathParameterString(version)
-                    ),
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnUserDefinedTool?>(
+            UpdateToolDescriptionAsyncCore(id, version, request, options, cancellationToken)
+        );
     }
 }

@@ -4,7 +4,7 @@ using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-public partial class ConfigsClient
+public partial class ConfigsClient : IConfigsClient
 {
     private RawClient _client;
 
@@ -18,31 +18,32 @@ public partial class ConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    private async System.Threading.Tasks.Task<ReturnPagedConfigs> ListConfigsInternalAsync(
+    private WithRawResponseTask<ReturnPagedConfigs> ListConfigsInternalAsync(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        if (request.PageNumber != null)
-        {
-            _query["page_number"] = request.PageNumber.Value.ToString();
-        }
-        if (request.PageSize != null)
-        {
-            _query["page_size"] = request.PageSize.Value.ToString();
-        }
-        if (request.RestrictToMostRecent != null)
-        {
-            _query["restrict_to_most_recent"] = JsonUtils.Serialize(
-                request.RestrictToMostRecent.Value
-            );
-        }
-        if (request.Name != null)
-        {
-            _query["name"] = request.Name;
-        }
+        return new WithRawResponseTask<ReturnPagedConfigs>(
+            ListConfigsInternalAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnPagedConfigs>
+    > ListConfigsInternalAsyncCore(
+        ConfigsListConfigsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _queryString = new Hume.Core.QueryStringBuilder.Builder(capacity: 4)
+            .Add("page_number", request.PageNumber)
+            .Add("page_size", request.PageSize)
+            .Add("restrict_to_most_recent", request.RestrictToMostRecent)
+            .Add("name", request.Name)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -50,7 +51,7 @@ public partial class ConfigsClient
                     BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/evi/configs",
-                    Query = _query,
+                    QueryString = _queryString,
                     Options = options,
                 },
                 cancellationToken
@@ -61,14 +62,99 @@ public partial class ConfigsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnPagedConfigs>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnPagedConfigs>(responseBody)!;
+                return new WithRawResponse<ReturnPagedConfigs>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
 
+    private async System.Threading.Tasks.Task<WithRawResponse<ReturnConfig>> CreateConfigAsyncCore(
+        PostedConfig request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = "v0/evi/configs",
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
+                return new WithRawResponse<ReturnConfig>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -98,28 +184,33 @@ public partial class ConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    private async System.Threading.Tasks.Task<ReturnPagedConfigs> ListConfigVersionsInternalAsync(
+    private WithRawResponseTask<ReturnPagedConfigs> ListConfigVersionsInternalAsync(
         string id,
         ConfigsListConfigVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        if (request.PageNumber != null)
-        {
-            _query["page_number"] = request.PageNumber.Value.ToString();
-        }
-        if (request.PageSize != null)
-        {
-            _query["page_size"] = request.PageSize.Value.ToString();
-        }
-        if (request.RestrictToMostRecent != null)
-        {
-            _query["restrict_to_most_recent"] = JsonUtils.Serialize(
-                request.RestrictToMostRecent.Value
-            );
-        }
+        return new WithRawResponseTask<ReturnPagedConfigs>(
+            ListConfigVersionsInternalAsyncCore(id, request, options, cancellationToken)
+        );
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnPagedConfigs>
+    > ListConfigVersionsInternalAsyncCore(
+        string id,
+        ConfigsListConfigVersionsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _queryString = new Hume.Core.QueryStringBuilder.Builder(capacity: 3)
+            .Add("page_number", request.PageNumber)
+            .Add("page_size", request.PageSize)
+            .Add("restrict_to_most_recent", request.RestrictToMostRecent)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -130,7 +221,7 @@ public partial class ConfigsClient
                         "v0/evi/configs/{0}",
                         ValueConvert.ToPathParameterString(id)
                     ),
-                    Query = _query,
+                    QueryString = _queryString,
                     Options = options,
                 },
                 cancellationToken
@@ -141,14 +232,322 @@ public partial class ConfigsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ReturnPagedConfigs>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<ReturnPagedConfigs>(responseBody)!;
+                return new WithRawResponse<ReturnPagedConfigs>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
 
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnConfig>
+    > CreateConfigVersionAsyncCore(
+        string id,
+        PostedConfigVersion request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = string.Format(
+                        "v0/evi/configs/{0}",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
+                return new WithRawResponse<ReturnConfig>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<WithRawResponse<string>> UpdateConfigNameAsyncCore(
+        string id,
+        PostedConfigName request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethodExtensions.Patch,
+                    Path = string.Format(
+                        "v0/evi/configs/{0}",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            return new WithRawResponse<string>()
+            {
+                Data = responseBody,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnConfig>
+    > GetConfigVersionAsyncCore(
+        string id,
+        int version,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "v0/evi/configs/{0}/version/{1}",
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(version)
+                    ),
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
+                return new WithRawResponse<ReturnConfig>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<ReturnConfig>
+    > UpdateConfigDescriptionAsyncCore(
+        string id,
+        int version,
+        PostedConfigVersionDescription request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethodExtensions.Patch,
+                    Path = string.Format(
+                        "v0/evi/configs/{0}/version/{1}",
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(version)
+                    ),
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
+                return new WithRawResponse<ReturnConfig>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -201,7 +600,8 @@ public partial class ConfigsClient
             .CreateInstanceAsync(
                 request,
                 options,
-                ListConfigsInternalAsync,
+                async (request, options, cancellationToken) =>
+                    await ListConfigsInternalAsync(request, options, cancellationToken),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -252,61 +652,15 @@ public partial class ConfigsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnConfig> CreateConfigAsync(
+    public WithRawResponseTask<ReturnConfig> CreateConfigAsync(
         PostedConfig request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = "v0/evi/configs",
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnConfig>(
+            CreateConfigAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -339,8 +693,9 @@ public partial class ConfigsClient
             .CreateInstanceAsync(
                 request,
                 options,
-                (request, options, cancellationToken) =>
-                    ListConfigVersionsInternalAsync(id, request, options, cancellationToken),
+                async (request, options, cancellationToken) =>
+                    await ListConfigVersionsInternalAsync(id, request, options, cancellationToken)
+                        .ConfigureAwait(false),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -393,65 +748,16 @@ public partial class ConfigsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnConfig> CreateConfigVersionAsync(
+    public WithRawResponseTask<ReturnConfig> CreateConfigVersionAsync(
         string id,
         PostedConfigVersion request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = string.Format(
-                        "v0/evi/configs/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnConfig>(
+            CreateConfigVersionAsyncCore(id, request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -522,57 +828,16 @@ public partial class ConfigsClient
     ///     new PostedConfigName { Name = "Updated Weather Assistant Config Name" }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<string> UpdateConfigNameAsync(
+    public WithRawResponseTask<string> UpdateConfigNameAsync(
         string id,
         PostedConfigName request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethodExtensions.Patch,
-                    Path = string.Format(
-                        "v0/evi/configs/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            return responseBody;
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<string>(
+            UpdateConfigNameAsyncCore(id, request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -583,64 +848,16 @@ public partial class ConfigsClient
     /// <example><code>
     /// await client.EmpathicVoice.Configs.GetConfigVersionAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3", 1);
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnConfig> GetConfigVersionAsync(
+    public WithRawResponseTask<ReturnConfig> GetConfigVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "v0/evi/configs/{0}/version/{1}",
-                        ValueConvert.ToPathParameterString(id),
-                        ValueConvert.ToPathParameterString(version)
-                    ),
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnConfig>(
+            GetConfigVersionAsyncCore(id, version, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -720,7 +937,7 @@ public partial class ConfigsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnConfig> UpdateConfigDescriptionAsync(
+    public WithRawResponseTask<ReturnConfig> UpdateConfigDescriptionAsync(
         string id,
         int version,
         PostedConfigVersionDescription request,
@@ -728,58 +945,8 @@ public partial class ConfigsClient
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethodExtensions.Patch,
-                    Path = string.Format(
-                        "v0/evi/configs/{0}/version/{1}",
-                        ValueConvert.ToPathParameterString(id),
-                        ValueConvert.ToPathParameterString(version)
-                    ),
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnConfig>(
+            UpdateConfigDescriptionAsyncCore(id, version, request, options, cancellationToken)
+        );
     }
 }

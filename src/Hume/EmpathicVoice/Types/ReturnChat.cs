@@ -54,21 +54,6 @@ public record ReturnChat : IJsonOnDeserialized
     [JsonPropertyName("start_timestamp")]
     public required long StartTimestamp { get; set; }
 
-    /// <summary>
-    /// Indicates the current state of the chat. There are six possible statuses:
-    ///
-    /// - `ACTIVE`: The chat is currently active and ongoing.
-    ///
-    /// - `USER_ENDED`: The chat was manually ended by the user.
-    ///
-    /// - `USER_TIMEOUT`: The chat ended due to a user-defined timeout.
-    ///
-    /// - `MAX_DURATION_TIMEOUT`: The chat ended because it reached the maximum allowed duration.
-    ///
-    /// - `INACTIVITY_TIMEOUT`: The chat ended due to an inactivity timeout.
-    ///
-    /// - `ERROR`: The chat ended unexpectedly due to an error.
-    /// </summary>
     [JsonPropertyName("status")]
     public required ReturnChatStatus Status { get; set; }
 

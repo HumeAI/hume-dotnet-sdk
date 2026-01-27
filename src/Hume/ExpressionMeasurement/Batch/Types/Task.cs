@@ -146,12 +146,12 @@ public record Task
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<Task>
     {
-        public override bool CanConvert(global::System.Type typeToConvert) =>
+        public override bool CanConvert(System.Type typeToConvert) =>
             typeof(Task).IsAssignableFrom(typeToConvert);
 
         public override Task Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {

@@ -6,11 +6,11 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// Allows developers to inject additional context into the conversation, which is appended to the end of user messages for the session.
+/// Field for injecting additional context into the conversation, which is appended to the end of user messages for the session.
 ///
 /// When included in a Session Settings message, the provided context can be used to remind the LLM of its role in every user message, prevent it from forgetting important details, or add new relevant information to the conversation.
 ///
-/// Set to `null` to disable context injection.
+/// Set to `null` to clear injected context.
 /// </summary>
 [Serializable]
 public record ConnectSessionSettingsContext : IJsonOnDeserialized

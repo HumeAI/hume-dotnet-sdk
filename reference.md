@@ -1,6 +1,520 @@
 # Reference
+## Tts Voices
+<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">ListAsync</a>(VoicesListRequest { ... }) -> Pager&lt;ReturnVoice&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.Voices.ListAsync(
+    new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `VoicesListRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">CreateAsync</a>(PostedVoice { ... }) -> WithRawResponseTask&lt;ReturnVoice&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Saves a new custom voice to your account using the specified TTS generation ID.
+
+Once saved, this voice can be reused in subsequent TTS requests, ensuring consistent speech style and prosody. For more details on voice creation, see the [Voices Guide](/docs/text-to-speech-tts/voices).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.Voices.CreateAsync(
+    new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedVoice` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">DeleteAsync</a>(VoicesDeleteRequest { ... })</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deletes a previously generated custom voice.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.Voices.DeleteAsync(new VoicesDeleteRequest { Name = "David Hume" });
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `VoicesDeleteRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Tts
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;ReturnTts&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
+
+The response includes the base64-encoded audio and metadata in JSON format.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.SynthesizeJsonAsync(
+    new PostedTts
+    {
+        Context = new PostedContextWithUtterances
+        {
+            Utterances = new List<PostedUtterance>()
+            {
+                new PostedUtterance
+                {
+                    Text = "How can people see beauty so differently?",
+                    Description =
+                        "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
+                },
+            },
+        },
+        Format = new FormatMp3 { Type = "mp3" },
+        NumGenerations = 1,
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Description =
+                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
+
+The response contains the generated audio file in the requested format.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.SynthesizeFileAsync(
+    new PostedTts
+    {
+        Context = new PostedContextWithGenerationId
+        {
+            GenerationId = "09ad914d-8e7f-40f8-a279-e34f07f7dab2",
+        },
+        Format = new FormatMp3 { Type = "mp3" },
+        NumGenerations = 1,
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Description =
+                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileStreamingAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.SynthesizeFileStreamingAsync(
+    new PostedTts
+    {
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Voice = new PostedUtteranceVoiceWithName
+                {
+                    Name = "Male English Actor",
+                    Provider = Hume.Tts.VoiceProvider.HumeAi,
+                },
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonStreamingAsync</a>(PostedTts { ... }) -> IAsyncEnumerable&lt;OneOf&lt;SnippetAudioChunk, TimestampMessage&gt;&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
+
+The response is a stream of JSON objects including audio encoded in base64.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+client.Tts.SynthesizeJsonStreamingAsync(
+    new PostedTts
+    {
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Voice = new PostedUtteranceVoiceWithName
+                {
+                    Name = "Male English Actor",
+                    Provider = Hume.Tts.VoiceProvider.HumeAi,
+                },
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">ConvertVoiceJsonAsync</a>(ConvertVoiceJsonRequest { ... }) -> IAsyncEnumerable&lt;OneOf&lt;SnippetAudioChunk, TimestampMessage&gt;&gt;</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+client.Tts.ConvertVoiceJsonAsync(new ConvertVoiceJsonRequest());
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `ConvertVoiceJsonRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## EmpathicVoice ControlPlane
-<details><summary><code>client.EmpathicVoice.ControlPlane.<a href="/src/Hume/EmpathicVoice/ControlPlane/ControlPlaneClient.cs">SendAsync</a>(chatId, OneOf<SessionSettings, UserInput, AssistantInput, ToolResponseMessage, ToolErrorMessage, PauseAssistantMessage, ResumeAssistantMessage> { ... })</code></summary>
+<details><summary><code>client.EmpathicVoice.ControlPlane.<a href="/src/Hume/EmpathicVoice/ControlPlane/ControlPlaneClient.cs">SendAsync</a>(chatId, OneOf&lt;SessionSettings, UserInput, AssistantInput, ToolResponseMessage, ToolErrorMessage, PauseAssistantMessage, ResumeAssistantMessage&gt; { ... })</code></summary>
 <dl>
 <dd>
 
@@ -66,7 +580,7 @@ await client.EmpathicVoice.ControlPlane.SendAsync(
 </details>
 
 ## EmpathicVoice ChatGroups
-<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">ListChatGroupsAsync</a>(ChatGroupsListChatGroupsRequest { ... }) -> Pager<ReturnChatGroup></code></summary>
+<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">ListChatGroupsAsync</a>(ChatGroupsListChatGroupsRequest { ... }) -> Pager&lt;ReturnChatGroup&gt;</code></summary>
 <dl>
 <dd>
 
@@ -128,7 +642,7 @@ await client.EmpathicVoice.ChatGroups.ListChatGroupsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">GetChatGroupAsync</a>(id, ChatGroupsGetChatGroupRequest { ... }) -> ReturnChatGroupPagedChats</code></summary>
+<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">GetChatGroupAsync</a>(id, ChatGroupsGetChatGroupRequest { ... }) -> WithRawResponseTask&lt;ReturnChatGroupPagedChats&gt;</code></summary>
 <dl>
 <dd>
 
@@ -198,7 +712,7 @@ await client.EmpathicVoice.ChatGroups.GetChatGroupAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">GetAudioAsync</a>(id, ChatGroupsGetAudioRequest { ... }) -> ReturnChatGroupPagedAudioReconstructions</code></summary>
+<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">GetAudioAsync</a>(id, ChatGroupsGetAudioRequest { ... }) -> WithRawResponseTask&lt;ReturnChatGroupPagedAudioReconstructions&gt;</code></summary>
 <dl>
 <dd>
 
@@ -268,7 +782,7 @@ await client.EmpathicVoice.ChatGroups.GetAudioAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">ListChatGroupEventsAsync</a>(id, ChatGroupsListChatGroupEventsRequest { ... }) -> Pager<ReturnChatEvent></code></summary>
+<details><summary><code>client.EmpathicVoice.ChatGroups.<a href="/src/Hume/EmpathicVoice/ChatGroups/ChatGroupsClient.cs">ListChatGroupEventsAsync</a>(id, ChatGroupsListChatGroupEventsRequest { ... }) -> Pager&lt;ReturnChatEvent&gt;</code></summary>
 <dl>
 <dd>
 
@@ -339,7 +853,7 @@ await client.EmpathicVoice.ChatGroups.ListChatGroupEventsAsync(
 </details>
 
 ## EmpathicVoice Chats
-<details><summary><code>client.EmpathicVoice.Chats.<a href="/src/Hume/EmpathicVoice/Chats/ChatsClient.cs">ListChatsAsync</a>(ChatsListChatsRequest { ... }) -> Pager<ReturnChat></code></summary>
+<details><summary><code>client.EmpathicVoice.Chats.<a href="/src/Hume/EmpathicVoice/Chats/ChatsClient.cs">ListChatsAsync</a>(ChatsListChatsRequest { ... }) -> Pager&lt;ReturnChat&gt;</code></summary>
 <dl>
 <dd>
 
@@ -400,7 +914,7 @@ await client.EmpathicVoice.Chats.ListChatsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Chats.<a href="/src/Hume/EmpathicVoice/Chats/ChatsClient.cs">ListChatEventsAsync</a>(id, ChatsListChatEventsRequest { ... }) -> Pager<ReturnChatEvent></code></summary>
+<details><summary><code>client.EmpathicVoice.Chats.<a href="/src/Hume/EmpathicVoice/Chats/ChatsClient.cs">ListChatEventsAsync</a>(id, ChatsListChatEventsRequest { ... }) -> Pager&lt;ReturnChatEvent&gt;</code></summary>
 <dl>
 <dd>
 
@@ -470,7 +984,7 @@ await client.EmpathicVoice.Chats.ListChatEventsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Chats.<a href="/src/Hume/EmpathicVoice/Chats/ChatsClient.cs">GetAudioAsync</a>(id) -> ReturnChatAudioReconstruction</code></summary>
+<details><summary><code>client.EmpathicVoice.Chats.<a href="/src/Hume/EmpathicVoice/Chats/ChatsClient.cs">GetAudioAsync</a>(id) -> WithRawResponseTask&lt;ReturnChatAudioReconstruction&gt;</code></summary>
 <dl>
 <dd>
 
@@ -512,7 +1026,7 @@ await client.EmpathicVoice.Chats.GetAudioAsync("470a49f6-1dec-4afe-8b61-035d3b2d
 <dl>
 <dd>
 
-**id:** `string` — Identifier for a chat. Formatted as a UUID.
+**id:** `string` — Identifier for a Chat. Formatted as a UUID.
     
 </dd>
 </dl>
@@ -525,7 +1039,7 @@ await client.EmpathicVoice.Chats.GetAudioAsync("470a49f6-1dec-4afe-8b61-035d3b2d
 </details>
 
 ## EmpathicVoice Configs
-<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">ListConfigsAsync</a>(ConfigsListConfigsRequest { ... }) -> Pager<ReturnConfig></code></summary>
+<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">ListConfigsAsync</a>(ConfigsListConfigsRequest { ... }) -> Pager&lt;ReturnConfig&gt;</code></summary>
 <dl>
 <dd>
 
@@ -583,7 +1097,7 @@ await client.EmpathicVoice.Configs.ListConfigsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">CreateConfigAsync</a>(PostedConfig { ... }) -> ReturnConfig</code></summary>
+<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">CreateConfigAsync</a>(PostedConfig { ... }) -> WithRawResponseTask&lt;ReturnConfig&gt;</code></summary>
 <dl>
 <dd>
 
@@ -667,7 +1181,7 @@ await client.EmpathicVoice.Configs.CreateConfigAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">ListConfigVersionsAsync</a>(id, ConfigsListConfigVersionsRequest { ... }) -> Pager<ReturnConfig></code></summary>
+<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">ListConfigVersionsAsync</a>(id, ConfigsListConfigVersionsRequest { ... }) -> Pager&lt;ReturnConfig&gt;</code></summary>
 <dl>
 <dd>
 
@@ -734,7 +1248,7 @@ await client.EmpathicVoice.Configs.ListConfigVersionsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">CreateConfigVersionAsync</a>(id, PostedConfigVersion { ... }) -> ReturnConfig</code></summary>
+<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">CreateConfigVersionAsync</a>(id, PostedConfigVersion { ... }) -> WithRawResponseTask&lt;ReturnConfig&gt;</code></summary>
 <dl>
 <dd>
 
@@ -884,7 +1398,7 @@ await client.EmpathicVoice.Configs.DeleteConfigAsync("1b60e1a0-cc59-424a-8d2c-18
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">UpdateConfigNameAsync</a>(id, PostedConfigName { ... }) -> string</code></summary>
+<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">UpdateConfigNameAsync</a>(id, PostedConfigName { ... }) -> WithRawResponseTask&lt;string&gt;</code></summary>
 <dl>
 <dd>
 
@@ -951,7 +1465,7 @@ await client.EmpathicVoice.Configs.UpdateConfigNameAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">GetConfigVersionAsync</a>(id, version) -> ReturnConfig</code></summary>
+<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">GetConfigVersionAsync</a>(id, version) -> WithRawResponseTask&lt;ReturnConfig&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1094,7 +1608,7 @@ Version numbers are integer values representing different iterations of the Conf
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">UpdateConfigDescriptionAsync</a>(id, version, PostedConfigVersionDescription { ... }) -> ReturnConfig</code></summary>
+<details><summary><code>client.EmpathicVoice.Configs.<a href="/src/Hume/EmpathicVoice/Configs/ConfigsClient.cs">UpdateConfigDescriptionAsync</a>(id, version, PostedConfigVersionDescription { ... }) -> WithRawResponseTask&lt;ReturnConfig&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1180,7 +1694,7 @@ Version numbers are integer values representing different iterations of the Conf
 </details>
 
 ## EmpathicVoice Prompts
-<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">ListPromptsAsync</a>(PromptsListPromptsRequest { ... }) -> Pager<ReturnPrompt></code></summary>
+<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">ListPromptsAsync</a>(PromptsListPromptsRequest { ... }) -> Pager&lt;ReturnPrompt&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1238,7 +1752,7 @@ await client.EmpathicVoice.Prompts.ListPromptsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">CreatePromptAsync</a>(PostedPrompt { ... }) -> ReturnPrompt?</code></summary>
+<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">CreatePromptAsync</a>(PostedPrompt { ... }) -> WithRawResponseTask&lt;ReturnPrompt?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1301,7 +1815,7 @@ await client.EmpathicVoice.Prompts.CreatePromptAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">ListPromptVersionsAsync</a>(id, PromptsListPromptVersionsRequest { ... }) -> ReturnPagedPrompts</code></summary>
+<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">ListPromptVersionsAsync</a>(id, PromptsListPromptVersionsRequest { ... }) -> WithRawResponseTask&lt;ReturnPagedPrompts&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1348,7 +1862,7 @@ await client.EmpathicVoice.Prompts.ListPromptVersionsAsync(
 <dl>
 <dd>
 
-**id:** `string` — Identifier for a Prompt. Formatted as a UUID.
+**id:** `string` 
     
 </dd>
 </dl>
@@ -1368,7 +1882,7 @@ await client.EmpathicVoice.Prompts.ListPromptVersionsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">CreatePromptVersionAsync</a>(id, PostedPromptVersion { ... }) -> ReturnPrompt?</code></summary>
+<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">CreatePromptVersionAsync</a>(id, PostedPromptVersion { ... }) -> WithRawResponseTask&lt;ReturnPrompt?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1496,7 +2010,7 @@ await client.EmpathicVoice.Prompts.DeletePromptAsync("af699d45-2985-42cc-91b9-af
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">UpdatePromptNameAsync</a>(id, PostedPromptName { ... }) -> string</code></summary>
+<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">UpdatePromptNameAsync</a>(id, PostedPromptName { ... }) -> WithRawResponseTask&lt;string&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1563,7 +2077,7 @@ await client.EmpathicVoice.Prompts.UpdatePromptNameAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">GetPromptVersionAsync</a>(id, version) -> ReturnPrompt?</code></summary>
+<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">GetPromptVersionAsync</a>(id, version) -> WithRawResponseTask&lt;ReturnPrompt?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1706,7 +2220,7 @@ Version numbers are integer values representing different iterations of the Prom
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">UpdatePromptDescriptionAsync</a>(id, version, PostedPromptVersionDescription { ... }) -> ReturnPrompt?</code></summary>
+<details><summary><code>client.EmpathicVoice.Prompts.<a href="/src/Hume/EmpathicVoice/Prompts/PromptsClient.cs">UpdatePromptDescriptionAsync</a>(id, version, PostedPromptVersionDescription { ... }) -> WithRawResponseTask&lt;ReturnPrompt?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1792,7 +2306,7 @@ Version numbers are integer values representing different iterations of the Prom
 </details>
 
 ## EmpathicVoice Tools
-<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">ListToolsAsync</a>(ToolsListToolsRequest { ... }) -> Pager<ReturnUserDefinedTool></code></summary>
+<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">ListToolsAsync</a>(ToolsListToolsRequest { ... }) -> Pager&lt;ReturnUserDefinedTool&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1850,7 +2364,7 @@ await client.EmpathicVoice.Tools.ListToolsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">CreateToolAsync</a>(PostedUserDefinedTool { ... }) -> ReturnUserDefinedTool?</code></summary>
+<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">CreateToolAsync</a>(PostedUserDefinedTool { ... }) -> WithRawResponseTask&lt;ReturnUserDefinedTool?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1917,7 +2431,7 @@ await client.EmpathicVoice.Tools.CreateToolAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">ListToolVersionsAsync</a>(id, ToolsListToolVersionsRequest { ... }) -> Pager<ReturnUserDefinedTool></code></summary>
+<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">ListToolVersionsAsync</a>(id, ToolsListToolVersionsRequest { ... }) -> Pager&lt;ReturnUserDefinedTool&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1964,7 +2478,7 @@ await client.EmpathicVoice.Tools.ListToolVersionsAsync(
 <dl>
 <dd>
 
-**id:** `string` — Identifier for a Tool. Formatted as a UUID.
+**id:** `string` 
     
 </dd>
 </dl>
@@ -1984,7 +2498,7 @@ await client.EmpathicVoice.Tools.ListToolVersionsAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">CreateToolVersionAsync</a>(id, PostedUserDefinedToolVersion { ... }) -> ReturnUserDefinedTool?</code></summary>
+<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">CreateToolVersionAsync</a>(id, PostedUserDefinedToolVersion { ... }) -> WithRawResponseTask&lt;ReturnUserDefinedTool?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2115,7 +2629,7 @@ await client.EmpathicVoice.Tools.DeleteToolAsync("00183a3f-79ba-413d-9f3b-609864
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">UpdateToolNameAsync</a>(id, PostedUserDefinedToolName { ... }) -> string</code></summary>
+<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">UpdateToolNameAsync</a>(id, PostedUserDefinedToolName { ... }) -> WithRawResponseTask&lt;string&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2182,7 +2696,7 @@ await client.EmpathicVoice.Tools.UpdateToolNameAsync(
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">GetToolVersionAsync</a>(id, version) -> ReturnUserDefinedTool?</code></summary>
+<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">GetToolVersionAsync</a>(id, version) -> WithRawResponseTask&lt;ReturnUserDefinedTool?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2322,7 +2836,7 @@ Version numbers are integer values representing different iterations of the Tool
 </dl>
 </details>
 
-<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">UpdateToolDescriptionAsync</a>(id, version, PostedUserDefinedToolVersionDescription { ... }) -> ReturnUserDefinedTool?</code></summary>
+<details><summary><code>client.EmpathicVoice.Tools.<a href="/src/Hume/EmpathicVoice/Tools/ToolsClient.cs">UpdateToolDescriptionAsync</a>(id, version, PostedUserDefinedToolVersionDescription { ... }) -> WithRawResponseTask&lt;ReturnUserDefinedTool?&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2408,522 +2922,8 @@ Version numbers are integer values representing different iterations of the Tool
 </dl>
 </details>
 
-## Tts Voices
-<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">ListAsync</a>(VoicesListRequest { ... }) -> Pager<ReturnVoice></code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Lists voices you have saved in your account, or voices from the [Voice Library](https://platform.hume.ai/tts/voice-library).
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.Voices.ListAsync(
-    new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `VoicesListRequest` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">CreateAsync</a>(PostedVoice { ... }) -> ReturnVoice</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Saves a new custom voice to your account using the specified TTS generation ID.
-
-Once saved, this voice can be reused in subsequent TTS requests, ensuring consistent speech style and prosody. For more details on voice creation, see the [Voices Guide](/docs/text-to-speech-tts/voices).
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.Voices.CreateAsync(
-    new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedVoice` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">DeleteAsync</a>(VoicesDeleteRequest { ... })</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Deletes a previously generated custom voice.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.Voices.DeleteAsync(new VoicesDeleteRequest { Name = "David Hume" });
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `VoicesDeleteRequest` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## Tts
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonAsync</a>(PostedTts { ... }) -> ReturnTts</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
-
-The response includes the base64-encoded audio and metadata in JSON format.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.SynthesizeJsonAsync(
-    new PostedTts
-    {
-        Context = new PostedContextWithUtterances
-        {
-            Utterances = new List<PostedUtterance>()
-            {
-                new PostedUtterance
-                {
-                    Text = "How can people see beauty so differently?",
-                    Description =
-                        "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
-                },
-            },
-        },
-        Format = new FormatMp3 { Type = "mp3" },
-        NumGenerations = 1,
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Description =
-                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileAsync</a>(PostedTts { ... }) -> Stream</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
-
-The response contains the generated audio file in the requested format.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.SynthesizeFileAsync(
-    new PostedTts
-    {
-        Context = new PostedContextWithGenerationId
-        {
-            GenerationId = "09ad914d-8e7f-40f8-a279-e34f07f7dab2",
-        },
-        Format = new FormatMp3 { Type = "mp3" },
-        NumGenerations = 1,
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Description =
-                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileStreamingAsync</a>(PostedTts { ... }) -> Stream</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.SynthesizeFileStreamingAsync(
-    new PostedTts
-    {
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Voice = new PostedUtteranceVoiceWithName
-                {
-                    Name = "Male English Actor",
-                    Provider = Hume.Tts.VoiceProvider.HumeAi,
-                },
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonStreamingAsync</a>(PostedTts { ... }) -> IAsyncEnumerable<OneOf<SnippetAudioChunk, TimestampMessage>></code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
-
-The response is a stream of JSON objects including audio encoded in base64.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-client.Tts.SynthesizeJsonStreamingAsync(
-    new PostedTts
-    {
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Voice = new PostedUtteranceVoiceWithName
-                {
-                    Name = "Male English Actor",
-                    Provider = Hume.Tts.VoiceProvider.HumeAi,
-                },
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">ConvertVoiceJsonAsync</a>(ConvertVoiceJsonRequest { ... }) -> IAsyncEnumerable<OneOf<SnippetAudioChunk, TimestampMessage>></code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-client.Tts.ConvertVoiceJsonAsync(new ConvertVoiceJsonRequest());
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `ConvertVoiceJsonRequest` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 ## ExpressionMeasurement Batch
-<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">ListJobsAsync</a>(BatchListJobsRequest { ... }) -> IEnumerable<InferenceJob></code></summary>
+<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">ListJobsAsync</a>(BatchListJobsRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;InferenceJob&gt;&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2977,7 +2977,7 @@ await client.ExpressionMeasurement.Batch.ListJobsAsync(new BatchListJobsRequest(
 </dl>
 </details>
 
-<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">StartInferenceJobAsync</a>(InferenceBaseRequest { ... }) -> JobId</code></summary>
+<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">StartInferenceJobAsync</a>(InferenceBaseRequest { ... }) -> WithRawResponseTask&lt;JobId&gt;</code></summary>
 <dl>
 <dd>
 
@@ -3037,7 +3037,7 @@ await client.ExpressionMeasurement.Batch.StartInferenceJobAsync(
 </dl>
 </details>
 
-<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">GetJobDetailsAsync</a>(id) -> InferenceJob</code></summary>
+<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">GetJobDetailsAsync</a>(id) -> WithRawResponseTask&lt;InferenceJob&gt;</code></summary>
 <dl>
 <dd>
 
@@ -3091,7 +3091,7 @@ await client.ExpressionMeasurement.Batch.GetJobDetailsAsync("job_id");
 </dl>
 </details>
 
-<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">GetJobPredictionsAsync</a>(id) -> IEnumerable<InferenceSourcePredictResult></code></summary>
+<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">GetJobPredictionsAsync</a>(id) -> WithRawResponseTask&lt;IEnumerable&lt;InferenceSourcePredictResult&gt;&gt;</code></summary>
 <dl>
 <dd>
 
@@ -3145,7 +3145,7 @@ await client.ExpressionMeasurement.Batch.GetJobPredictionsAsync("job_id");
 </dl>
 </details>
 
-<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">StartInferenceJobFromLocalFileAsync</a>(BatchStartInferenceJobFromLocalFileRequest { ... }) -> JobId</code></summary>
+<details><summary><code>client.ExpressionMeasurement.Batch.<a href="/src/Hume/ExpressionMeasurement/Batch/BatchClient.cs">StartInferenceJobFromLocalFileAsync</a>(BatchStartInferenceJobFromLocalFileRequest { ... }) -> WithRawResponseTask&lt;JobId&gt;</code></summary>
 <dl>
 <dd>
 
