@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// Pause responses from EVI. Chat history is still saved and sent after resuming.
+/// **Pause responses from EVI.** Chat history is still saved and sent after resuming. Once this message is sent, EVI will not respond until a Resume Assistant message is sent.
+///
+/// When paused, EVI won't respond, but transcriptions of your audio inputs will still be recorded. See our [Pause Response Guide](/docs/speech-to-speech-evi/features/pause-responses) for further details.
 /// </summary>
 [Serializable]
 public record PauseAssistantMessage : IJsonOnDeserialized
@@ -24,7 +26,7 @@ public record PauseAssistantMessage : IJsonOnDeserialized
     /// <summary>
     /// The type of message sent through the socket; must be `pause_assistant_message` for our server to correctly identify and process it as a Pause Assistant message.
     ///
-    /// Once this message is sent, EVI will not respond until a [Resume Assistant message](/reference/speech-to-speech-evi/chat#send.ResumeAssistantMessage) is sent. When paused, EVI won't respond, but transcriptions of your audio inputs will still be recorded.
+    /// Once this message is sent, EVI will not respond until a [Resume Assistant message](/reference/empathic-voice-interface-evi/chat/chat#send.Resume%20Assistant%20Message.type) is sent. When paused, EVI won't respond, but transcriptions of your audio inputs will still be recorded.
     /// </summary>
     [JsonPropertyName("type")]
     public string Type
@@ -33,7 +35,7 @@ public record PauseAssistantMessage : IJsonOnDeserialized
         set =>
             value.Assert(
                 value == "pause_assistant_message",
-                "'[object Object]' must be " + "pause_assistant_message"
+                string.Format("'Type' must be {0}", "pause_assistant_message")
             );
     }
 

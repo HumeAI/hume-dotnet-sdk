@@ -5,7 +5,7 @@ using OneOf;
 
 namespace Hume.Tts;
 
-public partial class TtsClient
+public partial class TtsClient : ITtsClient
 {
     private RawClient _client;
 
@@ -16,6 +16,290 @@ public partial class TtsClient
     }
 
     public VoicesClient Voices { get; }
+
+    private async System.Threading.Tasks.Task<WithRawResponse<ReturnTts>> SynthesizeJsonAsyncCore(
+        PostedTts request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = "v0/tts",
+                    Body = request,
+                    Headers = _headers,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<ReturnTts>(responseBody)!;
+                return new WithRawResponse<ReturnTts>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<System.IO.Stream>
+    > SynthesizeFileAsyncCore(
+        PostedTts request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = "v0/tts/file",
+                    Body = request,
+                    Headers = _headers,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var stream = await response.Raw.Content.ReadAsStreamAsync();
+            return new WithRawResponse<System.IO.Stream>()
+            {
+                Data = stream,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<System.IO.Stream>
+    > SynthesizeFileStreamingAsyncCore(
+        PostedTts request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = "v0/tts/stream/file",
+                    Body = request,
+                    Headers = _headers,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var stream = await response.Raw.Content.ReadAsStreamAsync();
+            return new WithRawResponse<System.IO.Stream>()
+            {
+                Data = stream,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<System.IO.Stream>
+    > ConvertVoiceFileAsyncCore(
+        ConvertVoiceFileRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var multipartFormRequest_ = new MultipartFormRequest
+        {
+            BaseUrl = _client.Options.Environment.Base,
+            Method = HttpMethod.Post,
+            Path = "v0/tts/voice_conversion/file",
+            Headers = _headers,
+            Options = options,
+        };
+        multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
+        multipartFormRequest_.AddFileParameterPart("audio", request.Audio);
+        multipartFormRequest_.AddJsonPart("context", request.Context);
+        multipartFormRequest_.AddJsonPart("voice", request.Voice);
+        multipartFormRequest_.AddJsonPart("format", request.Format);
+        multipartFormRequest_.AddJsonParts(
+            "include_timestamp_types",
+            request.IncludeTimestampTypes
+        );
+        var response = await _client
+            .SendRequestAsync(multipartFormRequest_, cancellationToken)
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var stream = await response.Raw.Content.ReadAsStreamAsync();
+            return new WithRawResponse<System.IO.Stream>()
+            {
+                Data = stream,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
 
     /// <summary>
     /// Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
@@ -53,61 +337,15 @@ public partial class TtsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<ReturnTts> SynthesizeJsonAsync(
+    public WithRawResponseTask<ReturnTts> SynthesizeJsonAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = "v0/tts",
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<ReturnTts>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 422:
-                        throw new UnprocessableEntityError(
-                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<ReturnTts>(
+            SynthesizeJsonAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -138,52 +376,15 @@ public partial class TtsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<System.IO.Stream> SynthesizeFileAsync(
+    public WithRawResponseTask<System.IO.Stream> SynthesizeFileAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = "v0/tts/file",
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            return await response.Raw.Content.ReadAsStreamAsync();
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 422:
-                        throw new UnprocessableEntityError(
-                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<System.IO.Stream>(
+            SynthesizeFileAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -209,52 +410,15 @@ public partial class TtsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<System.IO.Stream> SynthesizeFileStreamingAsync(
+    public WithRawResponseTask<System.IO.Stream> SynthesizeFileStreamingAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = "v0/tts/stream/file",
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            return await response.Raw.Content.ReadAsStreamAsync();
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 422:
-                        throw new UnprocessableEntityError(
-                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<System.IO.Stream>(
+            SynthesizeFileStreamingAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -290,6 +454,12 @@ public partial class TtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -298,6 +468,7 @@ public partial class TtsClient
                     Method = HttpMethod.Post,
                     Path = "v0/tts/stream/json",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -349,57 +520,15 @@ public partial class TtsClient
         }
     }
 
-    public async System.Threading.Tasks.Task<System.IO.Stream> ConvertVoiceFileAsync(
+    public WithRawResponseTask<System.IO.Stream> ConvertVoiceFileAsync(
         ConvertVoiceFileRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var multipartFormRequest_ = new MultipartFormRequest
-        {
-            BaseUrl = _client.Options.Environment.Base,
-            Method = HttpMethod.Post,
-            Path = "v0/tts/voice_conversion/file",
-            Options = options,
-        };
-        multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
-        multipartFormRequest_.AddFileParameterPart("audio", request.Audio);
-        multipartFormRequest_.AddJsonPart("context", request.Context);
-        multipartFormRequest_.AddJsonPart("voice", request.Voice);
-        multipartFormRequest_.AddJsonPart("format", request.Format);
-        multipartFormRequest_.AddJsonParts(
-            "include_timestamp_types",
-            request.IncludeTimestampTypes
+        return new WithRawResponseTask<System.IO.Stream>(
+            ConvertVoiceFileAsyncCore(request, options, cancellationToken)
         );
-        var response = await _client
-            .SendRequestAsync(multipartFormRequest_, cancellationToken)
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            return await response.Raw.Content.ReadAsStreamAsync();
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 422:
-                        throw new UnprocessableEntityError(
-                            JsonUtils.Deserialize<HttpValidationError>(responseBody)
-                        );
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
     }
 
     /// <example><code>
@@ -411,11 +540,18 @@ public partial class TtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var multipartFormRequest_ = new MultipartFormRequest
         {
             BaseUrl = _client.Options.Environment.Base,
             Method = HttpMethod.Post,
             Path = "v0/tts/voice_conversion/json",
+            Headers = _headers,
             Options = options,
         };
         multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);

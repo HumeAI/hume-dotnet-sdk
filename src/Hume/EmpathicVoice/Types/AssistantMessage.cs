@@ -6,7 +6,7 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is an assistant message.
+/// **Transcript of the assistant's message.** Contains the message role, content, and optionally tool call information including the tool name, parameters, response requirement status, tool call ID, and tool type.
 /// </summary>
 [Serializable]
 public record AssistantMessage : IJsonOnDeserialized
@@ -22,7 +22,7 @@ public record AssistantMessage : IJsonOnDeserialized
     public string? CustomSessionId { get; set; }
 
     /// <summary>
-    /// Indicates if this message was inserted into the conversation as text from an [Assistant Input message](/reference/speech-to-speech-evi/chat#send.AssistantInput.text).
+    /// Indicates if this message was inserted into the conversation as text from an [Assistant Input message](/reference/empathic-voice-interface-evi/chat/chat#send.Assistant%20Input.text).
     /// </summary>
     [JsonPropertyName("from_text")]
     public required bool FromText { get; set; }
@@ -32,6 +32,12 @@ public record AssistantMessage : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("id")]
     public string? Id { get; set; }
+
+    /// <summary>
+    /// Indicates if this message is a quick response or not.
+    /// </summary>
+    [JsonPropertyName("is_quick_response")]
+    public required bool IsQuickResponse { get; set; }
 
     /// <summary>
     /// Detected language of the message text.
@@ -63,7 +69,7 @@ public record AssistantMessage : IJsonOnDeserialized
         set =>
             value.Assert(
                 value == "assistant_message",
-                "'[object Object]' must be " + "assistant_message"
+                string.Format("'Type' must be {0}", "assistant_message")
             );
     }
 

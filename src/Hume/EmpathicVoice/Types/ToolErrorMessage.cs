@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is a function call error.
+/// **Error message from the tool call**, not exposed to the LLM or user. Upon receiving a Tool Call message and failing to invoke the function, this message is sent to notify EVI of the tool's failure.
+///
+/// For built-in tools implemented on the server, you will receive this message type rather than a `ToolCallMessage` if the tool fails. See our [Tool Use Guide](/docs/speech-to-speech-evi/features/tool-use) for further details.
 /// </summary>
 [Serializable]
 public record ToolErrorMessage : IJsonOnDeserialized
@@ -48,7 +50,7 @@ public record ToolErrorMessage : IJsonOnDeserialized
     /// <summary>
     /// The unique identifier for a specific tool call instance.
     ///
-    /// This ID is used to track the request and response of a particular tool invocation, ensuring that the Tool Error message is linked to the appropriate tool call request. The specified `tool_call_id` must match the one received in the [Tool Call message](/reference/speech-to-speech-evi/chat#receive.ToolCallMessage).
+    /// This ID is used to track the request and response of a particular tool invocation, ensuring that the Tool Error message is linked to the appropriate tool call request. The specified `tool_call_id` must match the one received in the [Tool Call message](/reference/empathic-voice-interface-evi/chat/chat#receive.Tool%20Call%20Message.type).
     /// </summary>
     [JsonPropertyName("tool_call_id")]
     public required string ToolCallId { get; set; }
@@ -62,13 +64,14 @@ public record ToolErrorMessage : IJsonOnDeserialized
     /// <summary>
     /// The type of message sent through the socket; for a Tool Error message, this must be `tool_error`.
     ///
-    /// Upon receiving a [Tool Call message](/reference/speech-to-speech-evi/chat#receive.ToolCallMessage) and failing to invoke the function, this message is sent to notify EVI of the tool's failure.
+    /// Upon receiving a [Tool Call message](/reference/empathic-voice-interface-evi/chat/chat#receive.Tool%20Call%20Message.type) and failing to invoke the function, this message is sent to notify EVI of the tool's failure.
     /// </summary>
     [JsonPropertyName("type")]
     public string Type
     {
         get => "tool_error";
-        set => value.Assert(value == "tool_error", "'[object Object]' must be " + "tool_error");
+        set =>
+            value.Assert(value == "tool_error", string.Format("'Type' must be {0}", "tool_error"));
     }
 
     [JsonIgnore]

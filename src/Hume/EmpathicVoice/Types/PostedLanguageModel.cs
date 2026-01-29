@@ -15,15 +15,9 @@ public record PostedLanguageModel : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// The provider of the supplemental language model.
-    /// </summary>
     [JsonPropertyName("model_provider")]
     public ModelProviderEnum? ModelProvider { get; set; }
 
-    /// <summary>
-    /// String that specifies the language model to use with `model_provider`.
-    /// </summary>
     [JsonPropertyName("model_resource")]
     public LanguageModelType? ModelResource { get; set; }
 

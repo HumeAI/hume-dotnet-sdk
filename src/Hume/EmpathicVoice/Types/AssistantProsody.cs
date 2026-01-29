@@ -6,7 +6,7 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is an Assistant Prosody message.
+/// **Expression measurement predictions of the assistant's audio output.** Contains inference model results including prosody scores for 48 emotions within the detected expression of the assistant's audio sample.
 /// </summary>
 [Serializable]
 public record AssistantProsody : IJsonOnDeserialized
@@ -45,7 +45,7 @@ public record AssistantProsody : IJsonOnDeserialized
         set =>
             value.Assert(
                 value == "assistant_prosody",
-                "'[object Object]' must be " + "assistant_prosody"
+                string.Format("'Type' must be {0}", "assistant_prosody")
             );
     }
 
