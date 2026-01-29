@@ -16,7 +16,7 @@ public record FormatMp3 : IJsonOnDeserialized
     public string Type
     {
         get => "mp3";
-        set => value.Assert(value == "mp3", "'[object Object]' must be " + "mp3");
+        set => value.Assert(value == "mp3", string.Format("'Type' must be {0}", "mp3"));
     }
 
     [JsonIgnore]

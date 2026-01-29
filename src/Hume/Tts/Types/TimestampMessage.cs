@@ -43,7 +43,7 @@ public record TimestampMessage : IJsonOnDeserialized
     public string Type
     {
         get => "timestamp";
-        set => value.Assert(value == "timestamp", "'[object Object]' must be " + "timestamp");
+        set => value.Assert(value == "timestamp", string.Format("'Type' must be {0}", "timestamp"));
     }
 
     [JsonIgnore]

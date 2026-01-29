@@ -13,7 +13,7 @@ public record PostedVoice
     public required string GenerationId { get; set; }
 
     /// <summary>
-    /// Name of the voice in the `Voice Library`.
+    /// The name of a **Voice**.
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; set; }

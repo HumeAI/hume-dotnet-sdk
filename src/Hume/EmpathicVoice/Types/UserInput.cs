@@ -6,7 +6,7 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// User text to insert into the conversation. Text sent through a User Input message is treated as the user's speech to EVI. EVI processes this input and provides a corresponding response.
+/// **User text to insert into the conversation.** Text sent through a User Input message is treated as the user's speech to EVI. EVI processes this input and provides a corresponding response.
 ///
 /// Expression measurement results are not available for User Input messages, as the prosody model relies on audio input and cannot process text alone.
 /// </summary>
@@ -38,7 +38,8 @@ public record UserInput : IJsonOnDeserialized
     public string Type
     {
         get => "user_input";
-        set => value.Assert(value == "user_input", "'[object Object]' must be " + "user_input");
+        set =>
+            value.Assert(value == "user_input", string.Format("'Type' must be {0}", "user_input"));
     }
 
     [JsonIgnore]

@@ -64,11 +64,6 @@ public record ReturnChatPagedEvents : IJsonOnDeserialized
     [JsonPropertyName("page_size")]
     public required int PageSize { get; set; }
 
-    /// <summary>
-    /// Indicates the order in which the paginated results are presented, based on their creation date.
-    ///
-    /// It shows `ASC` for ascending order (chronological, with the oldest records first) or `DESC` for descending order (reverse-chronological, with the newest records first). This value corresponds to the `ascending_order` query parameter used in the request.
-    /// </summary>
     [JsonPropertyName("pagination_direction")]
     public required ReturnChatPagedEventsPaginationDirection PaginationDirection { get; set; }
 
@@ -78,21 +73,6 @@ public record ReturnChatPagedEvents : IJsonOnDeserialized
     [JsonPropertyName("start_timestamp")]
     public required long StartTimestamp { get; set; }
 
-    /// <summary>
-    /// Indicates the current state of the chat. There are six possible statuses:
-    ///
-    /// - `ACTIVE`: The chat is currently active and ongoing.
-    ///
-    /// - `USER_ENDED`: The chat was manually ended by the user.
-    ///
-    /// - `USER_TIMEOUT`: The chat ended due to a user-defined timeout.
-    ///
-    /// - `MAX_DURATION_TIMEOUT`: The chat ended because it reached the maximum allowed duration.
-    ///
-    /// - `INACTIVITY_TIMEOUT`: The chat ended due to an inactivity timeout.
-    ///
-    /// - `ERROR`: The chat ended unexpectedly due to an error.
-    /// </summary>
     [JsonPropertyName("status")]
     public required ReturnChatPagedEventsStatus Status { get; set; }
 

@@ -8,16 +8,11 @@ namespace Hume.EmpathicVoice;
 public record PostedConfigVersion
 {
     /// <summary>
-    /// List of built-in tools associated with this Config version.
+    /// Built-in tool specification for a Config.
     /// </summary>
     [JsonPropertyName("builtin_tools")]
     public IEnumerable<PostedBuiltinTool>? BuiltinTools { get; set; }
 
-    /// <summary>
-    /// The eLLM setup associated with this Config version.
-    ///
-    /// Hume's eLLM (empathic Large Language Model) is a multimodal language model that takes into account both expression measures and language. The eLLM generates short, empathic language responses and guides text-to-speech (TTS) prosody.
-    /// </summary>
     [JsonPropertyName("ellm_model")]
     public PostedEllmModel? EllmModel { get; set; }
 
@@ -25,16 +20,11 @@ public record PostedConfigVersion
     public PostedEventMessageSpecs? EventMessages { get; set; }
 
     /// <summary>
-    /// The version of the EVI used with this config.
+    /// EVI version to use. Only versions `3` and `4-mini` are supported.
     /// </summary>
     [JsonPropertyName("evi_version")]
     public required string EviVersion { get; set; }
 
-    /// <summary>
-    /// The supplemental language model associated with this Config version.
-    ///
-    /// This model is used to generate longer, more detailed responses from EVI. Choosing an appropriate supplemental language model for your use case is crucial for generating fast, high-quality responses from EVI.
-    /// </summary>
     [JsonPropertyName("language_model")]
     public PostedLanguageModel? LanguageModel { get; set; }
 
@@ -48,7 +38,7 @@ public record PostedConfigVersion
     public PostedTimeoutSpecs? Timeouts { get; set; }
 
     /// <summary>
-    /// List of user-defined tools associated with this Config version.
+    /// Tool specification for a Config.
     /// </summary>
     [JsonPropertyName("tools")]
     public IEnumerable<PostedUserDefinedToolSpec>? Tools { get; set; }
@@ -59,9 +49,6 @@ public record PostedConfigVersion
     [JsonPropertyName("version_description")]
     public string? VersionDescription { get; set; }
 
-    /// <summary>
-    /// A voice specification associated with this Config version.
-    /// </summary>
     [JsonPropertyName("voice")]
     public OneOf<VoiceId, VoiceName>? Voice { get; set; }
 

@@ -236,12 +236,12 @@ public record StateInference
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<StateInference>
     {
-        public override bool CanConvert(global::System.Type typeToConvert) =>
+        public override bool CanConvert(System.Type typeToConvert) =>
             typeof(StateInference).IsAssignableFrom(typeToConvert);
 
         public override StateInference Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {

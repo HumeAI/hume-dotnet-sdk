@@ -11,7 +11,7 @@ public record BatchStartInferenceJobFromLocalFileRequest
     /// </summary>
     public InferenceBaseRequest? Json { get; set; }
 
-    public IEnumerable<FileParameter> File { get; set; } = new List<FileParameter>();
+    public required FileParameter File { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

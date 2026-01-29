@@ -22,14 +22,16 @@ public record ReturnBuiltinTool : IJsonOnDeserialized
     public string? FallbackContent { get; set; }
 
     /// <summary>
-    /// Name applied to all versions of a particular Tool.
+    /// Name of the built-in tool to use. Hume supports the following built-in tools:
+    ///
+    /// - **web_search:** enables EVI to search the web for up-to-date information when applicable.
+    /// - **hang_up:** closes the WebSocket connection when appropriate (e.g., after detecting a farewell in the conversation).
+    ///
+    /// For more information, see our guide on [using built-in tools](/docs/speech-to-speech-evi/features/tool-use#using-built-in-tools).
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
-    /// <summary>
-    /// Type of Tool. Either `BUILTIN` for natively implemented tools, like web search, or `FUNCTION` for user-defined tools.
-    /// </summary>
     [JsonPropertyName("tool_type")]
     public required ReturnBuiltinToolToolType ToolType { get; set; }
 

@@ -4,7 +4,7 @@ using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
 
-public partial class BatchClient
+public partial class BatchClient : IBatchClient
 {
     private RawClient _client;
 
@@ -13,40 +13,29 @@ public partial class BatchClient
         _client = client;
     }
 
-    /// <summary>
-    /// Sort and filter jobs.
-    /// </summary>
-    /// <example><code>
-    /// await client.ExpressionMeasurement.Batch.ListJobsAsync(new BatchListJobsRequest());
-    /// </code></example>
-    public async System.Threading.Tasks.Task<IEnumerable<InferenceJob>> ListJobsAsync(
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<IEnumerable<InferenceJob>>
+    > ListJobsAsyncCore(
         BatchListJobsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        _query["status"] = request.Status.Select(_value => _value.Stringify()).ToList();
-        if (request.Limit != null)
-        {
-            _query["limit"] = request.Limit.Value.ToString();
-        }
-        if (request.When != null)
-        {
-            _query["when"] = request.When.Value.Stringify();
-        }
-        if (request.TimestampMs != null)
-        {
-            _query["timestamp_ms"] = request.TimestampMs.Value.ToString();
-        }
-        if (request.SortBy != null)
-        {
-            _query["sort_by"] = request.SortBy.Value.Stringify();
-        }
-        if (request.Direction != null)
-        {
-            _query["direction"] = request.Direction.Value.Stringify();
-        }
+        var _queryString = new Hume.Core.QueryStringBuilder.Builder(capacity: 6)
+            .Add("limit", request.Limit)
+            .Add("status", request.Status)
+            .Add("when", request.When)
+            .Add("timestamp_ms", request.TimestampMs)
+            .Add("sort_by", request.SortBy)
+            .Add("direction", request.Direction)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -54,7 +43,8 @@ public partial class BatchClient
                     BaseUrl = _client.Options.Environment.Base,
                     Method = HttpMethod.Get,
                     Path = "v0/batch/jobs",
-                    Query = _query,
+                    QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -65,14 +55,28 @@ public partial class BatchClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<InferenceJob>>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<IEnumerable<InferenceJob>>(responseBody)!;
+                return new WithRawResponse<IEnumerable<InferenceJob>>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new HumeClientException("Failed to deserialize response", e);
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             throw new HumeClientApiException(
@@ -81,6 +85,339 @@ public partial class BatchClient
                 responseBody
             );
         }
+    }
+
+    private async System.Threading.Tasks.Task<WithRawResponse<JobId>> StartInferenceJobAsyncCore(
+        InferenceBaseRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Post,
+                    Path = "v0/batch/jobs",
+                    Body = request,
+                    Headers = _headers,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<JobId>(responseBody)!;
+                return new WithRawResponse<JobId>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<WithRawResponse<InferenceJob>> GetJobDetailsAsyncCore(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "v0/batch/jobs/{0}",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Headers = _headers,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<InferenceJob>(responseBody)!;
+                return new WithRawResponse<InferenceJob>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<IEnumerable<InferenceSourcePredictResult>>
+    > GetJobPredictionsAsyncCore(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "v0/batch/jobs/{0}/predictions",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Headers = _headers,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<IEnumerable<InferenceSourcePredictResult>>(
+                    responseBody
+                )!;
+                return new WithRawResponse<IEnumerable<InferenceSourcePredictResult>>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<System.IO.Stream>
+    > GetJobArtifactsAsyncCore(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.Environment.Base,
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "v0/batch/jobs/{0}/artifacts",
+                        ValueConvert.ToPathParameterString(id)
+                    ),
+                    Headers = _headers,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var stream = await response.Raw.Content.ReadAsStreamAsync();
+            return new WithRawResponse<System.IO.Stream>()
+            {
+                Data = stream,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    private async System.Threading.Tasks.Task<
+        WithRawResponse<JobId>
+    > StartInferenceJobFromLocalFileAsyncCore(
+        BatchStartInferenceJobFromLocalFileRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var multipartFormRequest_ = new MultipartFormRequest
+        {
+            BaseUrl = _client.Options.Environment.Base,
+            Method = HttpMethod.Post,
+            Path = "v0/batch/jobs",
+            Headers = _headers,
+            Options = options,
+        };
+        multipartFormRequest_.AddJsonPart("json", request.Json);
+        multipartFormRequest_.AddFileParameterPart("file", request.File);
+        var response = await _client
+            .SendRequestAsync(multipartFormRequest_, cancellationToken)
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                var responseData = JsonUtils.Deserialize<JobId>(responseBody)!;
+                return new WithRawResponse<JobId>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new HumeClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            throw new HumeClientApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    /// <summary>
+    /// Sort and filter jobs.
+    /// </summary>
+    /// <example><code>
+    /// await client.ExpressionMeasurement.Batch.ListJobsAsync(new BatchListJobsRequest());
+    /// </code></example>
+    public WithRawResponseTask<IEnumerable<InferenceJob>> ListJobsAsync(
+        BatchListJobsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<IEnumerable<InferenceJob>>(
+            ListJobsAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -95,47 +432,15 @@ public partial class BatchClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<JobId> StartInferenceJobAsync(
+    public WithRawResponseTask<JobId> StartInferenceJobAsync(
         InferenceBaseRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = "v0/batch/jobs",
-                    Body = request,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<JobId>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<JobId>(
+            StartInferenceJobAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -144,48 +449,15 @@ public partial class BatchClient
     /// <example><code>
     /// await client.ExpressionMeasurement.Batch.GetJobDetailsAsync("job_id");
     /// </code></example>
-    public async System.Threading.Tasks.Task<InferenceJob> GetJobDetailsAsync(
+    public WithRawResponseTask<InferenceJob> GetJobDetailsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "v0/batch/jobs/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<InferenceJob>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<InferenceJob>(
+            GetJobDetailsAsyncCore(id, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -194,90 +466,29 @@ public partial class BatchClient
     /// <example><code>
     /// await client.ExpressionMeasurement.Batch.GetJobPredictionsAsync("job_id");
     /// </code></example>
-    public async System.Threading.Tasks.Task<
-        IEnumerable<InferenceSourcePredictResult>
-    > GetJobPredictionsAsync(
+    public WithRawResponseTask<IEnumerable<InferenceSourcePredictResult>> GetJobPredictionsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "v0/batch/jobs/{0}/predictions",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<IEnumerable<InferenceSourcePredictResult>>(
-                    responseBody
-                )!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<IEnumerable<InferenceSourcePredictResult>>(
+            GetJobPredictionsAsyncCore(id, options, cancellationToken)
+        );
     }
 
     /// <summary>
     /// Get the artifacts ZIP of a completed inference job.
     /// </summary>
-    public async System.Threading.Tasks.Task<System.IO.Stream> GetJobArtifactsAsync(
+    public WithRawResponseTask<System.IO.Stream> GetJobArtifactsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "v0/batch/jobs/{0}/artifacts",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            return await response.Raw.Content.ReadAsStreamAsync();
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<System.IO.Stream>(
+            GetJobArtifactsAsyncCore(id, options, cancellationToken)
+        );
     }
 
     /// <summary>
@@ -288,44 +499,14 @@ public partial class BatchClient
     ///     new BatchStartInferenceJobFromLocalFileRequest()
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<JobId> StartInferenceJobFromLocalFileAsync(
+    public WithRawResponseTask<JobId> StartInferenceJobFromLocalFileAsync(
         BatchStartInferenceJobFromLocalFileRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var multipartFormRequest_ = new MultipartFormRequest
-        {
-            BaseUrl = _client.Options.Environment.Base,
-            Method = HttpMethod.Post,
-            Path = "v0/batch/jobs",
-            Options = options,
-        };
-        multipartFormRequest_.AddJsonPart("json", request.Json);
-        multipartFormRequest_.AddFileParameterParts("file", request.File);
-        var response = await _client
-            .SendRequestAsync(multipartFormRequest_, cancellationToken)
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<JobId>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new HumeClientException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            throw new HumeClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<JobId>(
+            StartInferenceJobFromLocalFileAsyncCore(request, options, cancellationToken)
+        );
     }
 }

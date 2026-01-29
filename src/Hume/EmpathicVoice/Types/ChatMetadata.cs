@@ -6,7 +6,9 @@ using Hume.Core;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// When provided, the output is a chat metadata message.
+/// **The first message received after establishing a connection with EVI**, containing important identifiers for the current Chat session.
+///
+/// Includes the Chat ID (which allows the Chat session to be tracked and referenced) and the Chat Group ID (used to resume a Chat when passed in the `resumed_chat_group_id` query parameter of a subsequent connection request, allowing EVI to continue the conversation from where it left off within the Chat Group).
 /// </summary>
 [Serializable]
 public record ChatMetadata : IJsonOnDeserialized
@@ -18,9 +20,9 @@ public record ChatMetadata : IJsonOnDeserialized
     /// <summary>
     /// ID of the Chat Group.
     ///
-    /// Used to resume a Chat when passed in the [resumed_chat_group_id](/reference/speech-to-speech-evi/chat#request.query.resumed_chat_group_id) query parameter of a subsequent connection request. This allows EVI to continue the conversation from where it left off within the Chat Group.
+    /// Used to resume a Chat when passed in the [resumed_chat_group_id](/reference/empathic-voice-interface-evi/chat/chat#request.query.resumed_chat_group_id) query parameter of a subsequent connection request. This allows EVI to continue the conversation from where it left off within the Chat Group.
     ///
-    /// Learn more about [supporting chat resumability](/docs/speech-to-speech-evi/faq#does-evi-support-chat-resumability) from the EVI FAQ.
+    /// Learn more about [supporting chat resumability](/docs/empathic-voice-interface-evi/faq#does-evi-support-chat-resumability) from the EVI FAQ.
     /// </summary>
     [JsonPropertyName("chat_group_id")]
     public required string ChatGroupId { get; set; }
@@ -53,7 +55,10 @@ public record ChatMetadata : IJsonOnDeserialized
     {
         get => "chat_metadata";
         set =>
-            value.Assert(value == "chat_metadata", "'[object Object]' must be " + "chat_metadata");
+            value.Assert(
+                value == "chat_metadata",
+                string.Format("'Type' must be {0}", "chat_metadata")
+            );
     }
 
     [JsonIgnore]

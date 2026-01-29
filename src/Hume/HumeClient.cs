@@ -5,31 +5,38 @@ using Hume.Tts;
 
 namespace Hume;
 
-public partial class HumeClient
+public partial class HumeClient : IHumeClient
 {
     private readonly RawClient _client;
 
-    public HumeClient(string? apiKey, ClientOptions? clientOptions = null)
+    public HumeClient(string? apiKey = null, ClientOptions? clientOptions = null)
     {
-        var defaultHeaders = new Headers(
+        clientOptions ??= new ClientOptions();
+        var platformHeaders = new Headers(
             new Dictionary<string, string>()
             {
-                { "X-Hume-Api-Key", apiKey ?? "" },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "Hume" },
                 { "X-Fern-SDK-Version", Version.Current },
-                { "User-Agent", "Hume/0.2.3" },
+                { "User-Agent", "Hume/0.2.4" },
             }
         );
-        clientOptions ??= new ClientOptions();
-        foreach (var header in defaultHeaders)
+        foreach (var header in platformHeaders)
         {
             if (!clientOptions.Headers.ContainsKey(header.Key))
             {
                 clientOptions.Headers[header.Key] = header.Value;
             }
         }
-        _client = new RawClient(clientOptions);
+        var clientOptionsWithAuth = clientOptions.Clone();
+        var authHeaders = new Headers(
+            new Dictionary<string, string>() { { "X-Hume-Api-Key", apiKey ?? "" } }
+        );
+        foreach (var header in authHeaders)
+        {
+            clientOptionsWithAuth.Headers[header.Key] = header.Value;
+        }
+        _client = new RawClient(clientOptionsWithAuth);
         EmpathicVoice = new EmpathicVoiceClient(_client);
         Tts = new TtsClient(_client);
         ExpressionMeasurement = new ExpressionMeasurementClient(_client);

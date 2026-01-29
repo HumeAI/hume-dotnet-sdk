@@ -7,7 +7,9 @@ using OneOf;
 namespace Hume.EmpathicVoice;
 
 /// <summary>
-/// Settings for this chat session.
+/// **Settings for this chat session.** Session settings are temporary and apply only to the current Chat session.
+///
+/// These settings can be adjusted dynamically based on the requirements of each session to ensure optimal performance and user experience. See our [Session Settings Guide](/docs/speech-to-speech-evi/configuration/session-settings) for a complete list of configurable settings.
 /// </summary>
 [Serializable]
 public record SessionSettings : IJsonOnDeserialized
@@ -19,7 +21,7 @@ public record SessionSettings : IJsonOnDeserialized
     /// <summary>
     /// Configuration details for the audio input used during the session. Ensures the audio is being correctly set up for processing.
     ///
-    /// This optional field is only required when the audio input is encoded in PCM Linear 16 (16-bit, little-endian, signed PCM WAV data). For detailed instructions on how to configure session settings for PCM Linear 16 audio, please refer to the [Session Settings guide](/docs/speech-to-speech-evi/configuration/session-settings).
+    /// This optional field is only required when the audio input is encoded in PCM Linear 16 (16-bit, little-endian, signed PCM WAV data). For detailed instructions on how to configure session settings for PCM Linear 16 audio, please refer to the [Session Settings section](/docs/empathic-voice-interface-evi/configuration#session-settings) on the EVI Configuration page.
     /// </summary>
     [JsonPropertyName("audio")]
     public AudioConfiguration? Audio { get; set; }
@@ -27,7 +29,7 @@ public record SessionSettings : IJsonOnDeserialized
     /// <summary>
     /// List of built-in tools to enable for the session.
     ///
-    /// Tools are resources used by EVI to perform various tasks, such as searching the web or calling external APIs. Built-in tools, like web search, are natively integrated, while user-defined tools are created and invoked by the user. To learn more, see our [Tool Use Guide](/docs/speech-to-speech-evi/features/tool-use).
+    /// Tools are resources used by EVI to perform various tasks, such as searching the web or calling external APIs. Built-in tools, like web search, are natively integrated, while user-defined tools are created and invoked by the user. To learn more, see our [Tool Use Guide](/docs/empathic-voice-interface-evi/tool-use).
     ///
     /// Currently, the only built-in tool Hume provides is **Web Search**. When enabled, Web Search equips EVI with the ability to search the web for up-to-date information.
     /// </summary>
@@ -49,7 +51,7 @@ public record SessionSettings : IJsonOnDeserialized
     ///
     /// If included, the response sent from Hume to your backend will include this ID. This allows you to correlate frontend users with their incoming messages.
     ///
-    /// It is recommended to pass a `custom_session_id` if you are using a Custom Language Model. Please see our guide to [using a custom language model](/docs/speech-to-speech-evi/guides/custom-language-model) with EVI to learn more.
+    /// It is recommended to pass a `custom_session_id` if you are using a Custom Language Model. Please see our guide to [using a custom language model](/docs/empathic-voice-interface-evi/custom-language-model) with EVI to learn more.
     /// </summary>
     [JsonPropertyName("custom_session_id")]
     public string? CustomSessionId { get; set; }
@@ -72,7 +74,7 @@ public record SessionSettings : IJsonOnDeserialized
     ///
     /// You can use the Prompt to define a specific goal or role for EVI, specifying how it should act or what it should focus on during the conversation. For example, EVI can be instructed to act as a customer support representative, a fitness coach, or a travel advisor, each with its own set of behaviors and response styles.
     ///
-    /// For help writing a system prompt, see our [Prompting Guide](/docs/speech-to-speech-evi/guides/prompting).
+    /// For help writing a system prompt, see our [Prompting Guide](/docs/empathic-voice-interface-evi/prompting).
     /// </summary>
     [JsonPropertyName("system_prompt")]
     public string? SystemPrompt { get; set; }
@@ -80,7 +82,7 @@ public record SessionSettings : IJsonOnDeserialized
     /// <summary>
     /// List of user-defined tools to enable for the session.
     ///
-    /// Tools are resources used by EVI to perform various tasks, such as searching the web or calling external APIs. Built-in tools, like web search, are natively integrated, while user-defined tools are created and invoked by the user. To learn more, see our [Tool Use Guide](/docs/speech-to-speech-evi/features/tool-use).
+    /// Tools are resources used by EVI to perform various tasks, such as searching the web or calling external APIs. Built-in tools, like web search, are natively integrated, while user-defined tools are created and invoked by the user. To learn more, see our [Tool Use Guide](/docs/empathic-voice-interface-evi/tool-use).
     /// </summary>
     [JsonPropertyName("tools")]
     public IEnumerable<Tool>? Tools { get; set; }
@@ -90,7 +92,7 @@ public record SessionSettings : IJsonOnDeserialized
     ///
     /// Session settings are temporary and apply only to the current Chat session. These settings can be adjusted dynamically based on the requirements of each session to ensure optimal performance and user experience.
     ///
-    /// For more information, please refer to the [Session Settings guide](/docs/speech-to-speech-evi/configuration/session-settings).
+    /// For more information, please refer to the [Session Settings section](/docs/empathic-voice-interface-evi/configuration#session-settings) on the EVI Configuration page.
     /// </summary>
     [JsonPropertyName("type")]
     public string Type
@@ -99,7 +101,7 @@ public record SessionSettings : IJsonOnDeserialized
         set =>
             value.Assert(
                 value == "session_settings",
-                "'[object Object]' must be " + "session_settings"
+                string.Format("'Type' must be {0}", "session_settings")
             );
     }
 

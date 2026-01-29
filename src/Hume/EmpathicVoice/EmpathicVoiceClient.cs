@@ -2,7 +2,7 @@ using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-public partial class EmpathicVoiceClient
+public partial class EmpathicVoiceClient : IEmpathicVoiceClient
 {
     private RawClient _client;
 
@@ -32,6 +32,11 @@ public partial class EmpathicVoiceClient
     public ControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options)
     {
         return new ControlPlaneApi(options);
+    }
+
+    public ChatApi CreateChatApi()
+    {
+        return new ChatApi(new ChatApi.Options());
     }
 
     public ChatApi CreateChatApi(ChatApi.Options options)
