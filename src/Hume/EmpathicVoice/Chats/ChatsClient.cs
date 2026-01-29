@@ -43,6 +43,12 @@ public partial class ChatsClient : IChatsClient
             .Add("status", request.Status)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -51,6 +57,7 @@ public partial class ChatsClient : IChatsClient
                     Method = HttpMethod.Get,
                     Path = "v0/evi/chats",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -137,6 +144,12 @@ public partial class ChatsClient : IChatsClient
             .Add("ascending_order", request.AscendingOrder)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -148,6 +161,7 @@ public partial class ChatsClient : IChatsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -212,6 +226,12 @@ public partial class ChatsClient : IChatsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -222,6 +242,7 @@ public partial class ChatsClient : IChatsClient
                         "v0/evi/chats/{0}/audio",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -304,7 +325,7 @@ public partial class ChatsClient : IChatsClient
             ChatsListChatsRequest,
             RequestOptions?,
             ReturnPagedChats,
-            int?,
+            int,
             object,
             ReturnChat
         >
@@ -353,7 +374,7 @@ public partial class ChatsClient : IChatsClient
             ChatsListChatEventsRequest,
             RequestOptions?,
             ReturnChatPagedEvents,
-            int?,
+            int,
             object,
             ReturnChatEvent
         >

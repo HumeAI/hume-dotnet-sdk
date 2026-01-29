@@ -43,6 +43,12 @@ public partial class VoicesClient : IVoicesClient
             .Add("filter_tag", request.FilterTag)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -51,6 +57,7 @@ public partial class VoicesClient : IVoicesClient
                     Method = HttpMethod.Get,
                     Path = "v0/tts/voices",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -113,6 +120,12 @@ public partial class VoicesClient : IVoicesClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -121,6 +134,7 @@ public partial class VoicesClient : IVoicesClient
                     Method = HttpMethod.Post,
                     Path = "v0/tts/voices",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -197,7 +211,7 @@ public partial class VoicesClient : IVoicesClient
             VoicesListRequest,
             RequestOptions?,
             ReturnPagedVoices,
-            int?,
+            int,
             object,
             ReturnVoice
         >
@@ -257,6 +271,12 @@ public partial class VoicesClient : IVoicesClient
             .Add("name", request.Name)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -265,6 +285,7 @@ public partial class VoicesClient : IVoicesClient
                     Method = HttpMethod.Delete,
                     Path = "v0/tts/voices",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken

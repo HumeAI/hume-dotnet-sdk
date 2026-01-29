@@ -30,6 +30,12 @@ public partial class BatchClient : IBatchClient
             .Add("direction", request.Direction)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -38,6 +44,7 @@ public partial class BatchClient : IBatchClient
                     Method = HttpMethod.Get,
                     Path = "v0/batch/jobs",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -86,6 +93,12 @@ public partial class BatchClient : IBatchClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -94,6 +107,7 @@ public partial class BatchClient : IBatchClient
                     Method = HttpMethod.Post,
                     Path = "v0/batch/jobs",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -143,6 +157,12 @@ public partial class BatchClient : IBatchClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -153,6 +173,7 @@ public partial class BatchClient : IBatchClient
                         "v0/batch/jobs/{0}",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -203,6 +224,12 @@ public partial class BatchClient : IBatchClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -213,6 +240,7 @@ public partial class BatchClient : IBatchClient
                         "v0/batch/jobs/{0}/predictions",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -265,6 +293,12 @@ public partial class BatchClient : IBatchClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -275,6 +309,7 @@ public partial class BatchClient : IBatchClient
                         "v0/batch/jobs/{0}/artifacts",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -312,11 +347,18 @@ public partial class BatchClient : IBatchClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var multipartFormRequest_ = new MultipartFormRequest
         {
             BaseUrl = _client.Options.Environment.Base,
             Method = HttpMethod.Post,
             Path = "v0/batch/jobs",
+            Headers = _headers,
             Options = options,
         };
         multipartFormRequest_.AddJsonPart("json", request.Json);

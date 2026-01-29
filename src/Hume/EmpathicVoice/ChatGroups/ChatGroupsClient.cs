@@ -42,6 +42,12 @@ public partial class ChatGroupsClient : IChatGroupsClient
             .Add("config_id", request.ConfigId)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -50,6 +56,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
                     Method = HttpMethod.Get,
                     Path = "v0/evi/chat_groups",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -122,6 +129,12 @@ public partial class ChatGroupsClient : IChatGroupsClient
             .Add("ascending_order", request.AscendingOrder)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -133,6 +146,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -204,6 +218,12 @@ public partial class ChatGroupsClient : IChatGroupsClient
             .Add("ascending_order", request.AscendingOrder)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -215,6 +235,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -303,6 +324,12 @@ public partial class ChatGroupsClient : IChatGroupsClient
             .Add("ascending_order", request.AscendingOrder)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -314,6 +341,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -395,7 +423,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
             ChatGroupsListChatGroupsRequest,
             RequestOptions?,
             ReturnPagedChatGroups,
-            int?,
+            int,
             object,
             ReturnChatGroup
         >
@@ -496,7 +524,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
             ChatGroupsListChatGroupEventsRequest,
             RequestOptions?,
             ReturnChatGroupPagedEvents,
-            int?,
+            int,
             object,
             ReturnChatEvent
         >

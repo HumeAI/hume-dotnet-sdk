@@ -44,6 +44,12 @@ public partial class PromptsClient : IPromptsClient
             .Add("name", request.Name)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -52,6 +58,7 @@ public partial class PromptsClient : IPromptsClient
                     Method = HttpMethod.Get,
                     Path = "v0/evi/prompts",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -114,6 +121,12 @@ public partial class PromptsClient : IPromptsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -122,6 +135,7 @@ public partial class PromptsClient : IPromptsClient
                     Method = HttpMethod.Post,
                     Path = "v0/evi/prompts",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -194,6 +208,12 @@ public partial class PromptsClient : IPromptsClient
             .Add("restrict_to_most_recent", request.RestrictToMostRecent)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -205,6 +225,7 @@ public partial class PromptsClient : IPromptsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -270,6 +291,12 @@ public partial class PromptsClient : IPromptsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -281,6 +308,7 @@ public partial class PromptsClient : IPromptsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -345,6 +373,12 @@ public partial class PromptsClient : IPromptsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -356,6 +390,7 @@ public partial class PromptsClient : IPromptsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -409,6 +444,12 @@ public partial class PromptsClient : IPromptsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -420,6 +461,7 @@ public partial class PromptsClient : IPromptsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(version)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -486,6 +528,12 @@ public partial class PromptsClient : IPromptsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -498,6 +546,7 @@ public partial class PromptsClient : IPromptsClient
                         ValueConvert.ToPathParameterString(version)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -576,7 +625,7 @@ public partial class PromptsClient : IPromptsClient
             PromptsListPromptsRequest,
             RequestOptions?,
             ReturnPagedPrompts,
-            int?,
+            int,
             object,
             ReturnPrompt
         >
@@ -690,6 +739,12 @@ public partial class PromptsClient : IPromptsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -700,6 +755,7 @@ public partial class PromptsClient : IPromptsClient
                         "v0/evi/prompts/{0}",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -794,6 +850,12 @@ public partial class PromptsClient : IPromptsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -805,6 +867,7 @@ public partial class PromptsClient : IPromptsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(version)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken

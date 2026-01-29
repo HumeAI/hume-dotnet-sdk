@@ -44,6 +44,12 @@ public partial class ToolsClient : IToolsClient
             .Add("name", request.Name)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -52,6 +58,7 @@ public partial class ToolsClient : IToolsClient
                     Method = HttpMethod.Get,
                     Path = "v0/evi/tools",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -118,6 +125,12 @@ public partial class ToolsClient : IToolsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -126,6 +139,7 @@ public partial class ToolsClient : IToolsClient
                     Method = HttpMethod.Post,
                     Path = "v0/evi/tools",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -215,6 +229,12 @@ public partial class ToolsClient : IToolsClient
             .Add("restrict_to_most_recent", request.RestrictToMostRecent)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -226,6 +246,7 @@ public partial class ToolsClient : IToolsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -293,6 +314,12 @@ public partial class ToolsClient : IToolsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -304,6 +331,7 @@ public partial class ToolsClient : IToolsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -368,6 +396,12 @@ public partial class ToolsClient : IToolsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -379,6 +413,7 @@ public partial class ToolsClient : IToolsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -432,6 +467,12 @@ public partial class ToolsClient : IToolsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -443,6 +484,7 @@ public partial class ToolsClient : IToolsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(version)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -509,6 +551,12 @@ public partial class ToolsClient : IToolsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -521,6 +569,7 @@ public partial class ToolsClient : IToolsClient
                         ValueConvert.ToPathParameterString(version)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -599,7 +648,7 @@ public partial class ToolsClient : IToolsClient
             ToolsListToolsRequest,
             RequestOptions?,
             ReturnPagedUserDefinedTools,
-            int?,
+            int,
             object,
             ReturnUserDefinedTool
         >
@@ -675,7 +724,7 @@ public partial class ToolsClient : IToolsClient
             ToolsListToolVersionsRequest,
             RequestOptions?,
             ReturnPagedUserDefinedTools,
-            int?,
+            int,
             object,
             ReturnUserDefinedTool
         >
@@ -744,6 +793,12 @@ public partial class ToolsClient : IToolsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -754,6 +809,7 @@ public partial class ToolsClient : IToolsClient
                         "v0/evi/tools/{0}",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -845,6 +901,12 @@ public partial class ToolsClient : IToolsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -856,6 +918,7 @@ public partial class ToolsClient : IToolsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(version)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken

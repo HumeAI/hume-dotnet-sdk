@@ -44,6 +44,12 @@ public partial class ConfigsClient : IConfigsClient
             .Add("name", request.Name)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -52,6 +58,7 @@ public partial class ConfigsClient : IConfigsClient
                     Method = HttpMethod.Get,
                     Path = "v0/evi/configs",
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -114,6 +121,12 @@ public partial class ConfigsClient : IConfigsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -122,6 +135,7 @@ public partial class ConfigsClient : IConfigsClient
                     Method = HttpMethod.Post,
                     Path = "v0/evi/configs",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -211,6 +225,12 @@ public partial class ConfigsClient : IConfigsClient
             .Add("restrict_to_most_recent", request.RestrictToMostRecent)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -222,6 +242,7 @@ public partial class ConfigsClient : IConfigsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -287,6 +308,12 @@ public partial class ConfigsClient : IConfigsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -298,6 +325,7 @@ public partial class ConfigsClient : IConfigsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -362,6 +390,12 @@ public partial class ConfigsClient : IConfigsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -373,6 +407,7 @@ public partial class ConfigsClient : IConfigsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -426,6 +461,12 @@ public partial class ConfigsClient : IConfigsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -437,6 +478,7 @@ public partial class ConfigsClient : IConfigsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(version)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -503,6 +545,12 @@ public partial class ConfigsClient : IConfigsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -515,6 +563,7 @@ public partial class ConfigsClient : IConfigsClient
                         ValueConvert.ToPathParameterString(version)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -593,7 +642,7 @@ public partial class ConfigsClient : IConfigsClient
             ConfigsListConfigsRequest,
             RequestOptions?,
             ReturnPagedConfigs,
-            int?,
+            int,
             object,
             ReturnConfig
         >
@@ -686,7 +735,7 @@ public partial class ConfigsClient : IConfigsClient
             ConfigsListConfigVersionsRequest,
             RequestOptions?,
             ReturnPagedConfigs,
-            int?,
+            int,
             object,
             ReturnConfig
         >
@@ -774,6 +823,12 @@ public partial class ConfigsClient : IConfigsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -784,6 +839,7 @@ public partial class ConfigsClient : IConfigsClient
                         "v0/evi/configs/{0}",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -878,6 +934,12 @@ public partial class ConfigsClient : IConfigsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -889,6 +951,7 @@ public partial class ConfigsClient : IConfigsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(version)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken

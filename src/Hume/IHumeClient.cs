@@ -6,7 +6,7 @@ namespace Hume;
 
 public partial interface IHumeClient
 {
-    public TtsClient Tts { get; }
     public EmpathicVoiceClient EmpathicVoice { get; }
+    public TtsClient Tts { get; }
     public ExpressionMeasurementClient ExpressionMeasurement { get; }
 }

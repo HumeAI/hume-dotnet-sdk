@@ -38,6 +38,12 @@ public partial class ControlPlaneClient : IControlPlaneClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -49,6 +55,7 @@ public partial class ControlPlaneClient : IControlPlaneClient
                         ValueConvert.ToPathParameterString(chatId)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },

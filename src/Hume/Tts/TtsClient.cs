@@ -23,6 +23,12 @@ public partial class TtsClient : ITtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -31,6 +37,7 @@ public partial class TtsClient : ITtsClient
                     Method = HttpMethod.Post,
                     Path = "v0/tts",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -96,6 +103,12 @@ public partial class TtsClient : ITtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -104,6 +117,7 @@ public partial class TtsClient : ITtsClient
                     Method = HttpMethod.Post,
                     Path = "v0/tts/file",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -156,6 +170,12 @@ public partial class TtsClient : ITtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -164,6 +184,7 @@ public partial class TtsClient : ITtsClient
                     Method = HttpMethod.Post,
                     Path = "v0/tts/stream/file",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -216,11 +237,18 @@ public partial class TtsClient : ITtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var multipartFormRequest_ = new MultipartFormRequest
         {
             BaseUrl = _client.Options.Environment.Base,
             Method = HttpMethod.Post,
             Path = "v0/tts/voice_conversion/file",
+            Headers = _headers,
             Options = options,
         };
         multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
@@ -426,6 +454,12 @@ public partial class TtsClient : ITtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -434,6 +468,7 @@ public partial class TtsClient : ITtsClient
                     Method = HttpMethod.Post,
                     Path = "v0/tts/stream/json",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -505,11 +540,18 @@ public partial class TtsClient : ITtsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Hume.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var multipartFormRequest_ = new MultipartFormRequest
         {
             BaseUrl = _client.Options.Environment.Base,
             Method = HttpMethod.Post,
             Path = "v0/tts/voice_conversion/json",
+            Headers = _headers,
             Options = options,
         };
         multipartFormRequest_.AddStringPart("strip_headers", request.StripHeaders);
