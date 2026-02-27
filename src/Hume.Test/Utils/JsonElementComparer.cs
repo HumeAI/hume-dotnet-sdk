@@ -90,14 +90,13 @@ public class JsonElementComparer : IEqualityComparer<JsonElement>
                 return false;
 
             case JsonValueKind.Number:
-                var xNum = x.GetDouble();
-                var yNum = y.GetDouble();
-                // Use approximate equality for floating-point to handle serialization precision differences
-                // (e.g. System.Text.Json may round doubles differently than the mock response)
-                const double tolerance = 1e-7;
-                if (Math.Abs(xNum - yNum) > tolerance)
+                // Use double comparison with tolerance for floating-point precision
+                var xDouble = x.GetDouble();
+                var yDouble = y.GetDouble();
+                const double epsilon = 1e-10;
+                if (global::System.Math.Abs(xDouble - yDouble) > epsilon)
                 {
-                    _failurePath = $"{path}: Expected {x.GetDecimal()} but got {y.GetDecimal()}";
+                    _failurePath = $"{path}: Expected {xDouble} but got {yDouble}";
                     return false;
                 }
 

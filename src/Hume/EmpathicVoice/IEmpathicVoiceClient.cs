@@ -10,6 +10,6 @@ public partial interface IEmpathicVoiceClient
     public IToolsClient Tools { get; }
 
     public ChatApi CreateChatApi();
+
     public ChatApi CreateChatApi(ChatApi.Options options);
-    public ControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options);
 }
