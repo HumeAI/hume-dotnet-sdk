@@ -1,5 +1,5 @@
-using Hume.Core;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using Hume.Tts;
 using NUnit.Framework;
 
@@ -109,9 +109,6 @@ public class SynthesizeJsonTest : BaseMockServerTest
                 },
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnTts>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

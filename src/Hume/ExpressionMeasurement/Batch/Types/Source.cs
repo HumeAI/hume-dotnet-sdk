@@ -221,22 +221,35 @@ public record Source
                 discriminatorElement.GetString()
                 ?? throw new JsonException("Discriminator property 'type' is null");
 
+            // Strip the discriminant property to prevent it from leaking into AdditionalProperties
+            var jsonObject = System.Text.Json.Nodes.JsonObject.Create(json);
+            jsonObject?.Remove("type");
+            var jsonWithoutDiscriminator =
+                jsonObject != null ? JsonSerializer.SerializeToElement(jsonObject, options) : json;
+
             var value = discriminator switch
             {
-                "url" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceUrl?>(options)
-                    ?? throw new JsonException(
-                        "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceUrl"
-                    ),
-                "file" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceFile?>(options)
-                    ?? throw new JsonException(
-                        "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceFile"
-                    ),
-                "text" => json.Deserialize<Hume.ExpressionMeasurement.Batch.SourceTextSource?>(
-                    options
-                )
-                    ?? throw new JsonException(
-                        "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceTextSource"
-                    ),
+                "url" =>
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.SourceUrl?>(
+                        options
+                    )
+                        ?? throw new JsonException(
+                            "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceUrl"
+                        ),
+                "file" =>
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.SourceFile?>(
+                        options
+                    )
+                        ?? throw new JsonException(
+                            "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceFile"
+                        ),
+                "text" =>
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.SourceTextSource?>(
+                        options
+                    )
+                        ?? throw new JsonException(
+                            "Failed to deserialize Hume.ExpressionMeasurement.Batch.SourceTextSource"
+                        ),
                 _ => json.Deserialize<object?>(options),
             };
             return new Source(discriminator, value);

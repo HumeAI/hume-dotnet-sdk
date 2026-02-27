@@ -1,6 +1,5 @@
-using Hume.Core;
-using Hume.ExpressionMeasurement.Batch;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.ExpressionMeasurement.Batch;
@@ -24,7 +23,6 @@ public class GetJobPredictionsTest : BaseMockServerTest
                       "file": "faces/100.jpg",
                       "models": {
                         "face": {
-                          "metadata": null,
                           "grouped_predictions": [
                             {
                               "id": "unknown",
@@ -232,9 +230,7 @@ public class GetJobPredictionsTest : BaseMockServerTest
                                       "name": "Triumph",
                                       "score": 0.01955239288508892
                                     }
-                                  ],
-                                  "facs": null,
-                                  "descriptions": null
+                                  ]
                                 }
                               ]
                             }
@@ -264,12 +260,6 @@ public class GetJobPredictionsTest : BaseMockServerTest
             );
 
         var response = await Client.ExpressionMeasurement.Batch.GetJobPredictionsAsync("job_id");
-        Assert.That(
-            response,
-            Is.EqualTo(
-                    JsonUtils.Deserialize<IEnumerable<InferenceSourcePredictResult>>(mockResponse)
-                )
-                .UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

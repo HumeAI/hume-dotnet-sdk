@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -40,7 +40,7 @@ public class CreateToolVersionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/tools/00183a3f-79ba-413d-9f3b-609864268bea")
+                    .WithPath("/v0/evi/tools/your-tool-id")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPost()
                     .WithBodyAsJson(requestJson)
@@ -53,7 +53,7 @@ public class CreateToolVersionTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.Tools.CreateToolVersionAsync(
-            "00183a3f-79ba-413d-9f3b-609864268bea",
+            "your-tool-id",
             new PostedUserDefinedToolVersion
             {
                 Parameters =
@@ -64,9 +64,6 @@ public class CreateToolVersionTest : BaseMockServerTest
                 Description = "This tool is for getting the current weather.",
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnUserDefinedTool?>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

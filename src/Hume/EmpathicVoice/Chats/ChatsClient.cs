@@ -353,7 +353,7 @@ public partial class ChatsClient : IChatsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Chats.ListChatEventsAsync(
-    ///     "470a49f6-1dec-4afe-8b61-035d3b2d63b0",
+    ///     "your-chat-id",
     ///     new ChatsListChatEventsRequest
     ///     {
     ///         PageNumber = 0,
@@ -402,7 +402,7 @@ public partial class ChatsClient : IChatsClient
     /// Fetches the audio of a previous **Chat**. For more details, see our guide on audio reconstruction [here](/docs/speech-to-speech-evi/faq#can-i-access-the-audio-of-previous-conversations-with-evi).
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Chats.GetAudioAsync("470a49f6-1dec-4afe-8b61-035d3b2d63b0");
+    /// await client.EmpathicVoice.Chats.GetAudioAsync("your-chat-id");
     /// </code></example>
     public WithRawResponseTask<ReturnChatAudioReconstruction> GetAudioAsync(
         string id,

@@ -37,7 +37,7 @@ public class ListToolVersionsTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/tools/00183a3f-79ba-413d-9f3b-609864268bea")
+                    .WithPath("/v0/evi/tools/your-tool-id")
                     .UsingGet()
             )
             .RespondWith(
@@ -48,7 +48,7 @@ public class ListToolVersionsTest : BaseMockServerTest
             );
 
         var items = await Client.EmpathicVoice.Tools.ListToolVersionsAsync(
-            "00183a3f-79ba-413d-9f3b-609864268bea",
+            "your-tool-id",
             new ToolsListToolVersionsRequest()
         );
         await foreach (var item in items)

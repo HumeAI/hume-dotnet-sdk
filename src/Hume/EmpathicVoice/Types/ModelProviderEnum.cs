@@ -29,6 +29,8 @@ public readonly record struct ModelProviderEnum : IStringEnum
 
     public static readonly ModelProviderEnum Cerebras = new(Values.Cerebras);
 
+    public static readonly ModelProviderEnum XAi = new(Values.XAi);
+
     public ModelProviderEnum(string value)
     {
         Value = value;
@@ -97,5 +99,7 @@ public readonly record struct ModelProviderEnum : IStringEnum
         public const string Sambanova = "SAMBANOVA";
 
         public const string Cerebras = "CEREBRAS";
+
+        public const string XAi = "X_AI";
     }
 }

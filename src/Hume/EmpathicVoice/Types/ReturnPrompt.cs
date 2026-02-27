@@ -39,6 +39,9 @@ public record ReturnPrompt : IJsonOnDeserialized
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    [JsonPropertyName("prompt_expansion")]
+    public PromptExpansionSpec? PromptExpansion { get; set; }
+
     /// <summary>
     /// Instructions used to shape EVI's behavior, responses, and style.
     ///

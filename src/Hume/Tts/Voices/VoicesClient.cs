@@ -240,9 +240,7 @@ public partial class VoicesClient : IVoicesClient
     /// Once saved, this voice can be reused in subsequent TTS requests, ensuring consistent speech style and prosody. For more details on voice creation, see the [Voices Guide](/docs/text-to-speech-tts/voices).
     /// </summary>
     /// <example><code>
-    /// await client.Tts.Voices.CreateAsync(
-    ///     new PostedVoice { GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab", Name = "David Hume" }
-    /// );
+    /// await client.Tts.Voices.CreateAsync(new PostedVoice { GenerationId = "", Name = "David Hume" });
     /// </code></example>
     public WithRawResponseTask<ReturnVoice> CreateAsync(
         PostedVoice request,

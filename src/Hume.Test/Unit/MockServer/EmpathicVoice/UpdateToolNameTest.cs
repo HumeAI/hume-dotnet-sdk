@@ -20,7 +20,7 @@ public class UpdateToolNameTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/tools/00183a3f-79ba-413d-9f3b-609864268bea")
+                    .WithPath("/v0/evi/tools/your-tool-id")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPatch()
                     .WithBodyAsJson(requestJson)
@@ -29,7 +29,7 @@ public class UpdateToolNameTest : BaseMockServerTest
 
         Assert.DoesNotThrowAsync(async () =>
             await Client.EmpathicVoice.Tools.UpdateToolNameAsync(
-                "00183a3f-79ba-413d-9f3b-609864268bea",
+                "your-tool-id",
                 new PostedUserDefinedToolName { Name = "get_current_temperature" }
             )
         );

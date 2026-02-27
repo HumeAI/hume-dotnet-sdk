@@ -1,6 +1,5 @@
-using Hume.Core;
-using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -27,7 +26,7 @@ public class GetAudioTest_ : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/chats/470a49f6-1dec-4afe-8b61-035d3b2d63b0/audio")
+                    .WithPath("/v0/evi/chats/your-chat-id/audio")
                     .UsingGet()
             )
             .RespondWith(
@@ -37,13 +36,7 @@ public class GetAudioTest_ : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var response = await Client.EmpathicVoice.Chats.GetAudioAsync(
-            "470a49f6-1dec-4afe-8b61-035d3b2d63b0"
-        );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnChatAudioReconstruction>(mockResponse))
-                .UsingDefaults()
-        );
+        var response = await Client.EmpathicVoice.Chats.GetAudioAsync("your-chat-id");
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

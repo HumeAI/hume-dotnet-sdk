@@ -21,6 +21,9 @@ public record PostedConfigPromptSpec : IJsonOnDeserialized
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
+    [JsonPropertyName("prompt_expansion")]
+    public PromptExpansionSpec? PromptExpansion { get; set; }
+
     /// <summary>
     /// Text used to create a new prompt for a particular config.
     /// </summary>

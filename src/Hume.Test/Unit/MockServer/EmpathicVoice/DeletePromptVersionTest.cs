@@ -13,16 +13,13 @@ public class DeletePromptVersionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/prompts/af699d45-2985-42cc-91b9-af9e5da3bac5/version/1")
+                    .WithPath("/v0/evi/prompts/your-prompt-id/version/1")
                     .UsingDelete()
             )
             .RespondWith(WireMock.ResponseBuilders.Response.Create().WithStatusCode(200));
 
         Assert.DoesNotThrowAsync(async () =>
-            await Client.EmpathicVoice.Prompts.DeletePromptVersionAsync(
-                "af699d45-2985-42cc-91b9-af9e5da3bac5",
-                1
-            )
+            await Client.EmpathicVoice.Prompts.DeletePromptVersionAsync("your-prompt-id", 1)
         );
     }
 }

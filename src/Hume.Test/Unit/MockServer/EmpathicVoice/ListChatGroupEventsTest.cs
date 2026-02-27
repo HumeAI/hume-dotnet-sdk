@@ -56,7 +56,7 @@ public class ListChatGroupEventsTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/chat_groups/697056f0-6c7e-487d-9bd8-9c19df79f05f/events")
+                    .WithPath("/v0/evi/chat_groups/your-chat-group-id/events")
                     .WithParam("page_number", "0")
                     .WithParam("page_size", "3")
                     .UsingGet()
@@ -69,7 +69,7 @@ public class ListChatGroupEventsTest : BaseMockServerTest
             );
 
         var items = await Client.EmpathicVoice.ChatGroups.ListChatGroupEventsAsync(
-            "697056f0-6c7e-487d-9bd8-9c19df79f05f",
+            "your-chat-group-id",
             new ChatGroupsListChatGroupEventsRequest
             {
                 PageNumber = 0,

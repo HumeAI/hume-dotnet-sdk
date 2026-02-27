@@ -272,31 +272,37 @@ public record StateTlInference
                 discriminatorElement.GetString()
                 ?? throw new JsonException("Discriminator property 'status' is null");
 
+            // Strip the discriminant property to prevent it from leaking into AdditionalProperties
+            var jsonObject = System.Text.Json.Nodes.JsonObject.Create(json);
+            jsonObject?.Remove("status");
+            var jsonWithoutDiscriminator =
+                jsonObject != null ? JsonSerializer.SerializeToElement(jsonObject, options) : json;
+
             var value = discriminator switch
             {
                 "QUEUED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued"
                         ),
                 "IN_PROGRESS" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress"
                         ),
                 "COMPLETED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference"
                         ),
                 "FAILED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed?>(
                         options
                     )
                         ?? throw new JsonException(

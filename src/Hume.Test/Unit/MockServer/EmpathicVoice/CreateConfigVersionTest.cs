@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -16,7 +16,7 @@ public class CreateConfigVersionTest : BaseMockServerTest
               "version_description": "This is an updated version of the Weather Assistant Config.",
               "evi_version": "3",
               "prompt": {
-                "id": "af699d45-2985-42cc-91b9-af9e5da3bac5",
+                "id": "",
                 "version": 0
               },
               "voice": {
@@ -113,7 +113,7 @@ public class CreateConfigVersionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/configs/1b60e1a0-cc59-424a-8d2c-189d354db3f3")
+                    .WithPath("/v0/evi/configs/your-config-id")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPost()
                     .WithBodyAsJson(requestJson)
@@ -126,16 +126,12 @@ public class CreateConfigVersionTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.Configs.CreateConfigVersionAsync(
-            "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+            "your-config-id",
             new PostedConfigVersion
             {
                 VersionDescription = "This is an updated version of the Weather Assistant Config.",
                 EviVersion = "3",
-                Prompt = new PostedConfigPromptSpec
-                {
-                    Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
-                    Version = 0,
-                },
+                Prompt = new PostedConfigPromptSpec { Id = "", Version = 0 },
                 Voice = new VoiceName
                 {
                     Provider = Hume.EmpathicVoice.VoiceProvider.HumeAi,
@@ -160,9 +156,6 @@ public class CreateConfigVersionTest : BaseMockServerTest
                 },
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnConfig>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }
