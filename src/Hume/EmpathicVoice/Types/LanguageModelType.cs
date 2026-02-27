@@ -85,8 +85,6 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.Gemini25FlashPreview0417
     );
 
-    public static readonly LanguageModelType Gemini3FlashPreview = new(Values.Gemini3FlashPreview);
-
     public static readonly LanguageModelType Gpt4Turbo = new(Values.Gpt4Turbo);
 
     public static readonly LanguageModelType Gpt4TurboPreview = new(Values.Gpt4TurboPreview);
@@ -284,8 +282,6 @@ public readonly record struct LanguageModelType : IStringEnum
         public const string Gemini25Flash = "gemini-2.5-flash";
 
         public const string Gemini25FlashPreview0417 = "gemini-2.5-flash-preview-04-17";
-
-        public const string Gemini3FlashPreview = "gemini-3-flash-preview";
 
         public const string Gpt4Turbo = "gpt-4-turbo";
 

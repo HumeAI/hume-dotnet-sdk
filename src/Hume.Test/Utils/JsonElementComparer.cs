@@ -90,12 +90,7 @@ public class JsonElementComparer : IEqualityComparer<JsonElement>
                 return false;
 
             case JsonValueKind.Number:
-                var xNum = x.GetDouble();
-                var yNum = y.GetDouble();
-                // Use approximate equality for floating-point to handle serialization precision differences
-                // (e.g. System.Text.Json may round doubles differently than the mock response)
-                const double tolerance = 1e-7;
-                if (Math.Abs(xNum - yNum) > tolerance)
+                if (x.GetDecimal() != y.GetDecimal())
                 {
                     _failurePath = $"{path}: Expected {x.GetDecimal()} but got {y.GetDecimal()}";
                     return false;

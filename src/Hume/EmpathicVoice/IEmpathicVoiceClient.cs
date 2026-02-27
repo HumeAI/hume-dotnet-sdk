@@ -8,8 +8,4 @@ public partial interface IEmpathicVoiceClient
     public IConfigsClient Configs { get; }
     public IPromptsClient Prompts { get; }
     public IToolsClient Tools { get; }
-
-    public ChatApi CreateChatApi();
-    public ChatApi CreateChatApi(ChatApi.Options options);
-    public ControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options);
 }
