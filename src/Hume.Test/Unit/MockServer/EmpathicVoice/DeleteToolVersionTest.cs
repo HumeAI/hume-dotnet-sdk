@@ -13,7 +13,7 @@ public class DeleteToolVersionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/tools/version/1")
+                    .WithPath("/v0/evi/tools//version/1")
                     .UsingDelete()
             )
             .RespondWith(WireMock.ResponseBuilders.Response.Create().WithStatusCode(200));

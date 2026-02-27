@@ -26,7 +26,11 @@ internal record MultipartFormRequest : BaseRequest
                 Utf8NoBom,
                 "application/json"
             );
-            var content = new StringContent(JsonUtils.Serialize(value), encoding, mediaType);
+            var content = new StringContent(
+                JsonUtils.SerializeWithAdditionalProperties(value, null),
+                encoding,
+                mediaType
+            );
             if (string.IsNullOrEmpty(charset) && content.Headers.ContentType is not null)
             {
                 content.Headers.ContentType.CharSet = "";
