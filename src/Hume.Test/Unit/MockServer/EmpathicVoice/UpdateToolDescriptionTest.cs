@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -37,7 +37,7 @@ public class UpdateToolDescriptionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/tools/00183a3f-79ba-413d-9f3b-609864268bea/version/1")
+                    .WithPath("/v0/evi/tools/your-tool-id/version/1")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPatch()
                     .WithBodyAsJson(requestJson)
@@ -50,7 +50,7 @@ public class UpdateToolDescriptionTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.Tools.UpdateToolDescriptionAsync(
-            "00183a3f-79ba-413d-9f3b-609864268bea",
+            "your-tool-id",
             1,
             new PostedUserDefinedToolVersionDescription
             {
@@ -58,9 +58,6 @@ public class UpdateToolDescriptionTest : BaseMockServerTest
                     "Fetches current temperature, precipitation, wind speed, AQI, and other weather conditions. Uses Celsius, Fahrenheit, or kelvin depending on user's region.",
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnUserDefinedTool?>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

@@ -6,6 +6,9 @@ namespace Hume.EmpathicVoice;
 [Serializable]
 public record PostedPromptVersion
 {
+    [JsonPropertyName("prompt_expansion")]
+    public PromptExpansionSpec? PromptExpansion { get; set; }
+
     /// <summary>
     /// Instructions used to shape EVI's behavior, responses, and style.
     ///

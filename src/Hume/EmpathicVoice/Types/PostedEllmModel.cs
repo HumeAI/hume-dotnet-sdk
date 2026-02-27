@@ -16,9 +16,7 @@ public record PostedEllmModel : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Boolean indicating if the eLLM is allowed to generate short responses.
-    ///
-    /// If omitted, short responses from the eLLM are enabled by default.
+    /// Boolean indicating if the eLLM is allowed to generate short responses (new EVI 3 configs default to disabled; new versions inherit prior value when omitted).
     /// </summary>
     [JsonPropertyName("allow_short_responses")]
     public bool? AllowShortResponses { get; set; }

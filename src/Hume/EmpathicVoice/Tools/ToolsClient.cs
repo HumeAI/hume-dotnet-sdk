@@ -708,7 +708,7 @@ public partial class ToolsClient : IToolsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.ListToolVersionsAsync(
-    ///     "00183a3f-79ba-413d-9f3b-609864268bea",
+    ///     "your-tool-id",
     ///     new ToolsListToolVersionsRequest()
     /// );
     /// </code></example>
@@ -755,7 +755,7 @@ public partial class ToolsClient : IToolsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.CreateToolVersionAsync(
-    ///     "00183a3f-79ba-413d-9f3b-609864268bea",
+    ///     "your-tool-id",
     ///     new PostedUserDefinedToolVersion
     ///     {
     ///         Parameters =
@@ -785,7 +785,7 @@ public partial class ToolsClient : IToolsClient
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Tools.DeleteToolAsync("00183a3f-79ba-413d-9f3b-609864268bea");
+    /// await client.EmpathicVoice.Tools.DeleteToolAsync("your-tool-id");
     /// </code></example>
     public async System.Threading.Tasks.Task DeleteToolAsync(
         string id,
@@ -850,7 +850,7 @@ public partial class ToolsClient : IToolsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.UpdateToolNameAsync(
-    ///     "00183a3f-79ba-413d-9f3b-609864268bea",
+    ///     "your-tool-id",
     ///     new PostedUserDefinedToolName { Name = "get_current_temperature" }
     /// );
     /// </code></example>
@@ -872,7 +872,7 @@ public partial class ToolsClient : IToolsClient
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Tools.GetToolVersionAsync("00183a3f-79ba-413d-9f3b-609864268bea", 1);
+    /// await client.EmpathicVoice.Tools.GetToolVersionAsync("your-tool-id", 1);
     /// </code></example>
     public WithRawResponseTask<ReturnUserDefinedTool?> GetToolVersionAsync(
         string id,
@@ -892,7 +892,7 @@ public partial class ToolsClient : IToolsClient
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("00183a3f-79ba-413d-9f3b-609864268bea", 1);
+    /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("", 1);
     /// </code></example>
     public async System.Threading.Tasks.Task DeleteToolVersionAsync(
         string id,
@@ -959,7 +959,7 @@ public partial class ToolsClient : IToolsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Tools.UpdateToolDescriptionAsync(
-    ///     "00183a3f-79ba-413d-9f3b-609864268bea",
+    ///     "your-tool-id",
     ///     1,
     ///     new PostedUserDefinedToolVersionDescription
     ///     {

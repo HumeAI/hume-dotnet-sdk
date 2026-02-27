@@ -20,7 +20,7 @@ public class UpdatePromptNameTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/prompts/af699d45-2985-42cc-91b9-af9e5da3bac5")
+                    .WithPath("/v0/evi/prompts/your-prompt-id")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPatch()
                     .WithBodyAsJson(requestJson)
@@ -29,7 +29,7 @@ public class UpdatePromptNameTest : BaseMockServerTest
 
         Assert.DoesNotThrowAsync(async () =>
             await Client.EmpathicVoice.Prompts.UpdatePromptNameAsync(
-                "af699d45-2985-42cc-91b9-af9e5da3bac5",
+                "your-prompt-id",
                 new PostedPromptName { Name = "Updated Weather Assistant Prompt Name" }
             )
         );

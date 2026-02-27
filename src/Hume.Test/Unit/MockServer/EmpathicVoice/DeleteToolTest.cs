@@ -13,13 +13,13 @@ public class DeleteToolTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/tools/00183a3f-79ba-413d-9f3b-609864268bea")
+                    .WithPath("/v0/evi/tools/your-tool-id")
                     .UsingDelete()
             )
             .RespondWith(WireMock.ResponseBuilders.Response.Create().WithStatusCode(200));
 
         Assert.DoesNotThrowAsync(async () =>
-            await Client.EmpathicVoice.Tools.DeleteToolAsync("00183a3f-79ba-413d-9f3b-609864268bea")
+            await Client.EmpathicVoice.Tools.DeleteToolAsync("your-tool-id")
         );
     }
 }

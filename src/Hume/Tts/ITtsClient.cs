@@ -5,7 +5,7 @@ namespace Hume.Tts;
 
 public partial interface ITtsClient
 {
-    public VoicesClient Voices { get; }
+    public IVoicesClient Voices { get; }
 
     /// <summary>
     /// Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.

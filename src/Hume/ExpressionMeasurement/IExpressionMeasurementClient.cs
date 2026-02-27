@@ -5,6 +5,6 @@ namespace Hume.ExpressionMeasurement;
 
 public partial interface IExpressionMeasurementClient
 {
-    public BatchClient Batch { get; }
-    public StreamClient Stream { get; }
+    public IBatchClient Batch { get; }
+    public IStreamClient Stream { get; }
 }

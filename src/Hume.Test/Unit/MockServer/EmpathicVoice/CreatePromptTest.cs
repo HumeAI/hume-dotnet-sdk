@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -23,7 +23,6 @@ public class CreatePromptTest : BaseMockServerTest
               "id": "af699d45-2985-42cc-91b9-af9e5da3bac5",
               "version": 0,
               "version_type": "FIXED",
-              "version_description": null,
               "name": "Weather Assistant Prompt",
               "created_on": 1722633247488,
               "modified_on": 1722633247488,
@@ -55,9 +54,6 @@ public class CreatePromptTest : BaseMockServerTest
                     "<role>You are an AI weather assistant providing users with accurate and up-to-date weather information. Respond to user queries concisely and clearly. Use simple language and avoid technical jargon. Provide temperature, precipitation, wind conditions, and any weather alerts. Include helpful tips if severe weather is expected.</role>",
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnPrompt?>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

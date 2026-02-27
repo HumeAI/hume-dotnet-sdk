@@ -681,7 +681,7 @@ public partial class PromptsClient : IPromptsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.ListPromptVersionsAsync(
-    ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
+    ///     "your-prompt-id",
     ///     new PromptsListPromptVersionsRequest()
     /// );
     /// </code></example>
@@ -704,7 +704,7 @@ public partial class PromptsClient : IPromptsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.CreatePromptVersionAsync(
-    ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
+    ///     "your-prompt-id",
     ///     new PostedPromptVersion
     ///     {
     ///         Text =
@@ -731,7 +731,7 @@ public partial class PromptsClient : IPromptsClient
     /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Prompts.DeletePromptAsync("af699d45-2985-42cc-91b9-af9e5da3bac5");
+    /// await client.EmpathicVoice.Prompts.DeletePromptAsync("your-prompt-id");
     /// </code></example>
     public async System.Threading.Tasks.Task DeletePromptAsync(
         string id,
@@ -796,7 +796,7 @@ public partial class PromptsClient : IPromptsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.UpdatePromptNameAsync(
-    ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
+    ///     "your-prompt-id",
     ///     new PostedPromptName { Name = "Updated Weather Assistant Prompt Name" }
     /// );
     /// </code></example>
@@ -818,7 +818,7 @@ public partial class PromptsClient : IPromptsClient
     /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Prompts.GetPromptVersionAsync("af699d45-2985-42cc-91b9-af9e5da3bac5", 0);
+    /// await client.EmpathicVoice.Prompts.GetPromptVersionAsync("your-prompt-id", 0);
     /// </code></example>
     public WithRawResponseTask<ReturnPrompt?> GetPromptVersionAsync(
         string id,
@@ -838,10 +838,7 @@ public partial class PromptsClient : IPromptsClient
     /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Prompts.DeletePromptVersionAsync(
-    ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
-    ///     1
-    /// );
+    /// await client.EmpathicVoice.Prompts.DeletePromptVersionAsync("your-prompt-id", 1);
     /// </code></example>
     public async System.Threading.Tasks.Task DeletePromptVersionAsync(
         string id,
@@ -908,7 +905,7 @@ public partial class PromptsClient : IPromptsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.UpdatePromptDescriptionAsync(
-    ///     "af699d45-2985-42cc-91b9-af9e5da3bac5",
+    ///     "your-prompt-id",
     ///     1,
     ///     new PostedPromptVersionDescription
     ///     {

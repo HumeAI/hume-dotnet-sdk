@@ -1,6 +1,5 @@
-using Hume.Core;
-using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -76,7 +75,7 @@ public class GetConfigVersionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/configs/1b60e1a0-cc59-424a-8d2c-189d354db3f3/version/1")
+                    .WithPath("/v0/evi/configs/your-config-id/version/1")
                     .UsingGet()
             )
             .RespondWith(
@@ -87,12 +86,9 @@ public class GetConfigVersionTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.Configs.GetConfigVersionAsync(
-            "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+            "your-config-id",
             1
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnConfig>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

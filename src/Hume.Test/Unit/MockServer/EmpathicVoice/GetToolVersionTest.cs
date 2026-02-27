@@ -1,6 +1,5 @@
-using Hume.Core;
-using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -31,7 +30,7 @@ public class GetToolVersionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/tools/00183a3f-79ba-413d-9f3b-609864268bea/version/1")
+                    .WithPath("/v0/evi/tools/your-tool-id/version/1")
                     .UsingGet()
             )
             .RespondWith(
@@ -41,13 +40,7 @@ public class GetToolVersionTest : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var response = await Client.EmpathicVoice.Tools.GetToolVersionAsync(
-            "00183a3f-79ba-413d-9f3b-609864268bea",
-            1
-        );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnUserDefinedTool?>(mockResponse)).UsingDefaults()
-        );
+        var response = await Client.EmpathicVoice.Tools.GetToolVersionAsync("your-tool-id", 1);
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

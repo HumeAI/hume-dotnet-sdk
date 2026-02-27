@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.ExpressionMeasurement.Batch;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.ExpressionMeasurement.Batch;
@@ -16,7 +16,6 @@ public class ListJobsTest : BaseMockServerTest
               {
                 "job_id": "job_id",
                 "request": {
-                  "callback_url": null,
                   "files": [
                     {
                       "filename": "filename",
@@ -27,8 +26,6 @@ public class ListJobsTest : BaseMockServerTest
                   "models": {
                     "burst": {},
                     "face": {
-                      "descriptions": null,
-                      "facs": null,
                       "fps_pred": 3,
                       "identify_faces": false,
                       "min_face_size": 60,
@@ -38,17 +35,14 @@ public class ListJobsTest : BaseMockServerTest
                     "facemesh": {},
                     "language": {
                       "granularity": "word",
-                      "identify_speakers": false,
-                      "sentiment": null,
-                      "toxicity": null
+                      "identify_speakers": false
                     },
                     "ner": {
                       "identify_speakers": false
                     },
                     "prosody": {
                       "granularity": "utterance",
-                      "identify_speakers": false,
-                      "window": null
+                      "identify_speakers": false
                     }
                   },
                   "notify": true,
@@ -58,12 +52,12 @@ public class ListJobsTest : BaseMockServerTest
                   ]
                 },
                 "state": {
+                  "status": "COMPLETED",
                   "created_timestamp_ms": 1712587158717,
                   "ended_timestamp_ms": 1712587159274,
                   "num_errors": 0,
                   "num_predictions": 10,
-                  "started_timestamp_ms": 1712587158800,
-                  "status": "COMPLETED"
+                  "started_timestamp_ms": 1712587158800
                 },
                 "type": "INFERENCE"
               }
@@ -82,10 +76,6 @@ public class ListJobsTest : BaseMockServerTest
         var response = await Client.ExpressionMeasurement.Batch.ListJobsAsync(
             new BatchListJobsRequest()
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<IEnumerable<InferenceJob>>(mockResponse))
-                .UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

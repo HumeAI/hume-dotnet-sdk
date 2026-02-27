@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -34,7 +34,7 @@ public class UpdatePromptDescriptionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/prompts/af699d45-2985-42cc-91b9-af9e5da3bac5/version/1")
+                    .WithPath("/v0/evi/prompts/your-prompt-id/version/1")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPatch()
                     .WithBodyAsJson(requestJson)
@@ -47,16 +47,13 @@ public class UpdatePromptDescriptionTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.Prompts.UpdatePromptDescriptionAsync(
-            "af699d45-2985-42cc-91b9-af9e5da3bac5",
+            "your-prompt-id",
             1,
             new PostedPromptVersionDescription
             {
                 VersionDescription = "This is an updated version_description.",
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnPrompt?>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

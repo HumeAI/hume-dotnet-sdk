@@ -15,7 +15,7 @@ public partial class TtsClient : ITtsClient
         Voices = new VoicesClient(_client);
     }
 
-    public VoicesClient Voices { get; }
+    public IVoicesClient Voices { get; }
 
     private async System.Threading.Tasks.Task<WithRawResponse<ReturnTts>> SynthesizeJsonAsyncCore(
         PostedTts request,
@@ -357,10 +357,7 @@ public partial class TtsClient : ITtsClient
     /// await client.Tts.SynthesizeFileAsync(
     ///     new PostedTts
     ///     {
-    ///         Context = new PostedContextWithGenerationId
-    ///         {
-    ///             GenerationId = "09ad914d-8e7f-40f8-a279-e34f07f7dab2",
-    ///         },
+    ///         Context = new PostedContextWithGenerationId { GenerationId = "" },
     ///         Format = new FormatMp3 { Type = "mp3" },
     ///         NumGenerations = 1,
     ///         Utterances = new List&lt;PostedUtterance&gt;()

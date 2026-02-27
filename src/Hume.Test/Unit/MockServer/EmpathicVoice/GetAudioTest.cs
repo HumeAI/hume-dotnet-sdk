@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -38,7 +38,7 @@ public class GetAudioTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/chat_groups/369846cf-6ad5-404d-905e-a8acb5cdfc78/audio")
+                    .WithPath("/v0/evi/chat_groups/your-chat-group-id/audio")
                     .WithParam("page_number", "0")
                     .WithParam("page_size", "10")
                     .UsingGet()
@@ -51,7 +51,7 @@ public class GetAudioTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.ChatGroups.GetAudioAsync(
-            "369846cf-6ad5-404d-905e-a8acb5cdfc78",
+            "your-chat-group-id",
             new ChatGroupsGetAudioRequest
             {
                 PageNumber = 0,
@@ -59,12 +59,6 @@ public class GetAudioTest : BaseMockServerTest
                 AscendingOrder = true,
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(
-                    JsonUtils.Deserialize<ReturnChatGroupPagedAudioReconstructions>(mockResponse)
-                )
-                .UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -35,7 +35,7 @@ public class ListPromptVersionsTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/prompts/af699d45-2985-42cc-91b9-af9e5da3bac5")
+                    .WithPath("/v0/evi/prompts/your-prompt-id")
                     .UsingGet()
             )
             .RespondWith(
@@ -46,12 +46,9 @@ public class ListPromptVersionsTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.Prompts.ListPromptVersionsAsync(
-            "af699d45-2985-42cc-91b9-af9e5da3bac5",
+            "your-prompt-id",
             new PromptsListPromptVersionsRequest()
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnPagedPrompts>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

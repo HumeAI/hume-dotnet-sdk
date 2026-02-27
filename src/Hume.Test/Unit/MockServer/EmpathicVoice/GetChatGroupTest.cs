@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -28,9 +28,7 @@ public class GetChatGroupTest : BaseMockServerTest
                   "status": "USER_ENDED",
                   "start_timestamp": 1712334213647,
                   "end_timestamp": 1712334332571,
-                  "event_count": 0,
-                  "metadata": null,
-                  "config": null
+                  "event_count": 0
                 }
               ],
               "active": false
@@ -41,7 +39,7 @@ public class GetChatGroupTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/chat_groups/697056f0-6c7e-487d-9bd8-9c19df79f05f")
+                    .WithPath("/v0/evi/chat_groups/your-chat-group-id")
                     .WithParam("page_number", "0")
                     .WithParam("page_size", "1")
                     .UsingGet()
@@ -54,7 +52,7 @@ public class GetChatGroupTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.ChatGroups.GetChatGroupAsync(
-            "697056f0-6c7e-487d-9bd8-9c19df79f05f",
+            "your-chat-group-id",
             new ChatGroupsGetChatGroupRequest
             {
                 PageNumber = 0,
@@ -62,10 +60,6 @@ public class GetChatGroupTest : BaseMockServerTest
                 AscendingOrder = true,
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnChatGroupPagedChats>(mockResponse))
-                .UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

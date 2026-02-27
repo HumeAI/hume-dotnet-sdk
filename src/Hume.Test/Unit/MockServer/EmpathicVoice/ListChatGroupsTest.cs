@@ -36,7 +36,7 @@ public class ListChatGroupsTest : BaseMockServerTest
                     .WithPath("/v0/evi/chat_groups")
                     .WithParam("page_number", "0")
                     .WithParam("page_size", "1")
-                    .WithParam("config_id", "1b60e1a0-cc59-424a-8d2c-189d354db3f3")
+                    .WithParam("config_id", "your-config-id")
                     .UsingGet()
             )
             .RespondWith(
@@ -52,7 +52,7 @@ public class ListChatGroupsTest : BaseMockServerTest
                 PageNumber = 0,
                 PageSize = 1,
                 AscendingOrder = true,
-                ConfigId = "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+                ConfigId = "your-config-id",
             }
         );
         await foreach (var item in items)

@@ -17,17 +17,17 @@ public partial class EmpathicVoiceClient : IEmpathicVoiceClient
         Tools = new ToolsClient(_client);
     }
 
-    public ControlPlaneClient ControlPlane { get; }
+    public IControlPlaneClient ControlPlane { get; }
 
-    public ChatGroupsClient ChatGroups { get; }
+    public IChatGroupsClient ChatGroups { get; }
 
-    public ChatsClient Chats { get; }
+    public IChatsClient Chats { get; }
 
-    public ConfigsClient Configs { get; }
+    public IConfigsClient Configs { get; }
 
-    public PromptsClient Prompts { get; }
+    public IPromptsClient Prompts { get; }
 
-    public ToolsClient Tools { get; }
+    public IToolsClient Tools { get; }
 
     public ControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options)
     {

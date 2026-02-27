@@ -15,7 +15,7 @@ public partial class ExpressionMeasurementClient : IExpressionMeasurementClient
         Stream = new StreamClient(_client);
     }
 
-    public BatchClient Batch { get; }
+    public IBatchClient Batch { get; }
 
-    public StreamClient Stream { get; }
+    public IStreamClient Stream { get; }
 }

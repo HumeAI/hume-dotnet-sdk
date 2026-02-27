@@ -2,10 +2,14 @@ namespace Hume.EmpathicVoice;
 
 public partial interface IEmpathicVoiceClient
 {
-    public ControlPlaneClient ControlPlane { get; }
-    public ChatGroupsClient ChatGroups { get; }
-    public ChatsClient Chats { get; }
-    public ConfigsClient Configs { get; }
-    public PromptsClient Prompts { get; }
-    public ToolsClient Tools { get; }
+    public IControlPlaneClient ControlPlane { get; }
+    public IChatGroupsClient ChatGroups { get; }
+    public IChatsClient Chats { get; }
+    public IConfigsClient Configs { get; }
+    public IPromptsClient Prompts { get; }
+    public IToolsClient Tools { get; }
+
+    public ChatApi CreateChatApi();
+    public ChatApi CreateChatApi(ChatApi.Options options);
+    public ControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options);
 }

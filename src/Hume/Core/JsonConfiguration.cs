@@ -11,6 +11,11 @@ internal static partial class JsonOptions
 {
     internal static readonly JsonSerializerOptions JsonSerializerOptions;
     internal static readonly JsonSerializerOptions JsonSerializerOptionsRelaxedEscaping;
+    /// <summary>
+    /// Compact JSON (no indentation) for request bodies. Ensures consistent serialization
+    /// across Debug/Release and preserves body on retries.
+    /// </summary>
+    internal static readonly JsonSerializerOptions JsonSerializerOptionsCompact;
 
     static JsonOptions()
     {
@@ -41,6 +46,8 @@ internal static partial class JsonOptions
         };
         ConfigureJsonSerializerOptions(options);
         JsonSerializerOptions = options;
+
+        JsonSerializerOptionsCompact = new JsonSerializerOptions(options) { WriteIndented = false };
 
         var relaxedOptions = new JsonSerializerOptions(options)
         {
@@ -221,18 +228,24 @@ internal static class JsonUtils
         object? additionalProperties = null
     )
     {
+        // Use compact options for request bodies (no indentation) so serialization is
+        // consistent across Debug/Release and preserved on retries.
+        var options = JsonOptions.JsonSerializerOptionsCompact;
         if (additionalProperties is null)
         {
-            return Serialize(obj);
+            return JsonSerializer.Serialize(obj, options);
         }
-        var additionalPropertiesJsonNode = SerializeToNode(additionalProperties);
+        var additionalPropertiesJsonNode = JsonSerializer.SerializeToNode(
+            additionalProperties,
+            options
+        );
         if (additionalPropertiesJsonNode is not JsonObject additionalPropertiesJsonObject)
         {
             throw new InvalidOperationException(
                 "The additional properties must serialize to a JSON object."
             );
         }
-        var jsonNode = SerializeToNode(obj);
+        var jsonNode = JsonSerializer.SerializeToNode(obj, options);
         if (jsonNode is not JsonObject jsonObject)
         {
             throw new InvalidOperationException(
@@ -240,7 +253,7 @@ internal static class JsonUtils
             );
         }
         MergeJsonObjects(jsonObject, additionalPropertiesJsonObject);
-        return jsonObject.ToJsonString(JsonOptions.JsonSerializerOptions);
+        return jsonObject.ToJsonString(options);
     }
 
     private static void MergeJsonObjects(JsonObject baseObject, JsonObject overrideObject)

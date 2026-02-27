@@ -268,34 +268,42 @@ public record StateTraining
                 discriminatorElement.GetString()
                 ?? throw new JsonException("Discriminator property 'status' is null");
 
+            // Strip the discriminant property to prevent it from leaking into AdditionalProperties
+            var jsonObject = System.Text.Json.Nodes.JsonObject.Create(json);
+            jsonObject?.Remove("status");
+            var jsonWithoutDiscriminator =
+                jsonObject != null ? JsonSerializer.SerializeToElement(jsonObject, options) : json;
+
             var value = discriminator switch
             {
-                "QUEUED" => json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingQueued?>(
-                    options
-                )
-                    ?? throw new JsonException(
-                        "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingQueued"
-                    ),
+                "QUEUED" =>
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingQueued?>(
+                        options
+                    )
+                        ?? throw new JsonException(
+                            "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingQueued"
+                        ),
                 "IN_PROGRESS" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingInProgress?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingInProgress?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingInProgress"
                         ),
                 "COMPLETED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining"
                         ),
-                "FAILED" => json.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingFailed?>(
-                    options
-                )
-                    ?? throw new JsonException(
-                        "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingFailed"
-                    ),
+                "FAILED" =>
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateTrainingFailed?>(
+                        options
+                    )
+                        ?? throw new JsonException(
+                            "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateTrainingFailed"
+                        ),
                 _ => json.Deserialize<object?>(options),
             };
             return new StateTraining(discriminator, value);

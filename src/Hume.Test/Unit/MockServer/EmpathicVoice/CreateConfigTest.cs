@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -15,7 +15,7 @@ public class CreateConfigTest : BaseMockServerTest
             {
               "name": "Weather Assistant Config",
               "prompt": {
-                "id": "af699d45-2985-42cc-91b9-af9e5da3bac5",
+                "id": "",
                 "version": 0
               },
               "evi_version": "3",
@@ -126,11 +126,7 @@ public class CreateConfigTest : BaseMockServerTest
             new PostedConfig
             {
                 Name = "Weather Assistant Config",
-                Prompt = new PostedConfigPromptSpec
-                {
-                    Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
-                    Version = 0,
-                },
+                Prompt = new PostedConfigPromptSpec { Id = "", Version = 0 },
                 EviVersion = "3",
                 Voice = new VoiceName
                 {
@@ -155,9 +151,6 @@ public class CreateConfigTest : BaseMockServerTest
                 },
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnConfig>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

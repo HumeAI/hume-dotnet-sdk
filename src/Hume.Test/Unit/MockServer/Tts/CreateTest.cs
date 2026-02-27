@@ -1,5 +1,5 @@
-using Hume.Core;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using Hume.Tts;
 using NUnit.Framework;
 
@@ -13,7 +13,7 @@ public class CreateTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "generation_id": "795c949a-1510-4a80-9646-7d0863b023ab",
+              "generation_id": "",
               "name": "David Hume"
             }
             """;
@@ -43,15 +43,8 @@ public class CreateTest : BaseMockServerTest
             );
 
         var response = await Client.Tts.Voices.CreateAsync(
-            new PostedVoice
-            {
-                GenerationId = "795c949a-1510-4a80-9646-7d0863b023ab",
-                Name = "David Hume",
-            }
+            new PostedVoice { GenerationId = "", Name = "David Hume" }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<Hume.Tts.ReturnVoice>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

@@ -675,11 +675,7 @@ public partial class ConfigsClient : IConfigsClient
     ///     new PostedConfig
     ///     {
     ///         Name = "Weather Assistant Config",
-    ///         Prompt = new PostedConfigPromptSpec
-    ///         {
-    ///             Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
-    ///             Version = 0,
-    ///         },
+    ///         Prompt = new PostedConfigPromptSpec { Id = "", Version = 0 },
     ///         EviVersion = "3",
     ///         Voice = new VoiceName
     ///         {
@@ -719,7 +715,7 @@ public partial class ConfigsClient : IConfigsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.ListConfigVersionsAsync(
-    ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+    ///     "your-config-id",
     ///     new ConfigsListConfigVersionsRequest()
     /// );
     /// </code></example>
@@ -766,16 +762,12 @@ public partial class ConfigsClient : IConfigsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.CreateConfigVersionAsync(
-    ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+    ///     "your-config-id",
     ///     new PostedConfigVersion
     ///     {
     ///         VersionDescription = "This is an updated version of the Weather Assistant Config.",
     ///         EviVersion = "3",
-    ///         Prompt = new PostedConfigPromptSpec
-    ///         {
-    ///             Id = "af699d45-2985-42cc-91b9-af9e5da3bac5",
-    ///             Version = 0,
-    ///         },
+    ///         Prompt = new PostedConfigPromptSpec { Id = "", Version = 0 },
     ///         Voice = new VoiceName
     ///         {
     ///             Provider = Hume.EmpathicVoice.VoiceProvider.HumeAi,
@@ -815,7 +807,7 @@ public partial class ConfigsClient : IConfigsClient
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Configs.DeleteConfigAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3");
+    /// await client.EmpathicVoice.Configs.DeleteConfigAsync("your-config-id");
     /// </code></example>
     public async System.Threading.Tasks.Task DeleteConfigAsync(
         string id,
@@ -880,7 +872,7 @@ public partial class ConfigsClient : IConfigsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.UpdateConfigNameAsync(
-    ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+    ///     "your-config-id",
     ///     new PostedConfigName { Name = "Updated Weather Assistant Config Name" }
     /// );
     /// </code></example>
@@ -902,7 +894,7 @@ public partial class ConfigsClient : IConfigsClient
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Configs.GetConfigVersionAsync("1b60e1a0-cc59-424a-8d2c-189d354db3f3", 1);
+    /// await client.EmpathicVoice.Configs.GetConfigVersionAsync("your-config-id", 1);
     /// </code></example>
     public WithRawResponseTask<ReturnConfig> GetConfigVersionAsync(
         string id,
@@ -922,10 +914,7 @@ public partial class ConfigsClient : IConfigsClient
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Configs.DeleteConfigVersionAsync(
-    ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
-    ///     1
-    /// );
+    /// await client.EmpathicVoice.Configs.DeleteConfigVersionAsync("your-config-id", 1);
     /// </code></example>
     public async System.Threading.Tasks.Task DeleteConfigVersionAsync(
         string id,
@@ -992,7 +981,7 @@ public partial class ConfigsClient : IConfigsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.Configs.UpdateConfigDescriptionAsync(
-    ///     "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+    ///     "your-config-id",
     ///     1,
     ///     new PostedConfigVersionDescription
     ///     {

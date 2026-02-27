@@ -408,7 +408,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
     ///         PageNumber = 0,
     ///         PageSize = 1,
     ///         AscendingOrder = true,
-    ///         ConfigId = "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+    ///         ConfigId = "your-config-id",
     ///     }
     /// );
     /// </code></example>
@@ -451,7 +451,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.ChatGroups.GetChatGroupAsync(
-    ///     "697056f0-6c7e-487d-9bd8-9c19df79f05f",
+    ///     "your-chat-group-id",
     ///     new ChatGroupsGetChatGroupRequest
     ///     {
     ///         PageNumber = 0,
@@ -477,7 +477,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.ChatGroups.GetAudioAsync(
-    ///     "369846cf-6ad5-404d-905e-a8acb5cdfc78",
+    ///     "your-chat-group-id",
     ///     new ChatGroupsGetAudioRequest
     ///     {
     ///         PageNumber = 0,
@@ -503,7 +503,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
     /// </summary>
     /// <example><code>
     /// await client.EmpathicVoice.ChatGroups.ListChatGroupEventsAsync(
-    ///     "697056f0-6c7e-487d-9bd8-9c19df79f05f",
+    ///     "your-chat-group-id",
     ///     new ChatGroupsListChatGroupEventsRequest
     ///     {
     ///         PageNumber = 0,

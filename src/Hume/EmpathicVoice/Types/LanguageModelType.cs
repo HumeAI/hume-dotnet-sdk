@@ -11,6 +11,8 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.Claude37SonnetLatest
     );
 
+    public static readonly LanguageModelType ClaudeOpus46 = new(Values.ClaudeOpus46);
+
     public static readonly LanguageModelType Claude35SonnetLatest = new(
         Values.Claude35SonnetLatest
     );
@@ -83,6 +85,8 @@ public readonly record struct LanguageModelType : IStringEnum
         Values.Gemini25FlashPreview0417
     );
 
+    public static readonly LanguageModelType Gemini3FlashPreview = new(Values.Gemini3FlashPreview);
+
     public static readonly LanguageModelType Gpt4Turbo = new(Values.Gpt4Turbo);
 
     public static readonly LanguageModelType Gpt4TurboPreview = new(Values.Gpt4TurboPreview);
@@ -114,6 +118,14 @@ public readonly record struct LanguageModelType : IStringEnum
     public static readonly LanguageModelType Gpt5MiniPriority = new(Values.Gpt5MiniPriority);
 
     public static readonly LanguageModelType Gpt5NanoPriority = new(Values.Gpt5NanoPriority);
+
+    public static readonly LanguageModelType Gpt51 = new(Values.Gpt51);
+
+    public static readonly LanguageModelType Gpt51Priority = new(Values.Gpt51Priority);
+
+    public static readonly LanguageModelType Gpt52 = new(Values.Gpt52);
+
+    public static readonly LanguageModelType Gpt52Priority = new(Values.Gpt52Priority);
 
     public static readonly LanguageModelType Gemma7BIt = new(Values.Gemma7BIt);
 
@@ -222,6 +234,8 @@ public readonly record struct LanguageModelType : IStringEnum
     {
         public const string Claude37SonnetLatest = "claude-3-7-sonnet-latest";
 
+        public const string ClaudeOpus46 = "claude-opus-4-6";
+
         public const string Claude35SonnetLatest = "claude-3-5-sonnet-latest";
 
         public const string Claude35HaikuLatest = "claude-3-5-haiku-latest";
@@ -271,6 +285,8 @@ public readonly record struct LanguageModelType : IStringEnum
 
         public const string Gemini25FlashPreview0417 = "gemini-2.5-flash-preview-04-17";
 
+        public const string Gemini3FlashPreview = "gemini-3-flash-preview";
+
         public const string Gpt4Turbo = "gpt-4-turbo";
 
         public const string Gpt4TurboPreview = "gpt-4-turbo-preview";
@@ -302,6 +318,14 @@ public readonly record struct LanguageModelType : IStringEnum
         public const string Gpt5MiniPriority = "gpt-5-mini-priority";
 
         public const string Gpt5NanoPriority = "gpt-5-nano-priority";
+
+        public const string Gpt51 = "gpt-5.1";
+
+        public const string Gpt51Priority = "gpt-5.1-priority";
+
+        public const string Gpt52 = "gpt-5.2";
+
+        public const string Gpt52Priority = "gpt-5.2-priority";
 
         public const string Gemma7BIt = "gemma-7b-it";
 

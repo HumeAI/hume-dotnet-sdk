@@ -1,6 +1,6 @@
-using Hume.Core;
 using Hume.EmpathicVoice;
 using Hume.Test.Unit.MockServer;
+using Hume.Test.Utils;
 using NUnit.Framework;
 
 namespace Hume.Test.Unit.MockServer.EmpathicVoice;
@@ -35,7 +35,7 @@ public class CreatePromptVersionTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/prompts/af699d45-2985-42cc-91b9-af9e5da3bac5")
+                    .WithPath("/v0/evi/prompts/your-prompt-id")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPost()
                     .WithBodyAsJson(requestJson)
@@ -48,7 +48,7 @@ public class CreatePromptVersionTest : BaseMockServerTest
             );
 
         var response = await Client.EmpathicVoice.Prompts.CreatePromptVersionAsync(
-            "af699d45-2985-42cc-91b9-af9e5da3bac5",
+            "your-prompt-id",
             new PostedPromptVersion
             {
                 Text =
@@ -56,9 +56,6 @@ public class CreatePromptVersionTest : BaseMockServerTest
                 VersionDescription = "This is an updated version of the Weather Assistant Prompt.",
             }
         );
-        Assert.That(
-            response,
-            Is.EqualTo(JsonUtils.Deserialize<ReturnPrompt?>(mockResponse)).UsingDefaults()
-        );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

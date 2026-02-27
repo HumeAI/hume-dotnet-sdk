@@ -82,7 +82,7 @@ public class ListConfigVersionsTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/v0/evi/configs/1b60e1a0-cc59-424a-8d2c-189d354db3f3")
+                    .WithPath("/v0/evi/configs/your-config-id")
                     .UsingGet()
             )
             .RespondWith(
@@ -93,7 +93,7 @@ public class ListConfigVersionsTest : BaseMockServerTest
             );
 
         var items = await Client.EmpathicVoice.Configs.ListConfigVersionsAsync(
-            "1b60e1a0-cc59-424a-8d2c-189d354db3f3",
+            "your-config-id",
             new ConfigsListConfigVersionsRequest()
         );
         await foreach (var item in items)

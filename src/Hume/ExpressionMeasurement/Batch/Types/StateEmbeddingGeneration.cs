@@ -288,31 +288,37 @@ public record StateEmbeddingGeneration
                 discriminatorElement.GetString()
                 ?? throw new JsonException("Discriminator property 'status' is null");
 
+            // Strip the discriminant property to prevent it from leaking into AdditionalProperties
+            var jsonObject = System.Text.Json.Nodes.JsonObject.Create(json);
+            jsonObject?.Remove("status");
+            var jsonWithoutDiscriminator =
+                jsonObject != null ? JsonSerializer.SerializeToElement(jsonObject, options) : json;
+
             var value = discriminator switch
             {
                 "QUEUED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued"
                         ),
                 "IN_PROGRESS" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress"
                         ),
                 "COMPLETED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration?>(
                         options
                     )
                         ?? throw new JsonException(
                             "Failed to deserialize Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration"
                         ),
                 "FAILED" =>
-                    json.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed?>(
+                    jsonWithoutDiscriminator.Deserialize<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed?>(
                         options
                     )
                         ?? throw new JsonException(
