@@ -390,9 +390,9 @@ public class RetriesTests
             Assert.That(content, Is.EqualTo("Success"));
             Assert.That(_server.LogEntries, Has.Count.EqualTo(2));
 
-            // Verify the retried request preserved the multipart body
+            // Verify the retried request preserved the multipart body (JSON may be pretty-printed)
             var retriedEntry = _server.LogEntries.ElementAt(1);
-            Assert.That(retriedEntry.RequestMessage.Body, Does.Contain("""{"key":"value"}"""));
+            Assert.That(retriedEntry.RequestMessage.Body, Does.Contain("\"key\":\"value\""));
         }
     }
 
