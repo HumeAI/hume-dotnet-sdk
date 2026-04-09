@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 
@@ -6,7 +6,7 @@ namespace Hume.EmpathicVoice;
 
 public partial class ChatsClient : IChatsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal ChatsClient(RawClient client)
     {
@@ -27,7 +27,7 @@ public partial class ChatsClient : IChatsClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedChats>
     > ListChatsInternalAsyncCore(
         ChatsListChatsRequest request,
@@ -65,7 +65,9 @@ public partial class ChatsClient : IChatsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedChats>(responseBody)!;
@@ -91,7 +93,9 @@ public partial class ChatsClient : IChatsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -129,7 +133,7 @@ public partial class ChatsClient : IChatsClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnChatPagedEvents>
     > ListChatEventsInternalAsyncCore(
         string id,
@@ -169,7 +173,9 @@ public partial class ChatsClient : IChatsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnChatPagedEvents>(responseBody)!;
@@ -195,7 +201,9 @@ public partial class ChatsClient : IChatsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -218,7 +226,7 @@ public partial class ChatsClient : IChatsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnChatAudioReconstruction>
     > GetAudioAsyncCore(
         string id,
@@ -250,7 +258,9 @@ public partial class ChatsClient : IChatsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnChatAudioReconstruction>(
@@ -278,7 +288,9 @@ public partial class ChatsClient : IChatsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -314,7 +326,7 @@ public partial class ChatsClient : IChatsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnChat>> ListChatsAsync(
+    public async global::System.Threading.Tasks.Task<Pager<ReturnChat>> ListChatsAsync(
         ChatsListChatsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -333,7 +345,8 @@ public partial class ChatsClient : IChatsClient
                 request,
                 options,
                 async (request, options, cancellationToken) =>
-                    await ListChatsInternalAsync(request, options, cancellationToken),
+                    await ListChatsInternalAsync(request, options, cancellationToken)
+                        .WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -362,7 +375,7 @@ public partial class ChatsClient : IChatsClient
     ///     }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnChatEvent>> ListChatEventsAsync(
+    public async global::System.Threading.Tasks.Task<Pager<ReturnChatEvent>> ListChatEventsAsync(
         string id,
         ChatsListChatEventsRequest request,
         RequestOptions? options = null,
@@ -383,7 +396,7 @@ public partial class ChatsClient : IChatsClient
                 options,
                 async (request, options, cancellationToken) =>
                     await ListChatEventsInternalAsync(id, request, options, cancellationToken)
-                        .ConfigureAwait(false),
+                        .WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {

@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 using OneOf;
 
@@ -25,6 +25,9 @@ public record PostedConfig
     [JsonPropertyName("evi_version")]
     public required string EviVersion { get; set; }
 
+    [JsonPropertyName("interruption")]
+    public PostedInterruptionSpec? Interruption { get; set; }
+
     [JsonPropertyName("language_model")]
     public PostedLanguageModel? LanguageModel { get; set; }
 
@@ -48,6 +51,9 @@ public record PostedConfig
     /// </summary>
     [JsonPropertyName("tools")]
     public IEnumerable<PostedUserDefinedToolSpec>? Tools { get; set; }
+
+    [JsonPropertyName("turn_detection")]
+    public PostedTurnDetectionSpec? TurnDetection { get; set; }
 
     /// <summary>
     /// An optional description of the Config version.

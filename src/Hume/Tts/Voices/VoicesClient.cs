@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 
@@ -6,7 +6,7 @@ namespace Hume.Tts;
 
 public partial class VoicesClient : IVoicesClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal VoicesClient(RawClient client)
     {
@@ -27,7 +27,7 @@ public partial class VoicesClient : IVoicesClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedVoices>
     > ListInternalAsyncCore(
         VoicesListRequest request,
@@ -65,7 +65,9 @@ public partial class VoicesClient : IVoicesClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedVoices>(responseBody)!;
@@ -91,7 +93,9 @@ public partial class VoicesClient : IVoicesClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -114,7 +118,7 @@ public partial class VoicesClient : IVoicesClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<ReturnVoice>> CreateAsyncCore(
+    private async global::System.Threading.Tasks.Task<WithRawResponse<ReturnVoice>> CreateAsyncCore(
         PostedVoice request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -143,7 +147,9 @@ public partial class VoicesClient : IVoicesClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnVoice>(responseBody)!;
@@ -169,7 +175,9 @@ public partial class VoicesClient : IVoicesClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -200,7 +208,7 @@ public partial class VoicesClient : IVoicesClient
     ///     new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnVoice>> ListAsync(
+    public async global::System.Threading.Tasks.Task<Pager<ReturnVoice>> ListAsync(
         VoicesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -219,7 +227,7 @@ public partial class VoicesClient : IVoicesClient
                 request,
                 options,
                 async (request, options, cancellationToken) =>
-                    await ListInternalAsync(request, options, cancellationToken),
+                    await ListInternalAsync(request, options, cancellationToken).WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -259,7 +267,7 @@ public partial class VoicesClient : IVoicesClient
     /// <example><code>
     /// await client.Tts.Voices.DeleteAsync(new VoicesDeleteRequest { Name = "David Hume" });
     /// </code></example>
-    public async System.Threading.Tasks.Task DeleteAsync(
+    public async global::System.Threading.Tasks.Task DeleteAsync(
         VoicesDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -294,7 +302,9 @@ public partial class VoicesClient : IVoicesClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)

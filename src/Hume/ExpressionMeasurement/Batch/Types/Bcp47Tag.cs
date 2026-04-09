@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
 
-[JsonConverter(typeof(StringEnumSerializer<Bcp47Tag>))]
+[JsonConverter(typeof(Bcp47Tag.Bcp47TagSerializer))]
 [Serializable]
 public readonly record struct Bcp47Tag : IStringEnum
 {
@@ -103,6 +104,55 @@ public readonly record struct Bcp47Tag : IStringEnum
     public static explicit operator string(Bcp47Tag value) => value.Value;
 
     public static explicit operator Bcp47Tag(string value) => new(value);
+
+    internal class Bcp47TagSerializer : JsonConverter<Bcp47Tag>
+    {
+        public override Bcp47Tag Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new Bcp47Tag(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            Bcp47Tag value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override Bcp47Tag ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new Bcp47Tag(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            Bcp47Tag value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

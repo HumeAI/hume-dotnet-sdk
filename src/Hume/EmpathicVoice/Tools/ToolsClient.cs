@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 
@@ -6,7 +6,7 @@ namespace Hume.EmpathicVoice;
 
 public partial class ToolsClient : IToolsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal ToolsClient(RawClient client)
     {
@@ -29,7 +29,7 @@ public partial class ToolsClient : IToolsClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedUserDefinedTools>
     > ListToolsInternalAsyncCore(
         ToolsListToolsRequest request,
@@ -66,7 +66,9 @@ public partial class ToolsClient : IToolsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedUserDefinedTools>(
@@ -94,7 +96,9 @@ public partial class ToolsClient : IToolsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -117,7 +121,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnUserDefinedTool?>
     > CreateToolAsyncCore(
         PostedUserDefinedTool request,
@@ -148,7 +152,9 @@ public partial class ToolsClient : IToolsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
@@ -174,7 +180,9 @@ public partial class ToolsClient : IToolsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -214,7 +222,7 @@ public partial class ToolsClient : IToolsClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedUserDefinedTools>
     > ListToolVersionsInternalAsyncCore(
         string id,
@@ -254,7 +262,9 @@ public partial class ToolsClient : IToolsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedUserDefinedTools>(
@@ -282,7 +292,9 @@ public partial class ToolsClient : IToolsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -305,7 +317,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnUserDefinedTool?>
     > CreateToolVersionAsyncCore(
         string id,
@@ -340,7 +352,9 @@ public partial class ToolsClient : IToolsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
@@ -366,7 +380,9 @@ public partial class ToolsClient : IToolsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -389,7 +405,9 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<string>> UpdateToolNameAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<string>
+    > UpdateToolNameAsyncCore(
         string id,
         PostedUserDefinedToolName request,
         RequestOptions? options = null,
@@ -422,7 +440,9 @@ public partial class ToolsClient : IToolsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             return new WithRawResponse<string>()
             {
                 Data = responseBody,
@@ -435,7 +455,9 @@ public partial class ToolsClient : IToolsClient
             };
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -458,7 +480,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnUserDefinedTool?>
     > GetToolVersionAsyncCore(
         string id,
@@ -492,7 +514,9 @@ public partial class ToolsClient : IToolsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
@@ -518,7 +542,9 @@ public partial class ToolsClient : IToolsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -541,7 +567,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnUserDefinedTool?>
     > UpdateToolDescriptionAsyncCore(
         string id,
@@ -578,7 +604,9 @@ public partial class ToolsClient : IToolsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnUserDefinedTool?>(responseBody)!;
@@ -604,7 +632,9 @@ public partial class ToolsClient : IToolsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -637,7 +667,7 @@ public partial class ToolsClient : IToolsClient
     ///     new ToolsListToolsRequest { PageNumber = 0, PageSize = 2 }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
+    public async global::System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -656,7 +686,8 @@ public partial class ToolsClient : IToolsClient
                 request,
                 options,
                 async (request, options, cancellationToken) =>
-                    await ListToolsInternalAsync(request, options, cancellationToken),
+                    await ListToolsInternalAsync(request, options, cancellationToken)
+                        .WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -712,7 +743,9 @@ public partial class ToolsClient : IToolsClient
     ///     new ToolsListToolVersionsRequest()
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolVersionsAsync(
+    public async global::System.Threading.Tasks.Task<
+        Pager<ReturnUserDefinedTool>
+    > ListToolVersionsAsync(
         string id,
         ToolsListToolVersionsRequest request,
         RequestOptions? options = null,
@@ -733,7 +766,7 @@ public partial class ToolsClient : IToolsClient
                 options,
                 async (request, options, cancellationToken) =>
                     await ListToolVersionsInternalAsync(id, request, options, cancellationToken)
-                        .ConfigureAwait(false),
+                        .WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -787,7 +820,7 @@ public partial class ToolsClient : IToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolAsync("your-tool-id");
     /// </code></example>
-    public async System.Threading.Tasks.Task DeleteToolAsync(
+    public async global::System.Threading.Tasks.Task DeleteToolAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -820,7 +853,9 @@ public partial class ToolsClient : IToolsClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -894,7 +929,7 @@ public partial class ToolsClient : IToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("", 1);
     /// </code></example>
-    public async System.Threading.Tasks.Task DeleteToolVersionAsync(
+    public async global::System.Threading.Tasks.Task DeleteToolVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -929,7 +964,9 @@ public partial class ToolsClient : IToolsClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)

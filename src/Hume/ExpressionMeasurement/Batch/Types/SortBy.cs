@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
 
-[JsonConverter(typeof(StringEnumSerializer<SortBy>))]
+[JsonConverter(typeof(SortBy.SortBySerializer))]
 [Serializable]
 public readonly record struct SortBy : IStringEnum
 {
@@ -51,6 +52,55 @@ public readonly record struct SortBy : IStringEnum
     public static explicit operator string(SortBy value) => value.Value;
 
     public static explicit operator SortBy(string value) => new(value);
+
+    internal class SortBySerializer : JsonConverter<SortBy>
+    {
+        public override SortBy Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new SortBy(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            SortBy value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override SortBy ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new SortBy(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            SortBy value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

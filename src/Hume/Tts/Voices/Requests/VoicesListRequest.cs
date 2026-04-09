@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.Tts;
@@ -34,6 +34,13 @@ public record VoicesListRequest
     [JsonIgnore]
     public bool? AscendingOrder { get; set; }
 
+    /// <summary>
+    /// Filter voices by tag using `TAG:TAG_VALUE` syntax.
+    ///
+    /// For example, `GENDER:Male` returns only voices with the `GENDER` tag set to `Male`. Tag types are case-insensitive; tag values are case-sensitive.
+    ///
+    /// Multiple values are ANDed together; for example, `[GENDER:Male, LANGUAGE:Japanese]` returns only voices matching both criteria.
+    /// </summary>
     [JsonIgnore]
     public IEnumerable<string> FilterTag { get; set; } = new List<string>();
 

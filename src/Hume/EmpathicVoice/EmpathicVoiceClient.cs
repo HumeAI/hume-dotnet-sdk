@@ -4,7 +4,7 @@ namespace Hume.EmpathicVoice;
 
 public partial class EmpathicVoiceClient : IEmpathicVoiceClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal EmpathicVoiceClient(RawClient client)
     {
@@ -29,17 +29,17 @@ public partial class EmpathicVoiceClient : IEmpathicVoiceClient
 
     public IToolsClient Tools { get; }
 
-    public ControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options)
+    public IControlPlaneApi CreateControlPlaneApi(ControlPlaneApi.Options options)
     {
         return new ControlPlaneApi(options);
     }
 
-    public ChatApi CreateChatApi()
+    public IChatApi CreateChatApi()
     {
-        return new ChatApi(new ChatApi.Options());
+        return new ChatApi(new ChatApi.Options { BaseUrl = _client.Options.Environment.Evi });
     }
 
-    public ChatApi CreateChatApi(ChatApi.Options options)
+    public IChatApi CreateChatApi(ChatApi.Options options)
     {
         return new ChatApi(options);
     }

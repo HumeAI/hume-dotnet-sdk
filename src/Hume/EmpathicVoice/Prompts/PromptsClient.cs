@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 
@@ -6,7 +6,7 @@ namespace Hume.EmpathicVoice;
 
 public partial class PromptsClient : IPromptsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal PromptsClient(RawClient client)
     {
@@ -29,7 +29,7 @@ public partial class PromptsClient : IPromptsClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedPrompts>
     > ListPromptsInternalAsyncCore(
         PromptsListPromptsRequest request,
@@ -66,7 +66,9 @@ public partial class PromptsClient : IPromptsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedPrompts>(responseBody)!;
@@ -92,7 +94,9 @@ public partial class PromptsClient : IPromptsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -115,7 +119,9 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<ReturnPrompt?>> CreatePromptAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<ReturnPrompt?>
+    > CreatePromptAsyncCore(
         PostedPrompt request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -144,7 +150,9 @@ public partial class PromptsClient : IPromptsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPrompt?>(responseBody)!;
@@ -170,7 +178,9 @@ public partial class PromptsClient : IPromptsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -193,7 +203,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedPrompts>
     > ListPromptVersionsAsyncCore(
         string id,
@@ -233,7 +243,9 @@ public partial class PromptsClient : IPromptsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedPrompts>(responseBody)!;
@@ -259,7 +271,9 @@ public partial class PromptsClient : IPromptsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -282,7 +296,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPrompt?>
     > CreatePromptVersionAsyncCore(
         string id,
@@ -317,7 +331,9 @@ public partial class PromptsClient : IPromptsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPrompt?>(responseBody)!;
@@ -343,7 +359,9 @@ public partial class PromptsClient : IPromptsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -366,7 +384,9 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<string>> UpdatePromptNameAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<string>
+    > UpdatePromptNameAsyncCore(
         string id,
         PostedPromptName request,
         RequestOptions? options = null,
@@ -399,7 +419,9 @@ public partial class PromptsClient : IPromptsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             return new WithRawResponse<string>()
             {
                 Data = responseBody,
@@ -412,7 +434,9 @@ public partial class PromptsClient : IPromptsClient
             };
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -435,7 +459,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPrompt?>
     > GetPromptVersionAsyncCore(
         string id,
@@ -469,7 +493,9 @@ public partial class PromptsClient : IPromptsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPrompt?>(responseBody)!;
@@ -495,7 +521,9 @@ public partial class PromptsClient : IPromptsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -518,7 +546,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPrompt?>
     > UpdatePromptDescriptionAsyncCore(
         string id,
@@ -555,7 +583,9 @@ public partial class PromptsClient : IPromptsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPrompt?>(responseBody)!;
@@ -581,7 +611,9 @@ public partial class PromptsClient : IPromptsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -614,7 +646,7 @@ public partial class PromptsClient : IPromptsClient
     ///     new PromptsListPromptsRequest { PageNumber = 0, PageSize = 2 }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnPrompt>> ListPromptsAsync(
+    public async global::System.Threading.Tasks.Task<Pager<ReturnPrompt>> ListPromptsAsync(
         PromptsListPromptsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -633,7 +665,8 @@ public partial class PromptsClient : IPromptsClient
                 request,
                 options,
                 async (request, options, cancellationToken) =>
-                    await ListPromptsInternalAsync(request, options, cancellationToken),
+                    await ListPromptsInternalAsync(request, options, cancellationToken)
+                        .WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -733,7 +766,7 @@ public partial class PromptsClient : IPromptsClient
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.DeletePromptAsync("your-prompt-id");
     /// </code></example>
-    public async System.Threading.Tasks.Task DeletePromptAsync(
+    public async global::System.Threading.Tasks.Task DeletePromptAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -766,7 +799,9 @@ public partial class PromptsClient : IPromptsClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -840,7 +875,7 @@ public partial class PromptsClient : IPromptsClient
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.DeletePromptVersionAsync("your-prompt-id", 1);
     /// </code></example>
-    public async System.Threading.Tasks.Task DeletePromptVersionAsync(
+    public async global::System.Threading.Tasks.Task DeletePromptVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -875,7 +910,9 @@ public partial class PromptsClient : IPromptsClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)

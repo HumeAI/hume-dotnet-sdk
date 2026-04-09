@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-[JsonConverter(typeof(StringEnumSerializer<ReturnChatEventType>))]
+[JsonConverter(typeof(ReturnChatEventType.ReturnChatEventTypeSerializer))]
 [Serializable]
 public readonly record struct ReturnChatEventType : IStringEnum
 {
@@ -77,6 +78,55 @@ public readonly record struct ReturnChatEventType : IStringEnum
     public static explicit operator string(ReturnChatEventType value) => value.Value;
 
     public static explicit operator ReturnChatEventType(string value) => new(value);
+
+    internal class ReturnChatEventTypeSerializer : JsonConverter<ReturnChatEventType>
+    {
+        public override ReturnChatEventType Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new ReturnChatEventType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            ReturnChatEventType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override ReturnChatEventType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new ReturnChatEventType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            ReturnChatEventType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

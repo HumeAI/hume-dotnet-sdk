@@ -18,7 +18,7 @@ public partial class HumeClient : IHumeClient
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "Hume" },
                 { "X-Fern-SDK-Version", Version.Current },
-                { "User-Agent", "Hume/0.2.6" },
+                { "User-Agent", "Hume/0.2.7" },
             }
         );
         foreach (var header in platformHeaders)

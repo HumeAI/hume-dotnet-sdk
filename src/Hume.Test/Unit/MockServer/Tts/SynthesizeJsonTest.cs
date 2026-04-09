@@ -6,10 +6,11 @@ using NUnit.Framework;
 namespace Hume.Test.Unit.MockServer.Tts;
 
 [TestFixture]
+[Parallelizable(ParallelScope.Self)]
 public class SynthesizeJsonTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]
-    public async System.Threading.Tasks.Task MockServerTest()
+    public async global::System.Threading.Tasks.Task MockServerTest()
     {
         const string requestJson = """
             {

@@ -8,7 +8,7 @@ public partial interface IControlPlaneClient
     /// <summary>
     /// Send a message to a specific chat.
     /// </summary>
-    System.Threading.Tasks.Task SendAsync(
+    global::System.Threading.Tasks.Task SendAsync(
         string chatId,
         OneOf<
             SessionSettings,
