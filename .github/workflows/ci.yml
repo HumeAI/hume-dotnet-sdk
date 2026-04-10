@@ -13,12 +13,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - uses: actions/checkout@master
+        uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.x
 
@@ -34,12 +32,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - uses: actions/checkout@master
+        uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.x
 
@@ -58,10 +54,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.x
 
@@ -79,7 +75,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout SDK repo (PR branch)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: sdk
           # checkout the PR branch, not main
@@ -87,13 +83,13 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout examples repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: humeai/hume-api-examples
           path: examples
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.x
 
