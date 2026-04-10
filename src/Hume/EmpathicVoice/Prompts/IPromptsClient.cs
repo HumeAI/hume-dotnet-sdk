@@ -10,7 +10,7 @@ public partial interface IPromptsClient
     ///
     /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
     /// </summary>
-    System.Threading.Tasks.Task<Pager<ReturnPrompt>> ListPromptsAsync(
+    global::System.Threading.Tasks.Task<Pager<ReturnPrompt>> ListPromptsAsync(
         PromptsListPromptsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -56,7 +56,7 @@ public partial interface IPromptsClient
     ///
     /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
     /// </summary>
-    System.Threading.Tasks.Task DeletePromptAsync(
+    global::System.Threading.Tasks.Task DeletePromptAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -91,7 +91,7 @@ public partial interface IPromptsClient
     ///
     /// See our [prompting guide](/docs/speech-to-speech-evi/guides/phone-calling) for tips on crafting your system prompt.
     /// </summary>
-    System.Threading.Tasks.Task DeletePromptVersionAsync(
+    global::System.Threading.Tasks.Task DeletePromptVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,

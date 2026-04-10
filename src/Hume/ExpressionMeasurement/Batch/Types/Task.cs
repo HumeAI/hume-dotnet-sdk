@@ -1,9 +1,9 @@
 // ReSharper disable NullableWarningSuppressionIsUsed
 // ReSharper disable InconsistentNaming
 
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Nodes;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
@@ -64,7 +64,7 @@ public record Task
     public Hume.ExpressionMeasurement.Batch.TaskClassification AsClassification() =>
         IsClassification
             ? (Hume.ExpressionMeasurement.Batch.TaskClassification)Value!
-            : throw new System.Exception("Task.Type is not 'classification'");
+            : throw new global::System.Exception("Task.Type is not 'classification'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.TaskRegression"/> if <see cref="Type"/> is 'regression', otherwise throws an exception.
@@ -73,7 +73,7 @@ public record Task
     public Hume.ExpressionMeasurement.Batch.TaskRegression AsRegression() =>
         IsRegression
             ? (Hume.ExpressionMeasurement.Batch.TaskRegression)Value!
-            : throw new System.Exception("Task.Type is not 'regression'");
+            : throw new global::System.Exception("Task.Type is not 'regression'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.TaskClassification, T> onClassification,
@@ -146,12 +146,12 @@ public record Task
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<Task>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
+        public override bool CanConvert(global::System.Type typeToConvert) =>
             typeof(Task).IsAssignableFrom(typeToConvert);
 
         public override Task Read(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -214,6 +214,27 @@ public record Task
                 } ?? new JsonObject();
             json["type"] = value.Type;
             json.WriteTo(writer, options);
+        }
+
+        public override Task ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new JsonException("The JSON property name could not be read as a string.");
+            return new Task(stringValue, stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            Task value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Type);
         }
     }
 

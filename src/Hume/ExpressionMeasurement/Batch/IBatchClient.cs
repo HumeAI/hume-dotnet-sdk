@@ -43,7 +43,7 @@ public partial interface IBatchClient
     /// <summary>
     /// Get the artifacts ZIP of a completed inference job.
     /// </summary>
-    WithRawResponseTask<System.IO.Stream> GetJobArtifactsAsync(
+    WithRawResponseTask<global::System.IO.Stream> GetJobArtifactsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace Hume.Test.Unit.MockServer.Tts;
 
 [TestFixture]
+[Parallelizable(ParallelScope.Self)]
 public class SynthesizeJsonStreamingTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]

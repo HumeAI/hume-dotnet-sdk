@@ -6,7 +6,7 @@ namespace Hume.ExpressionMeasurement;
 
 public partial class ExpressionMeasurementClient : IExpressionMeasurementClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal ExpressionMeasurementClient(RawClient client)
     {

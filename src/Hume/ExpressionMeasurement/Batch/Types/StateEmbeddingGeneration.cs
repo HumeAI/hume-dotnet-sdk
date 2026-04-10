@@ -1,9 +1,9 @@
 // ReSharper disable NullableWarningSuppressionIsUsed
 // ReSharper disable InconsistentNaming
 
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Nodes;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
@@ -92,7 +92,7 @@ public record StateEmbeddingGeneration
     public Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued AsQueued() =>
         IsQueued
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued)Value!
-            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'QUEUED'");
+            : throw new global::System.Exception("StateEmbeddingGeneration.Status is not 'QUEUED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress"/> if <see cref="Status"/> is 'IN_PROGRESS', otherwise throws an exception.
@@ -101,7 +101,9 @@ public record StateEmbeddingGeneration
     public Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress AsInProgress() =>
         IsInProgress
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationInProgress)Value!
-            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'IN_PROGRESS'");
+            : throw new global::System.Exception(
+                "StateEmbeddingGeneration.Status is not 'IN_PROGRESS'"
+            );
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration"/> if <see cref="Status"/> is 'COMPLETED', otherwise throws an exception.
@@ -111,7 +113,9 @@ public record StateEmbeddingGeneration
         IsCompleted
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationCompletedEmbeddingGeneration)
                 Value!
-            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'COMPLETED'");
+            : throw new global::System.Exception(
+                "StateEmbeddingGeneration.Status is not 'COMPLETED'"
+            );
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed"/> if <see cref="Status"/> is 'FAILED', otherwise throws an exception.
@@ -120,7 +124,7 @@ public record StateEmbeddingGeneration
     public Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed AsFailed() =>
         IsFailed
             ? (Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationFailed)Value!
-            : throw new System.Exception("StateEmbeddingGeneration.Status is not 'FAILED'");
+            : throw new global::System.Exception("StateEmbeddingGeneration.Status is not 'FAILED'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.StateEmbeddingGenerationQueued, T> onQueued,
@@ -258,12 +262,12 @@ public record StateEmbeddingGeneration
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<StateEmbeddingGeneration>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
+        public override bool CanConvert(global::System.Type typeToConvert) =>
             typeof(StateEmbeddingGeneration).IsAssignableFrom(typeToConvert);
 
         public override StateEmbeddingGeneration Read(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -346,6 +350,27 @@ public record StateEmbeddingGeneration
                 } ?? new JsonObject();
             json["status"] = value.Status;
             json.WriteTo(writer, options);
+        }
+
+        public override StateEmbeddingGeneration ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new JsonException("The JSON property name could not be read as a string.");
+            return new StateEmbeddingGeneration(stringValue, stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            StateEmbeddingGeneration value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Status);
         }
     }
 

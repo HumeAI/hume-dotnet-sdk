@@ -1,5 +1,5 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume;
 using Hume.Core;
 
@@ -27,13 +27,15 @@ public record AudioConfiguration : IJsonOnDeserialized
     /// <summary>
     /// Encoding format of the audio input, such as `linear16`.
     /// </summary>
+    [JsonRequired]
     [JsonPropertyName("encoding")]
-    public string Encoding
-    {
-        get => "linear16";
-        set =>
-            value.Assert(value == "linear16", string.Format("'Encoding' must be {0}", "linear16"));
-    }
+    public Encoding Encoding { get;
+#if NET5_0_OR_GREATER
+        init;
+#else
+        set;
+#endif
+    } = new();
 
     /// <summary>
     /// Audio sample rate. Number of samples per second in the audio input, measured in Hertz.

@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-[JsonConverter(typeof(StringEnumSerializer<WebhookEventChatStatus>))]
+[JsonConverter(typeof(WebhookEventChatStatus.WebhookEventChatStatusSerializer))]
 [Serializable]
 public readonly record struct WebhookEventChatStatus : IStringEnum
 {
@@ -63,6 +64,55 @@ public readonly record struct WebhookEventChatStatus : IStringEnum
     public static explicit operator string(WebhookEventChatStatus value) => value.Value;
 
     public static explicit operator WebhookEventChatStatus(string value) => new(value);
+
+    internal class WebhookEventChatStatusSerializer : JsonConverter<WebhookEventChatStatus>
+    {
+        public override WebhookEventChatStatus Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new WebhookEventChatStatus(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            WebhookEventChatStatus value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override WebhookEventChatStatus ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new WebhookEventChatStatus(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            WebhookEventChatStatus value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

@@ -4,19 +4,21 @@ namespace Hume.ExpressionMeasurement.Stream;
 
 public partial class StreamClient : IStreamClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal StreamClient(RawClient client)
     {
         _client = client;
     }
 
-    public StreamApi CreateStreamApi()
+    public IStreamApi CreateStreamApi()
     {
-        return new StreamApi(new StreamApi.Options());
+        return new StreamApi(
+            new StreamApi.Options { BaseUrl = _client.Options.Environment.Stream }
+        );
     }
 
-    public StreamApi CreateStreamApi(StreamApi.Options options)
+    public IStreamApi CreateStreamApi(StreamApi.Options options)
     {
         return new StreamApi(options);
     }

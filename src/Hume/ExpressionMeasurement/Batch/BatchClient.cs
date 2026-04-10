@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 
@@ -6,14 +6,14 @@ namespace Hume.ExpressionMeasurement.Batch;
 
 public partial class BatchClient : IBatchClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal BatchClient(RawClient client)
     {
         _client = client;
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<IEnumerable<InferenceJob>>
     > ListJobsAsyncCore(
         BatchListJobsRequest request,
@@ -52,7 +52,9 @@ public partial class BatchClient : IBatchClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<IEnumerable<InferenceJob>>(responseBody)!;
@@ -78,7 +80,9 @@ public partial class BatchClient : IBatchClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             throw new HumeClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -87,7 +91,9 @@ public partial class BatchClient : IBatchClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<JobId>> StartInferenceJobAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<JobId>
+    > StartInferenceJobAsyncCore(
         InferenceBaseRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -116,7 +122,9 @@ public partial class BatchClient : IBatchClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<JobId>(responseBody)!;
@@ -142,7 +150,9 @@ public partial class BatchClient : IBatchClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             throw new HumeClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -151,7 +161,9 @@ public partial class BatchClient : IBatchClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<InferenceJob>> GetJobDetailsAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<InferenceJob>
+    > GetJobDetailsAsyncCore(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -181,7 +193,9 @@ public partial class BatchClient : IBatchClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<InferenceJob>(responseBody)!;
@@ -207,7 +221,9 @@ public partial class BatchClient : IBatchClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             throw new HumeClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -216,7 +232,7 @@ public partial class BatchClient : IBatchClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<IEnumerable<InferenceSourcePredictResult>>
     > GetJobPredictionsAsyncCore(
         string id,
@@ -248,7 +264,9 @@ public partial class BatchClient : IBatchClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<IEnumerable<InferenceSourcePredictResult>>(
@@ -276,7 +294,9 @@ public partial class BatchClient : IBatchClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             throw new HumeClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -285,8 +305,8 @@ public partial class BatchClient : IBatchClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
-        WithRawResponse<System.IO.Stream>
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<global::System.IO.Stream>
     > GetJobArtifactsAsyncCore(
         string id,
         RequestOptions? options = null,
@@ -318,7 +338,7 @@ public partial class BatchClient : IBatchClient
         if (response.StatusCode is >= 200 and < 400)
         {
             var stream = await response.Raw.Content.ReadAsStreamAsync();
-            return new WithRawResponse<System.IO.Stream>()
+            return new WithRawResponse<global::System.IO.Stream>()
             {
                 Data = stream,
                 RawResponse = new RawResponse()
@@ -330,7 +350,9 @@ public partial class BatchClient : IBatchClient
             };
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             throw new HumeClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -339,7 +361,7 @@ public partial class BatchClient : IBatchClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<JobId>
     > StartInferenceJobFromLocalFileAsyncCore(
         BatchStartInferenceJobFromLocalFileRequest request,
@@ -362,13 +384,15 @@ public partial class BatchClient : IBatchClient
             Options = options,
         };
         multipartFormRequest_.AddJsonPart("json", request.Json);
-        multipartFormRequest_.AddFileParameterPart("file", request.File);
+        multipartFormRequest_.AddFileParameterParts("file", request.File);
         var response = await _client
             .SendRequestAsync(multipartFormRequest_, cancellationToken)
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<JobId>(responseBody)!;
@@ -394,7 +418,9 @@ public partial class BatchClient : IBatchClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             throw new HumeClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -480,13 +506,13 @@ public partial class BatchClient : IBatchClient
     /// <summary>
     /// Get the artifacts ZIP of a completed inference job.
     /// </summary>
-    public WithRawResponseTask<System.IO.Stream> GetJobArtifactsAsync(
+    public WithRawResponseTask<global::System.IO.Stream> GetJobArtifactsAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<System.IO.Stream>(
+        return new WithRawResponseTask<global::System.IO.Stream>(
             GetJobArtifactsAsyncCore(id, options, cancellationToken)
         );
     }
