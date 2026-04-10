@@ -1,7 +1,7 @@
 {
   "cliVersion": "4.65.2",
   "generatorName": "fernapi/fern-csharp-sdk",
-  "generatorVersion": "2.59.5",
+  "generatorVersion": "2.59.6",
   "generatorConfig": {
     "namespace": "Hume",
     "client-class-name": "HumeClient",

@@ -28,24 +28,6 @@ public partial class StreamInputApi
     }
 
     /// <summary>
-    /// Event handler for SnippetAudioChunk.
-    /// Use SnippetAudioChunk.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<SnippetAudioChunk> SnippetAudioChunk = new();
-
-    /// <summary>
-    /// Event handler for TimestampMessage.
-    /// Use TimestampMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TimestampMessage> TimestampMessage = new();
-
-    /// <summary>
-    /// Event handler for unknown/unrecognized message types.
-    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
-    /// </summary>
-    public readonly Event<JsonElement> UnknownMessage = new();
-
-    /// <summary>
     /// Default constructor
     /// </summary>
     public StreamInputApi() { }
@@ -104,6 +86,24 @@ public partial class StreamInputApi
     /// Event raised when the WebSocket connection is re-established after a disconnect.
     /// </summary>
     public Event<ReconnectionInfo> Reconnecting => _client.Reconnecting;
+
+    /// <summary>
+    /// Event handler for SnippetAudioChunk.
+    /// Use SnippetAudioChunk.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<SnippetAudioChunk> SnippetAudioChunk { get; } = new();
+
+    /// <summary>
+    /// Event handler for TimestampMessage.
+    /// Use TimestampMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TimestampMessage> TimestampMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for unknown/unrecognized message types.
+    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
+    /// </summary>
+    public Event<JsonElement> UnknownMessage { get; } = new();
 
     /// <summary>
     /// Disposes of event subscriptions

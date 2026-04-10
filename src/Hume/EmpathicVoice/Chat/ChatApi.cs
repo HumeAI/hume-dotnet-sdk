@@ -25,84 +25,6 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     }
 
     /// <summary>
-    /// Event handler for AssistantEnd.
-    /// Use AssistantEnd.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AssistantEnd> AssistantEnd = new();
-
-    /// <summary>
-    /// Event handler for AssistantMessage.
-    /// Use AssistantMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AssistantMessage> AssistantMessage = new();
-
-    /// <summary>
-    /// Event handler for AssistantProsody.
-    /// Use AssistantProsody.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AssistantProsody> AssistantProsody = new();
-
-    /// <summary>
-    /// Event handler for AudioOutput.
-    /// Use AudioOutput.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AudioOutput> AudioOutput = new();
-
-    /// <summary>
-    /// Event handler for ChatMetadata.
-    /// Use ChatMetadata.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ChatMetadata> ChatMetadata = new();
-
-    /// <summary>
-    /// Event handler for WebSocketError.
-    /// Use WebSocketError.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<WebSocketError> WebSocketError = new();
-
-    /// <summary>
-    /// Event handler for UserInterruption.
-    /// Use UserInterruption.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<UserInterruption> UserInterruption = new();
-
-    /// <summary>
-    /// Event handler for UserMessage.
-    /// Use UserMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<UserMessage> UserMessage = new();
-
-    /// <summary>
-    /// Event handler for ToolCallMessage.
-    /// Use ToolCallMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ToolCallMessage> ToolCallMessage = new();
-
-    /// <summary>
-    /// Event handler for ToolResponseMessage.
-    /// Use ToolResponseMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ToolResponseMessage> ToolResponseMessage = new();
-
-    /// <summary>
-    /// Event handler for ToolErrorMessage.
-    /// Use ToolErrorMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ToolErrorMessage> ToolErrorMessage = new();
-
-    /// <summary>
-    /// Event handler for SessionSettings.
-    /// Use SessionSettings.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<SessionSettings> SessionSettings = new();
-
-    /// <summary>
-    /// Event handler for unknown/unrecognized message types.
-    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
-    /// </summary>
-    public readonly Event<JsonElement> UnknownMessage = new();
-
-    /// <summary>
     /// Default constructor
     /// </summary>
     public ChatApi() { }
@@ -161,6 +83,84 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     /// Event raised when the WebSocket connection is re-established after a disconnect.
     /// </summary>
     public Event<ReconnectionInfo> Reconnecting => _client.Reconnecting;
+
+    /// <summary>
+    /// Event handler for AssistantEnd.
+    /// Use AssistantEnd.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AssistantEnd> AssistantEnd { get; } = new();
+
+    /// <summary>
+    /// Event handler for AssistantMessage.
+    /// Use AssistantMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AssistantMessage> AssistantMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for AssistantProsody.
+    /// Use AssistantProsody.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AssistantProsody> AssistantProsody { get; } = new();
+
+    /// <summary>
+    /// Event handler for AudioOutput.
+    /// Use AudioOutput.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AudioOutput> AudioOutput { get; } = new();
+
+    /// <summary>
+    /// Event handler for ChatMetadata.
+    /// Use ChatMetadata.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ChatMetadata> ChatMetadata { get; } = new();
+
+    /// <summary>
+    /// Event handler for WebSocketError.
+    /// Use WebSocketError.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<WebSocketError> WebSocketError { get; } = new();
+
+    /// <summary>
+    /// Event handler for UserInterruption.
+    /// Use UserInterruption.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<UserInterruption> UserInterruption { get; } = new();
+
+    /// <summary>
+    /// Event handler for UserMessage.
+    /// Use UserMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<UserMessage> UserMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for ToolCallMessage.
+    /// Use ToolCallMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ToolCallMessage> ToolCallMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for ToolResponseMessage.
+    /// Use ToolResponseMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ToolResponseMessage> ToolResponseMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for ToolErrorMessage.
+    /// Use ToolErrorMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ToolErrorMessage> ToolErrorMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for SessionSettings.
+    /// Use SessionSettings.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<SessionSettings> SessionSettings { get; } = new();
+
+    /// <summary>
+    /// Event handler for unknown/unrecognized message types.
+    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
+    /// </summary>
+    public Event<JsonElement> UnknownMessage { get; } = new();
 
     /// <summary>
     /// Disposes of event subscriptions

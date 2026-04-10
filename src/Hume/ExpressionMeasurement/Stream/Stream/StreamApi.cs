@@ -21,30 +21,6 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     }
 
     /// <summary>
-    /// Event handler for StreamModelPredictions.
-    /// Use StreamModelPredictions.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamModelPredictions> StreamModelPredictions = new();
-
-    /// <summary>
-    /// Event handler for StreamErrorMessage.
-    /// Use StreamErrorMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamErrorMessage> StreamErrorMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamWarningMessage.
-    /// Use StreamWarningMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamWarningMessage> StreamWarningMessage = new();
-
-    /// <summary>
-    /// Event handler for unknown/unrecognized message types.
-    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
-    /// </summary>
-    public readonly Event<JsonElement> UnknownMessage = new();
-
-    /// <summary>
     /// Default constructor
     /// </summary>
     public StreamApi() { }
@@ -90,6 +66,30 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     /// Event raised when the WebSocket connection is re-established after a disconnect.
     /// </summary>
     public Event<ReconnectionInfo> Reconnecting => _client.Reconnecting;
+
+    /// <summary>
+    /// Event handler for StreamModelPredictions.
+    /// Use StreamModelPredictions.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamModelPredictions> StreamModelPredictions { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamErrorMessage.
+    /// Use StreamErrorMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamErrorMessage> StreamErrorMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamWarningMessage.
+    /// Use StreamWarningMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamWarningMessage> StreamWarningMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for unknown/unrecognized message types.
+    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
+    /// </summary>
+    public Event<JsonElement> UnknownMessage { get; } = new();
 
     /// <summary>
     /// Disposes of event subscriptions
