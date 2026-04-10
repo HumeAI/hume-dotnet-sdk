@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-[JsonConverter(typeof(StringEnumSerializer<BuiltInTool>))]
+[JsonConverter(typeof(BuiltInTool.BuiltInToolSerializer))]
 [Serializable]
 public readonly record struct BuiltInTool : IStringEnum
 {
@@ -51,6 +52,55 @@ public readonly record struct BuiltInTool : IStringEnum
     public static explicit operator string(BuiltInTool value) => value.Value;
 
     public static explicit operator BuiltInTool(string value) => new(value);
+
+    internal class BuiltInToolSerializer : JsonConverter<BuiltInTool>
+    {
+        public override BuiltInTool Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new BuiltInTool(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            BuiltInTool value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override BuiltInTool ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new BuiltInTool(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            BuiltInTool value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

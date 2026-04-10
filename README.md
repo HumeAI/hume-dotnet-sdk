@@ -11,12 +11,15 @@ The Hume C# library provides convenient access to the Hume APIs from C#.
 - [Installation](#installation)
 - [Reference](#reference)
 - [Usage](#usage)
+- [Environments](#environments)
 - [Exception Handling](#exception-handling)
 - [Pagination](#pagination)
 - [Advanced](#advanced)
   - [Retries](#retries)
   - [Timeouts](#timeouts)
   - [Raw Response](#raw-response)
+  - [Additional Headers](#additional-headers)
+  - [Additional Query Parameters](#additional-query-parameters)
   - [Forward Compatible Enums](#forward-compatible-enums)
 - [Contributing](#contributing)
 
@@ -39,14 +42,24 @@ A full reference for this library is available [here](https://github.com/HumeAI/
 Instantiate and use the client with the following:
 
 ```csharp
-using Hume.EmpathicVoice;
+using Hume.Tts;
 using Hume;
 
 var client = new HumeClient("API_KEY");
-await client.EmpathicVoice.ControlPlane.SendAsync(
-    "chat_id",
-    new SessionSettings { Type = "session_settings" }
-);
+await client.Tts.Voices.CreateAsync(new PostedVoice { GenerationId = "", Name = "David Hume" });
+```
+
+## Environments
+
+This SDK allows you to configure different environments for API requests.
+
+```csharp
+using Hume;
+
+var client = new HumeClient(new ClientOptions
+{
+    Environment = HumeClientEnvironment.Prod
+});
 ```
 
 ## Exception Handling
@@ -58,7 +71,7 @@ will be thrown.
 using Hume;
 
 try {
-    var response = await client.EmpathicVoice.ControlPlane.SendAsync(...);
+    var response = await client.Tts.Voices.CreateAsync(...);
 } catch (HumeClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -70,18 +83,12 @@ try {
 List endpoints are paginated. The SDK provides an async enumerable so that you can simply loop over the items:
 
 ```csharp
-using Hume.EmpathicVoice;
+using Hume.Tts;
 using Hume;
 
 var client = new HumeClient("API_KEY");
-var items = await client.EmpathicVoice.ChatGroups.ListChatGroupsAsync(
-    new ChatGroupsListChatGroupsRequest
-    {
-        PageNumber = 0,
-        PageSize = 1,
-        AscendingOrder = true,
-        ConfigId = "your-config-id",
-    }
+var items = await client.Tts.Voices.ListAsync(
+    new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
 );
 
 await foreach (var item in items)
@@ -107,7 +114,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.EmpathicVoice.ControlPlane.SendAsync(
+var response = await client.Tts.Voices.CreateAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -120,7 +127,7 @@ var response = await client.EmpathicVoice.ControlPlane.SendAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.EmpathicVoice.ControlPlane.SendAsync(
+var response = await client.Tts.Voices.CreateAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
@@ -136,7 +143,7 @@ Access raw HTTP response data (status code, headers, URL) alongside parsed respo
 using Hume;
 
 // Access raw response data (status code, headers, etc.) alongside the parsed response
-var result = await client.EmpathicVoice.ControlPlane.SendAsync(...).WithRawResponse();
+var result = await client.Tts.Voices.CreateAsync(...).WithRawResponse();
 
 // Access the parsed data
 var data = result.Data;
@@ -153,7 +160,39 @@ if (headers.TryGetValue("X-Request-Id", out var requestId))
 }
 
 // For the default behavior, simply await without .WithRawResponse()
-var data = await client.EmpathicVoice.ControlPlane.SendAsync(...);
+var data = await client.Tts.Voices.CreateAsync(...);
+```
+
+### Additional Headers
+
+If you would like to send additional headers as part of the request, use the `AdditionalHeaders` request option.
+
+```csharp
+var response = await client.Tts.Voices.CreateAsync(
+    ...,
+    new RequestOptions {
+        AdditionalHeaders = new Dictionary<string, string?>
+        {
+            { "X-Custom-Header", "custom-value" }
+        }
+    }
+);
+```
+
+### Additional Query Parameters
+
+If you would like to send additional query parameters as part of the request, use the `AdditionalQueryParameters` request option.
+
+```csharp
+var response = await client.Tts.Voices.CreateAsync(
+    ...,
+    new RequestOptions {
+        AdditionalQueryParameters = new Dictionary<string, string>
+        {
+            { "custom_param", "custom-value" }
+        }
+    }
+);
 ```
 
 ### Forward Compatible Enums
@@ -161,28 +200,28 @@ var data = await client.EmpathicVoice.ControlPlane.SendAsync(...);
 This SDK uses forward-compatible enums that can handle unknown values gracefully.
 
 ```csharp
-using Hume.EmpathicVoice;
+using Hume.Tts;
 
 // Using a built-in value
-var builtInTool = BuiltInTool.WebSearch;
+var audioFormatType = AudioFormatType.Mp3;
 
 // Using a custom value
-var customBuiltInTool = BuiltInTool.FromCustom("custom-value");
+var customAudioFormatType = AudioFormatType.FromCustom("custom-value");
 
 // Using in a switch statement
-switch (builtInTool.Value)
+switch (audioFormatType.Value)
 {
-    case BuiltInTool.Values.WebSearch:
-        Console.WriteLine("WebSearch");
+    case AudioFormatType.Values.Mp3:
+        Console.WriteLine("Mp3");
         break;
     default:
-        Console.WriteLine($"Unknown value: {builtInTool.Value}");
+        Console.WriteLine($"Unknown value: {audioFormatType.Value}");
         break;
 }
 
 // Explicit casting
-string builtInToolString = (string)BuiltInTool.WebSearch;
-BuiltInTool builtInToolFromString = (BuiltInTool)"web_search";
+string audioFormatTypeString = (string)AudioFormatType.Mp3;
+AudioFormatType audioFormatTypeFromString = (AudioFormatType)"mp3";
 ```
 
 ## Contributing

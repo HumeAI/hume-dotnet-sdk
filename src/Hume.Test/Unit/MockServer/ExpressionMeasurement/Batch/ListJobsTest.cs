@@ -6,10 +6,11 @@ using NUnit.Framework;
 namespace Hume.Test.Unit.MockServer.ExpressionMeasurement.Batch;
 
 [TestFixture]
+[Parallelizable(ParallelScope.Self)]
 public class ListJobsTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]
-    public async System.Threading.Tasks.Task MockServerTest()
+    public async global::System.Threading.Tasks.Task MockServerTest()
     {
         const string mockResponse = """
             [

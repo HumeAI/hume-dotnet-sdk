@@ -1,9 +1,9 @@
 // ReSharper disable NullableWarningSuppressionIsUsed
 // ReSharper disable InconsistentNaming
 
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Nodes;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
@@ -92,7 +92,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued AsQueued() =>
         IsQueued
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued)Value!
-            : throw new System.Exception("StateTlInference.Status is not 'QUEUED'");
+            : throw new global::System.Exception("StateTlInference.Status is not 'QUEUED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress"/> if <see cref="Status"/> is 'IN_PROGRESS', otherwise throws an exception.
@@ -101,7 +101,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress AsInProgress() =>
         IsInProgress
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceInProgress)Value!
-            : throw new System.Exception("StateTlInference.Status is not 'IN_PROGRESS'");
+            : throw new global::System.Exception("StateTlInference.Status is not 'IN_PROGRESS'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference"/> if <see cref="Status"/> is 'COMPLETED', otherwise throws an exception.
@@ -110,7 +110,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference AsCompleted() =>
         IsCompleted
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceCompletedTlInference)Value!
-            : throw new System.Exception("StateTlInference.Status is not 'COMPLETED'");
+            : throw new global::System.Exception("StateTlInference.Status is not 'COMPLETED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed"/> if <see cref="Status"/> is 'FAILED', otherwise throws an exception.
@@ -119,7 +119,7 @@ public record StateTlInference
     public Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed AsFailed() =>
         IsFailed
             ? (Hume.ExpressionMeasurement.Batch.StateTlInferenceFailed)Value!
-            : throw new System.Exception("StateTlInference.Status is not 'FAILED'");
+            : throw new global::System.Exception("StateTlInference.Status is not 'FAILED'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.StateTlInferenceQueued, T> onQueued,
@@ -242,12 +242,12 @@ public record StateTlInference
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<StateTlInference>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
+        public override bool CanConvert(global::System.Type typeToConvert) =>
             typeof(StateTlInference).IsAssignableFrom(typeToConvert);
 
         public override StateTlInference Read(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -330,6 +330,27 @@ public record StateTlInference
                 } ?? new JsonObject();
             json["status"] = value.Status;
             json.WriteTo(writer, options);
+        }
+
+        public override StateTlInference ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new JsonException("The JSON property name could not be read as a string.");
+            return new StateTlInference(stringValue, stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            StateTlInference value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Status);
         }
     }
 

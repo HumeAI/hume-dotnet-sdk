@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 
@@ -6,7 +6,7 @@ namespace Hume.EmpathicVoice;
 
 public partial class ConfigsClient : IConfigsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal ConfigsClient(RawClient client)
     {
@@ -29,7 +29,7 @@ public partial class ConfigsClient : IConfigsClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedConfigs>
     > ListConfigsInternalAsyncCore(
         ConfigsListConfigsRequest request,
@@ -66,7 +66,9 @@ public partial class ConfigsClient : IConfigsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedConfigs>(responseBody)!;
@@ -92,7 +94,9 @@ public partial class ConfigsClient : IConfigsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -115,7 +119,9 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<ReturnConfig>> CreateConfigAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<ReturnConfig>
+    > CreateConfigAsyncCore(
         PostedConfig request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -144,7 +150,9 @@ public partial class ConfigsClient : IConfigsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
@@ -170,7 +178,9 @@ public partial class ConfigsClient : IConfigsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -210,7 +220,7 @@ public partial class ConfigsClient : IConfigsClient
         );
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnPagedConfigs>
     > ListConfigVersionsInternalAsyncCore(
         string id,
@@ -250,7 +260,9 @@ public partial class ConfigsClient : IConfigsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnPagedConfigs>(responseBody)!;
@@ -276,7 +288,9 @@ public partial class ConfigsClient : IConfigsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -299,7 +313,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnConfig>
     > CreateConfigVersionAsyncCore(
         string id,
@@ -334,7 +348,9 @@ public partial class ConfigsClient : IConfigsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
@@ -360,7 +376,9 @@ public partial class ConfigsClient : IConfigsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -383,7 +401,9 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<string>> UpdateConfigNameAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<string>
+    > UpdateConfigNameAsyncCore(
         string id,
         PostedConfigName request,
         RequestOptions? options = null,
@@ -416,7 +436,9 @@ public partial class ConfigsClient : IConfigsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             return new WithRawResponse<string>()
             {
                 Data = responseBody,
@@ -429,7 +451,9 @@ public partial class ConfigsClient : IConfigsClient
             };
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -452,7 +476,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnConfig>
     > GetConfigVersionAsyncCore(
         string id,
@@ -486,7 +510,9 @@ public partial class ConfigsClient : IConfigsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
@@ -512,7 +538,9 @@ public partial class ConfigsClient : IConfigsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -535,7 +563,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
+    private async global::System.Threading.Tasks.Task<
         WithRawResponse<ReturnConfig>
     > UpdateConfigDescriptionAsyncCore(
         string id,
@@ -572,7 +600,9 @@ public partial class ConfigsClient : IConfigsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnConfig>(responseBody)!;
@@ -598,7 +628,9 @@ public partial class ConfigsClient : IConfigsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -631,7 +663,7 @@ public partial class ConfigsClient : IConfigsClient
     ///     new ConfigsListConfigsRequest { PageNumber = 0, PageSize = 1 }
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigsAsync(
+    public async global::System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigsAsync(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -650,7 +682,8 @@ public partial class ConfigsClient : IConfigsClient
                 request,
                 options,
                 async (request, options, cancellationToken) =>
-                    await ListConfigsInternalAsync(request, options, cancellationToken),
+                    await ListConfigsInternalAsync(request, options, cancellationToken)
+                        .WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -719,7 +752,7 @@ public partial class ConfigsClient : IConfigsClient
     ///     new ConfigsListConfigVersionsRequest()
     /// );
     /// </code></example>
-    public async System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
+    public async global::System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
         string id,
         ConfigsListConfigVersionsRequest request,
         RequestOptions? options = null,
@@ -740,7 +773,7 @@ public partial class ConfigsClient : IConfigsClient
                 options,
                 async (request, options, cancellationToken) =>
                     await ListConfigVersionsInternalAsync(id, request, options, cancellationToken)
-                        .ConfigureAwait(false),
+                        .WithRawResponse(),
                 request => request.PageNumber ?? 0,
                 (request, offset) =>
                 {
@@ -809,7 +842,7 @@ public partial class ConfigsClient : IConfigsClient
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigAsync("your-config-id");
     /// </code></example>
-    public async System.Threading.Tasks.Task DeleteConfigAsync(
+    public async global::System.Threading.Tasks.Task DeleteConfigAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -842,7 +875,9 @@ public partial class ConfigsClient : IConfigsClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -916,7 +951,7 @@ public partial class ConfigsClient : IConfigsClient
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigVersionAsync("your-config-id", 1);
     /// </code></example>
-    public async System.Threading.Tasks.Task DeleteConfigVersionAsync(
+    public async global::System.Threading.Tasks.Task DeleteConfigVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,
@@ -951,7 +986,9 @@ public partial class ConfigsClient : IConfigsClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)

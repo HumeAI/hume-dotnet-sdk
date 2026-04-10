@@ -1,9 +1,9 @@
 // ReSharper disable NullableWarningSuppressionIsUsed
 // ReSharper disable InconsistentNaming
 
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Nodes;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
@@ -78,7 +78,7 @@ public record Source
     public Hume.ExpressionMeasurement.Batch.SourceUrl AsUrl() =>
         IsUrl
             ? (Hume.ExpressionMeasurement.Batch.SourceUrl)Value!
-            : throw new System.Exception("Source.Type is not 'url'");
+            : throw new global::System.Exception("Source.Type is not 'url'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.SourceFile"/> if <see cref="Type"/> is 'file', otherwise throws an exception.
@@ -87,7 +87,7 @@ public record Source
     public Hume.ExpressionMeasurement.Batch.SourceFile AsFile() =>
         IsFile
             ? (Hume.ExpressionMeasurement.Batch.SourceFile)Value!
-            : throw new System.Exception("Source.Type is not 'file'");
+            : throw new global::System.Exception("Source.Type is not 'file'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.SourceTextSource"/> if <see cref="Type"/> is 'text', otherwise throws an exception.
@@ -96,7 +96,7 @@ public record Source
     public Hume.ExpressionMeasurement.Batch.SourceTextSource AsText() =>
         IsText
             ? (Hume.ExpressionMeasurement.Batch.SourceTextSource)Value!
-            : throw new System.Exception("Source.Type is not 'text'");
+            : throw new global::System.Exception("Source.Type is not 'text'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.SourceUrl, T> onUrl,
@@ -191,12 +191,12 @@ public record Source
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<Source>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
+        public override bool CanConvert(global::System.Type typeToConvert) =>
             typeof(Source).IsAssignableFrom(typeToConvert);
 
         public override Source Read(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -271,6 +271,27 @@ public record Source
                 } ?? new JsonObject();
             json["type"] = value.Type;
             json.WriteTo(writer, options);
+        }
+
+        public override Source ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new JsonException("The JSON property name could not be read as a string.");
+            return new Source(stringValue, stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            Source value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Type);
         }
     }
 

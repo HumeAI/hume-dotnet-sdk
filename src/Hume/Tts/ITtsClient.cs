@@ -23,7 +23,7 @@ public partial interface ITtsClient
     ///
     /// The response contains the generated audio file in the requested format.
     /// </summary>
-    WithRawResponseTask<System.IO.Stream> SynthesizeFileAsync(
+    WithRawResponseTask<global::System.IO.Stream> SynthesizeFileAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -32,7 +32,7 @@ public partial interface ITtsClient
     /// <summary>
     /// Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
     /// </summary>
-    WithRawResponseTask<System.IO.Stream> SynthesizeFileStreamingAsync(
+    WithRawResponseTask<global::System.IO.Stream> SynthesizeFileStreamingAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -49,7 +49,7 @@ public partial interface ITtsClient
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<System.IO.Stream> ConvertVoiceFileAsync(
+    WithRawResponseTask<global::System.IO.Stream> ConvertVoiceFileAsync(
         ConvertVoiceFileRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -60,4 +60,8 @@ public partial interface ITtsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    IStreamInputApi CreateStreamInputApi();
+
+    IStreamInputApi CreateStreamInputApi(StreamInputApi.Options options);
 }

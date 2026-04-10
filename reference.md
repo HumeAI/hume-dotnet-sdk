@@ -1,4 +1,513 @@
 # Reference
+## Tts Voices
+<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">ListAsync</a>(VoicesListRequest { ... }) -> Pager&lt;ReturnVoice&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.Voices.ListAsync(
+    new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `VoicesListRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">CreateAsync</a>(PostedVoice { ... }) -> WithRawResponseTask&lt;ReturnVoice&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Saves a new custom voice to your account using the specified TTS generation ID.
+
+Once saved, this voice can be reused in subsequent TTS requests, ensuring consistent speech style and prosody. For more details on voice creation, see the [Voices Guide](/docs/text-to-speech-tts/voices).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.Voices.CreateAsync(new PostedVoice { GenerationId = "", Name = "David Hume" });
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedVoice` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">DeleteAsync</a>(VoicesDeleteRequest { ... })</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deletes a previously generated custom voice.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.Voices.DeleteAsync(new VoicesDeleteRequest { Name = "David Hume" });
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `VoicesDeleteRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Tts
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;ReturnTts&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
+
+The response includes the base64-encoded audio and metadata in JSON format.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.SynthesizeJsonAsync(
+    new PostedTts
+    {
+        Context = new PostedContextWithUtterances
+        {
+            Utterances = new List<PostedUtterance>()
+            {
+                new PostedUtterance
+                {
+                    Text = "How can people see beauty so differently?",
+                    Description =
+                        "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
+                },
+            },
+        },
+        Format = new FormatMp3(),
+        NumGenerations = 1,
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Description =
+                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
+
+The response contains the generated audio file in the requested format.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.SynthesizeFileAsync(
+    new PostedTts
+    {
+        Context = new PostedContextWithGenerationId { GenerationId = "" },
+        Format = new FormatMp3(),
+        NumGenerations = 1,
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Description =
+                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileStreamingAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Tts.SynthesizeFileStreamingAsync(
+    new PostedTts
+    {
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Voice = new PostedUtteranceVoiceWithName
+                {
+                    Name = "Male English Actor",
+                    Provider = Hume.Tts.VoiceProvider.HumeAi,
+                },
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonStreamingAsync</a>(PostedTts { ... }) -> IAsyncEnumerable&lt;OneOf&lt;SnippetAudioChunk, TimestampMessage&gt;&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
+
+The response is a stream of JSON objects including audio encoded in base64.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+client.Tts.SynthesizeJsonStreamingAsync(
+    new PostedTts
+    {
+        Utterances = new List<PostedUtterance>()
+        {
+            new PostedUtterance
+            {
+                Text =
+                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
+                Voice = new PostedUtteranceVoiceWithName
+                {
+                    Name = "Male English Actor",
+                    Provider = Hume.Tts.VoiceProvider.HumeAi,
+                },
+            },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PostedTts` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">ConvertVoiceJsonAsync</a>(ConvertVoiceJsonRequest { ... }) -> IAsyncEnumerable&lt;OneOf&lt;SnippetAudioChunk, TimestampMessage&gt;&gt;</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+client.Tts.ConvertVoiceJsonAsync(new ConvertVoiceJsonRequest());
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `ConvertVoiceJsonRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## EmpathicVoice ControlPlane
 <details><summary><code>client.EmpathicVoice.ControlPlane.<a href="/src/Hume/EmpathicVoice/ControlPlane/ControlPlaneClient.cs">SendAsync</a>(chatId, OneOf&lt;SessionSettings, UserInput, AssistantInput, ToolResponseMessage, ToolErrorMessage, PauseAssistantMessage, ResumeAssistantMessage&gt; { ... })</code></summary>
 <dl>
@@ -27,10 +536,7 @@ Send a message to a specific chat.
 <dd>
 
 ```csharp
-await client.EmpathicVoice.ControlPlane.SendAsync(
-    "chat_id",
-    new SessionSettings { Type = "session_settings" }
-);
+await client.EmpathicVoice.ControlPlane.SendAsync("chat_id", new SessionSettings());
 ```
 </dd>
 </dl>
@@ -2383,515 +2889,6 @@ Version numbers are integer values representing different iterations of the Tool
 <dd>
 
 **request:** `PostedUserDefinedToolVersionDescription` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## Tts Voices
-<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">ListAsync</a>(VoicesListRequest { ... }) -> Pager&lt;ReturnVoice&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.Voices.ListAsync(
-    new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `VoicesListRequest` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">CreateAsync</a>(PostedVoice { ... }) -> WithRawResponseTask&lt;ReturnVoice&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Saves a new custom voice to your account using the specified TTS generation ID.
-
-Once saved, this voice can be reused in subsequent TTS requests, ensuring consistent speech style and prosody. For more details on voice creation, see the [Voices Guide](/docs/text-to-speech-tts/voices).
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.Voices.CreateAsync(new PostedVoice { GenerationId = "", Name = "David Hume" });
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedVoice` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.Voices.<a href="/src/Hume/Tts/Voices/VoicesClient.cs">DeleteAsync</a>(VoicesDeleteRequest { ... })</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Deletes a previously generated custom voice.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.Voices.DeleteAsync(new VoicesDeleteRequest { Name = "David Hume" });
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `VoicesDeleteRequest` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## Tts
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;ReturnTts&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
-
-The response includes the base64-encoded audio and metadata in JSON format.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.SynthesizeJsonAsync(
-    new PostedTts
-    {
-        Context = new PostedContextWithUtterances
-        {
-            Utterances = new List<PostedUtterance>()
-            {
-                new PostedUtterance
-                {
-                    Text = "How can people see beauty so differently?",
-                    Description =
-                        "A curious student with a clear and respectful tone, seeking clarification on Hume's ideas with a straightforward question.",
-                },
-            },
-        },
-        Format = new FormatMp3 { Type = "mp3" },
-        NumGenerations = 1,
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Description =
-                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Synthesizes one or more input texts into speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
-
-The response contains the generated audio file in the requested format.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.SynthesizeFileAsync(
-    new PostedTts
-    {
-        Context = new PostedContextWithGenerationId { GenerationId = "" },
-        Format = new FormatMp3 { Type = "mp3" },
-        NumGenerations = 1,
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Description =
-                    "Middle-aged masculine voice with a clear, rhythmic Scots lilt, rounded vowels, and a warm, steady tone with an articulate, academic quality.",
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeFileStreamingAsync</a>(PostedTts { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Tts.SynthesizeFileStreamingAsync(
-    new PostedTts
-    {
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Voice = new PostedUtteranceVoiceWithName
-                {
-                    Name = "Male English Actor",
-                    Provider = Hume.Tts.VoiceProvider.HumeAi,
-                },
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">SynthesizeJsonStreamingAsync</a>(PostedTts { ... }) -> IAsyncEnumerable&lt;OneOf&lt;SnippetAudioChunk, TimestampMessage&gt;&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Streams synthesized speech using the specified voice. If no voice is provided, a novel voice will be generated dynamically. Optionally, additional context can be included to influence the speech's style and prosody. 
-
-The response is a stream of JSON objects including audio encoded in base64.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-client.Tts.SynthesizeJsonStreamingAsync(
-    new PostedTts
-    {
-        Utterances = new List<PostedUtterance>()
-        {
-            new PostedUtterance
-            {
-                Text =
-                    "Beauty is no quality in things themselves: It exists merely in the mind which contemplates them.",
-                Voice = new PostedUtteranceVoiceWithName
-                {
-                    Name = "Male English Actor",
-                    Provider = Hume.Tts.VoiceProvider.HumeAi,
-                },
-            },
-        },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `PostedTts` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Tts.<a href="/src/Hume/Tts/TtsClient.cs">ConvertVoiceJsonAsync</a>(ConvertVoiceJsonRequest { ... }) -> IAsyncEnumerable&lt;OneOf&lt;SnippetAudioChunk, TimestampMessage&gt;&gt;</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-client.Tts.ConvertVoiceJsonAsync(new ConvertVoiceJsonRequest());
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `ConvertVoiceJsonRequest` 
     
 </dd>
 </dl>

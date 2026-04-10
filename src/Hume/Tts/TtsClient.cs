@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 using OneOf;
@@ -7,7 +7,7 @@ namespace Hume.Tts;
 
 public partial class TtsClient : ITtsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal TtsClient(RawClient client)
     {
@@ -17,7 +17,9 @@ public partial class TtsClient : ITtsClient
 
     public IVoicesClient Voices { get; }
 
-    private async System.Threading.Tasks.Task<WithRawResponse<ReturnTts>> SynthesizeJsonAsyncCore(
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<ReturnTts>
+    > SynthesizeJsonAsyncCore(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -46,7 +48,9 @@ public partial class TtsClient : ITtsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 var responseData = JsonUtils.Deserialize<ReturnTts>(responseBody)!;
@@ -72,7 +76,9 @@ public partial class TtsClient : ITtsClient
             }
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -95,8 +101,8 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
-        WithRawResponse<System.IO.Stream>
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<global::System.IO.Stream>
     > SynthesizeFileAsyncCore(
         PostedTts request,
         RequestOptions? options = null,
@@ -127,7 +133,7 @@ public partial class TtsClient : ITtsClient
         if (response.StatusCode is >= 200 and < 400)
         {
             var stream = await response.Raw.Content.ReadAsStreamAsync();
-            return new WithRawResponse<System.IO.Stream>()
+            return new WithRawResponse<global::System.IO.Stream>()
             {
                 Data = stream,
                 RawResponse = new RawResponse()
@@ -139,7 +145,9 @@ public partial class TtsClient : ITtsClient
             };
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -162,8 +170,8 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
-        WithRawResponse<System.IO.Stream>
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<global::System.IO.Stream>
     > SynthesizeFileStreamingAsyncCore(
         PostedTts request,
         RequestOptions? options = null,
@@ -194,7 +202,7 @@ public partial class TtsClient : ITtsClient
         if (response.StatusCode is >= 200 and < 400)
         {
             var stream = await response.Raw.Content.ReadAsStreamAsync();
-            return new WithRawResponse<System.IO.Stream>()
+            return new WithRawResponse<global::System.IO.Stream>()
             {
                 Data = stream,
                 RawResponse = new RawResponse()
@@ -206,7 +214,9 @@ public partial class TtsClient : ITtsClient
             };
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -229,8 +239,8 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    private async System.Threading.Tasks.Task<
-        WithRawResponse<System.IO.Stream>
+    private async global::System.Threading.Tasks.Task<
+        WithRawResponse<global::System.IO.Stream>
     > ConvertVoiceFileAsyncCore(
         ConvertVoiceFileRequest request,
         RequestOptions? options = null,
@@ -266,7 +276,7 @@ public partial class TtsClient : ITtsClient
         if (response.StatusCode is >= 200 and < 400)
         {
             var stream = await response.Raw.Content.ReadAsStreamAsync();
-            return new WithRawResponse<System.IO.Stream>()
+            return new WithRawResponse<global::System.IO.Stream>()
             {
                 Data = stream,
                 RawResponse = new RawResponse()
@@ -278,7 +288,9 @@ public partial class TtsClient : ITtsClient
             };
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -322,7 +334,7 @@ public partial class TtsClient : ITtsClient
     ///                 },
     ///             },
     ///         },
-    ///         Format = new FormatMp3 { Type = "mp3" },
+    ///         Format = new FormatMp3(),
     ///         NumGenerations = 1,
     ///         Utterances = new List&lt;PostedUtterance&gt;()
     ///         {
@@ -358,7 +370,7 @@ public partial class TtsClient : ITtsClient
     ///     new PostedTts
     ///     {
     ///         Context = new PostedContextWithGenerationId { GenerationId = "" },
-    ///         Format = new FormatMp3 { Type = "mp3" },
+    ///         Format = new FormatMp3(),
     ///         NumGenerations = 1,
     ///         Utterances = new List&lt;PostedUtterance&gt;()
     ///         {
@@ -373,13 +385,13 @@ public partial class TtsClient : ITtsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<System.IO.Stream> SynthesizeFileAsync(
+    public WithRawResponseTask<global::System.IO.Stream> SynthesizeFileAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<System.IO.Stream>(
+        return new WithRawResponseTask<global::System.IO.Stream>(
             SynthesizeFileAsyncCore(request, options, cancellationToken)
         );
     }
@@ -407,13 +419,13 @@ public partial class TtsClient : ITtsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<System.IO.Stream> SynthesizeFileStreamingAsync(
+    public WithRawResponseTask<global::System.IO.Stream> SynthesizeFileStreamingAsync(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<System.IO.Stream>(
+        return new WithRawResponseTask<global::System.IO.Stream>(
             SynthesizeFileStreamingAsyncCore(request, options, cancellationToken)
         );
     }
@@ -494,7 +506,9 @@ public partial class TtsClient : ITtsClient
             yield break;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -517,13 +531,13 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    public WithRawResponseTask<System.IO.Stream> ConvertVoiceFileAsync(
+    public WithRawResponseTask<global::System.IO.Stream> ConvertVoiceFileAsync(
         ConvertVoiceFileRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<System.IO.Stream>(
+        return new WithRawResponseTask<global::System.IO.Stream>(
             ConvertVoiceFileAsyncCore(request, options, cancellationToken)
         );
     }
@@ -585,7 +599,9 @@ public partial class TtsClient : ITtsClient
             yield break;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
@@ -608,12 +624,14 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    public StreamInputApi CreateStreamInputApi()
+    public IStreamInputApi CreateStreamInputApi()
     {
-        return new StreamInputApi(new StreamInputApi.Options());
+        return new StreamInputApi(
+            new StreamInputApi.Options { BaseUrl = _client.Options.Environment.Tts }
+        );
     }
 
-    public StreamInputApi CreateStreamInputApi(StreamInputApi.Options options)
+    public IStreamInputApi CreateStreamInputApi(StreamInputApi.Options options)
     {
         return new StreamInputApi(options);
     }
