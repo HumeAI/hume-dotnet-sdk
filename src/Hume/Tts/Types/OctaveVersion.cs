@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.Tts;
 
-[JsonConverter(typeof(StringEnumSerializer<OctaveVersion>))]
+[JsonConverter(typeof(OctaveVersion.OctaveVersionSerializer))]
 [Serializable]
 public readonly record struct OctaveVersion : IStringEnum
 {
@@ -51,6 +52,55 @@ public readonly record struct OctaveVersion : IStringEnum
     public static explicit operator string(OctaveVersion value) => value.Value;
 
     public static explicit operator OctaveVersion(string value) => new(value);
+
+    internal class OctaveVersionSerializer : JsonConverter<OctaveVersion>
+    {
+        public override OctaveVersion Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new OctaveVersion(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            OctaveVersion value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override OctaveVersion ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new OctaveVersion(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            OctaveVersion value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

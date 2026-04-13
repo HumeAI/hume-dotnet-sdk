@@ -1,9 +1,9 @@
 // ReSharper disable NullableWarningSuppressionIsUsed
 // ReSharper disable InconsistentNaming
 
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Nodes;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
@@ -92,7 +92,7 @@ public record StateInference
     public Hume.ExpressionMeasurement.Batch.QueuedState AsQueued() =>
         IsQueued
             ? (Hume.ExpressionMeasurement.Batch.QueuedState)Value!
-            : throw new System.Exception("StateInference.Status is not 'QUEUED'");
+            : throw new global::System.Exception("StateInference.Status is not 'QUEUED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.InProgressState"/> if <see cref="Status"/> is 'IN_PROGRESS', otherwise throws an exception.
@@ -101,7 +101,7 @@ public record StateInference
     public Hume.ExpressionMeasurement.Batch.InProgressState AsInProgress() =>
         IsInProgress
             ? (Hume.ExpressionMeasurement.Batch.InProgressState)Value!
-            : throw new System.Exception("StateInference.Status is not 'IN_PROGRESS'");
+            : throw new global::System.Exception("StateInference.Status is not 'IN_PROGRESS'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.CompletedState"/> if <see cref="Status"/> is 'COMPLETED', otherwise throws an exception.
@@ -110,7 +110,7 @@ public record StateInference
     public Hume.ExpressionMeasurement.Batch.CompletedState AsCompleted() =>
         IsCompleted
             ? (Hume.ExpressionMeasurement.Batch.CompletedState)Value!
-            : throw new System.Exception("StateInference.Status is not 'COMPLETED'");
+            : throw new global::System.Exception("StateInference.Status is not 'COMPLETED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.FailedState"/> if <see cref="Status"/> is 'FAILED', otherwise throws an exception.
@@ -119,7 +119,7 @@ public record StateInference
     public Hume.ExpressionMeasurement.Batch.FailedState AsFailed() =>
         IsFailed
             ? (Hume.ExpressionMeasurement.Batch.FailedState)Value!
-            : throw new System.Exception("StateInference.Status is not 'FAILED'");
+            : throw new global::System.Exception("StateInference.Status is not 'FAILED'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.QueuedState, T> onQueued,
@@ -236,12 +236,12 @@ public record StateInference
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<StateInference>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
+        public override bool CanConvert(global::System.Type typeToConvert) =>
             typeof(StateInference).IsAssignableFrom(typeToConvert);
 
         public override StateInference Read(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -324,6 +324,27 @@ public record StateInference
                 } ?? new JsonObject();
             json["status"] = value.Status;
             json.WriteTo(writer, options);
+        }
+
+        public override StateInference ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new JsonException("The JSON property name could not be read as a string.");
+            return new StateInference(stringValue, stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            StateInference value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Status);
         }
     }
 

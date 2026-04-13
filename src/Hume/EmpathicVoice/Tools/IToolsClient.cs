@@ -10,7 +10,7 @@ public partial interface IToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
+    global::System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -32,7 +32,7 @@ public partial interface IToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolVersionsAsync(
+    global::System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolVersionsAsync(
         string id,
         ToolsListToolVersionsRequest request,
         RequestOptions? options = null,
@@ -56,7 +56,7 @@ public partial interface IToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    System.Threading.Tasks.Task DeleteToolAsync(
+    global::System.Threading.Tasks.Task DeleteToolAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -91,7 +91,7 @@ public partial interface IToolsClient
     ///
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
-    System.Threading.Tasks.Task DeleteToolVersionAsync(
+    global::System.Threading.Tasks.Task DeleteToolVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,

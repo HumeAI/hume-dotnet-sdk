@@ -1,5 +1,5 @@
-using System.ComponentModel;
-using System.Text.Json;
+using global::System.ComponentModel;
+using global::System.Text.Json;
 using Hume.Core;
 using Hume.Core.WebSockets;
 using OneOf;
@@ -9,7 +9,7 @@ namespace Hume.EmpathicVoice;
 /// <summary>
 /// Chat with Empathic Voice Interface (EVI)
 /// </summary>
-public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
+public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
     private readonly ChatApi.Options _options;
 
@@ -23,78 +23,6 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
         add => _client.PropertyChanged += value;
         remove => _client.PropertyChanged -= value;
     }
-
-    /// <summary>
-    /// Event handler for AssistantEnd.
-    /// Use AssistantEnd.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AssistantEnd> AssistantEnd = new();
-
-    /// <summary>
-    /// Event handler for AssistantMessage.
-    /// Use AssistantMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AssistantMessage> AssistantMessage = new();
-
-    /// <summary>
-    /// Event handler for AssistantProsody.
-    /// Use AssistantProsody.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AssistantProsody> AssistantProsody = new();
-
-    /// <summary>
-    /// Event handler for AudioOutput.
-    /// Use AudioOutput.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<AudioOutput> AudioOutput = new();
-
-    /// <summary>
-    /// Event handler for ChatMetadata.
-    /// Use ChatMetadata.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ChatMetadata> ChatMetadata = new();
-
-    /// <summary>
-    /// Event handler for WebSocketError.
-    /// Use WebSocketError.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<WebSocketError> WebSocketError = new();
-
-    /// <summary>
-    /// Event handler for UserInterruption.
-    /// Use UserInterruption.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<UserInterruption> UserInterruption = new();
-
-    /// <summary>
-    /// Event handler for UserMessage.
-    /// Use UserMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<UserMessage> UserMessage = new();
-
-    /// <summary>
-    /// Event handler for ToolCallMessage.
-    /// Use ToolCallMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ToolCallMessage> ToolCallMessage = new();
-
-    /// <summary>
-    /// Event handler for ToolResponseMessage.
-    /// Use ToolResponseMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ToolResponseMessage> ToolResponseMessage = new();
-
-    /// <summary>
-    /// Event handler for ToolErrorMessage.
-    /// Use ToolErrorMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<ToolErrorMessage> ToolErrorMessage = new();
-
-    /// <summary>
-    /// Event handler for SessionSettings.
-    /// Use SessionSettings.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<SessionSettings> SessionSettings = new();
 
     /// <summary>
     /// Default constructor
@@ -123,6 +51,12 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
         };
         uri.Path = $"{uri.Path.TrimEnd('/')}/chat";
         _client = new WebSocketClient(uri.Uri, OnTextMessage);
+        _client.HttpInvoker = _options.HttpInvoker;
+        _client.IsReconnectionEnabled = _options.IsReconnectionEnabled;
+        _client.ReconnectTimeout = _options.ReconnectTimeout;
+        _client.ErrorReconnectTimeout = _options.ErrorReconnectTimeout;
+        _client.LostReconnectTimeout = _options.LostReconnectTimeout;
+        _client.Backoff = _options.ReconnectBackoff;
     }
 
     /// <summary>
@@ -146,6 +80,89 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
     public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
 
     /// <summary>
+    /// Event raised when the WebSocket connection is re-established after a disconnect.
+    /// </summary>
+    public Event<ReconnectionInfo> Reconnecting => _client.Reconnecting;
+
+    /// <summary>
+    /// Event handler for AssistantEnd.
+    /// Use AssistantEnd.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AssistantEnd> AssistantEnd { get; } = new();
+
+    /// <summary>
+    /// Event handler for AssistantMessage.
+    /// Use AssistantMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AssistantMessage> AssistantMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for AssistantProsody.
+    /// Use AssistantProsody.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AssistantProsody> AssistantProsody { get; } = new();
+
+    /// <summary>
+    /// Event handler for AudioOutput.
+    /// Use AudioOutput.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<AudioOutput> AudioOutput { get; } = new();
+
+    /// <summary>
+    /// Event handler for ChatMetadata.
+    /// Use ChatMetadata.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ChatMetadata> ChatMetadata { get; } = new();
+
+    /// <summary>
+    /// Event handler for WebSocketError.
+    /// Use WebSocketError.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<WebSocketError> WebSocketError { get; } = new();
+
+    /// <summary>
+    /// Event handler for UserInterruption.
+    /// Use UserInterruption.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<UserInterruption> UserInterruption { get; } = new();
+
+    /// <summary>
+    /// Event handler for UserMessage.
+    /// Use UserMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<UserMessage> UserMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for ToolCallMessage.
+    /// Use ToolCallMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ToolCallMessage> ToolCallMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for ToolResponseMessage.
+    /// Use ToolResponseMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ToolResponseMessage> ToolResponseMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for ToolErrorMessage.
+    /// Use ToolErrorMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<ToolErrorMessage> ToolErrorMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for SessionSettings.
+    /// Use SessionSettings.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<SessionSettings> SessionSettings { get; } = new();
+
+    /// <summary>
+    /// Event handler for unknown/unrecognized message types.
+    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
+    /// </summary>
+    public Event<JsonElement> UnknownMessage { get; } = new();
+
+    /// <summary>
     /// Disposes of event subscriptions
     /// </summary>
     private void DisposeEvents()
@@ -162,14 +179,15 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
         ToolResponseMessage.Dispose();
         ToolErrorMessage.Dispose();
         SessionSettings.Dispose();
+        UnknownMessage.Dispose();
     }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    private async System.Threading.Tasks.Task OnTextMessage(Stream stream)
+    private async global::System.Threading.Tasks.Task OnTextMessage(Stream stream)
     {
-        var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
+        using var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
         {
             await ExceptionOccurred
@@ -275,25 +293,54 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
             }
         }
 
-        await ExceptionOccurred
-            .RaiseEvent(new Exception($"Unknown message: {json.ToString()}"))
+        await UnknownMessage.RaiseEvent(json.RootElement.Clone()).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Serializes and sends a JSON message to the server
+    /// </summary>
+    private async global::System.Threading.Tasks.Task SendJsonAsync(
+        object message,
+        CancellationToken cancellationToken = default
+    )
+    {
+        await _client
+            .SendInstant(JsonUtils.Serialize(message), cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Injects a fake text message for testing. Dispatches through the normal message handling pipeline.
+    /// </summary>
+    internal async global::System.Threading.Tasks.Task InjectTestMessage(string rawJson)
+    {
+        using var stream = new MemoryStream(global::System.Text.Encoding.UTF8.GetBytes(rawJson));
+        await OnTextMessage(stream).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Asynchronously establishes a WebSocket connection.
     /// </summary>
-    public async System.Threading.Tasks.Task ConnectAsync()
+    public async global::System.Threading.Tasks.Task ConnectAsync(
+        CancellationToken cancellationToken = default
+    )
     {
-        await _client.ConnectAsync().ConfigureAwait(false);
+#if NET6_0_OR_GREATER
+        _client.DeflateOptions = _options.EnableCompression
+            ? new System.Net.WebSockets.WebSocketDeflateOptions()
+            : null;
+#endif
+        await _client.ConnectAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Asynchronously closes the WebSocket connection.
     /// </summary>
-    public async System.Threading.Tasks.Task CloseAsync()
+    public async global::System.Threading.Tasks.Task CloseAsync(
+        CancellationToken cancellationToken = default
+    )
     {
-        await _client.CloseAsync().ConfigureAwait(false);
+        await _client.CloseAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -319,7 +366,7 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
     /// <summary>
     /// Sends a PublishEvent message to the server
     /// </summary>
-    public async System.Threading.Tasks.Task Send(
+    public async global::System.Threading.Tasks.Task Send(
         OneOf<
             AudioInput,
             SessionSettings,
@@ -329,10 +376,11 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
             ToolErrorMessage,
             PauseAssistantMessage,
             ResumeAssistantMessage
-        > message
+        > message,
+        CancellationToken cancellationToken = default
     )
     {
-        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await SendJsonAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -344,6 +392,17 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
         /// The Websocket URL for the API connection.
         /// </summary>
         public string BaseUrl { get; set; } = "wss://api.hume.ai/v0/evi";
+
+        /// <summary>
+        /// Enable per-message deflate compression (RFC 7692). When true, the client sets <c>ClientWebSocketOptions.DangerousDeflateOptions</c> before connecting. Compression is negotiated during the handshake; if the server does not support it, the connection proceeds uncompressed. Default: <c>false</c>.
+        /// <para><b>Security warning:</b> do not enable compression when transmitting data containing secrets — compressed encrypted payloads are vulnerable to CRIME/BREACH side-channel attacks. See <see href="https://learn.microsoft.com/dotnet/api/system.net.websockets.clientwebsocketoptions.dangerousdeflateoptions">ClientWebSocketOptions.DangerousDeflateOptions</see> for details.</para>
+        /// </summary>
+        public bool EnableCompression { get; set; } = false;
+
+        /// <summary>
+        /// Optional HTTP/2 handler for multiplexed WebSocket connections (.NET 7+).
+        /// </summary>
+        public System.Net.Http.HttpMessageInvoker? HttpInvoker { get; set; }
 
         /// <summary>
         /// Access token used for authenticating the client. If not provided, an `api_key` must be provided to authenticate.
@@ -407,5 +466,30 @@ public partial class ChatApi : IAsyncDisposable, IDisposable, INotifyPropertyCha
         public string? ApiKey { get; set; }
 
         public ConnectSessionSettings? SessionSettings { get; set; }
+
+        /// <summary>
+        /// Enable or disable automatic reconnection. Default: false.
+        /// </summary>
+        public bool IsReconnectionEnabled { get; set; } = false;
+
+        /// <summary>
+        /// Time to wait before reconnecting if no message comes from the server. Set null to disable. Default: 1 minute.
+        /// </summary>
+        public TimeSpan? ReconnectTimeout { get; set; } = TimeSpan.FromMinutes(1);
+
+        /// <summary>
+        /// Time to wait before reconnecting if the last reconnection attempt failed. Set null to disable. Default: 1 minute.
+        /// </summary>
+        public TimeSpan? ErrorReconnectTimeout { get; set; } = TimeSpan.FromMinutes(1);
+
+        /// <summary>
+        /// Time to wait before reconnecting if the connection is lost with a transient error. Set null to disable (reconnect immediately). Default: null.
+        /// </summary>
+        public TimeSpan? LostReconnectTimeout { get; set; }
+
+        /// <summary>
+        /// Backoff strategy for reconnection delays. Controls interval growth, jitter, and max attempts. Set to null to use fixed-interval reconnection (legacy behavior). Default: exponential backoff, 1s→60s, unlimited attempts, with jitter.
+        /// </summary>
+        public ReconnectStrategy? ReconnectBackoff { get; set; } = new ReconnectStrategy();
     }
 }

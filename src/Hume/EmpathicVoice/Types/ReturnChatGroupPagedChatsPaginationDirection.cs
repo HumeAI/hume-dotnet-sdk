@@ -1,9 +1,12 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
-[JsonConverter(typeof(StringEnumSerializer<ReturnChatGroupPagedChatsPaginationDirection>))]
+[JsonConverter(
+    typeof(ReturnChatGroupPagedChatsPaginationDirection.ReturnChatGroupPagedChatsPaginationDirectionSerializer)
+)]
 [Serializable]
 public readonly record struct ReturnChatGroupPagedChatsPaginationDirection : IStringEnum
 {
@@ -57,6 +60,56 @@ public readonly record struct ReturnChatGroupPagedChatsPaginationDirection : ISt
 
     public static explicit operator ReturnChatGroupPagedChatsPaginationDirection(string value) =>
         new(value);
+
+    internal class ReturnChatGroupPagedChatsPaginationDirectionSerializer
+        : JsonConverter<ReturnChatGroupPagedChatsPaginationDirection>
+    {
+        public override ReturnChatGroupPagedChatsPaginationDirection Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new ReturnChatGroupPagedChatsPaginationDirection(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            ReturnChatGroupPagedChatsPaginationDirection value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override ReturnChatGroupPagedChatsPaginationDirection ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new ReturnChatGroupPagedChatsPaginationDirection(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            ReturnChatGroupPagedChatsPaginationDirection value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

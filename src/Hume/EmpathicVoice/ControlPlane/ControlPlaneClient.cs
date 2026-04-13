@@ -1,4 +1,4 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using Hume;
 using Hume.Core;
 using OneOf;
@@ -7,7 +7,7 @@ namespace Hume.EmpathicVoice;
 
 public partial class ControlPlaneClient : IControlPlaneClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal ControlPlaneClient(RawClient client)
     {
@@ -18,12 +18,9 @@ public partial class ControlPlaneClient : IControlPlaneClient
     /// Send a message to a specific chat.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.ControlPlane.SendAsync(
-    ///     "chat_id",
-    ///     new SessionSettings { Type = "session_settings" }
-    /// );
+    /// await client.EmpathicVoice.ControlPlane.SendAsync("chat_id", new SessionSettings());
     /// </code></example>
-    public async System.Threading.Tasks.Task SendAsync(
+    public async global::System.Threading.Tasks.Task SendAsync(
         string chatId,
         OneOf<
             SessionSettings,
@@ -67,7 +64,9 @@ public partial class ControlPlaneClient : IControlPlaneClient
             return;
         }
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)

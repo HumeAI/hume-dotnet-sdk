@@ -11,12 +11,15 @@ The Hume C# library provides convenient access to the Hume APIs from C#.
 - [Installation](#installation)
 - [Reference](#reference)
 - [Usage](#usage)
+- [Environments](#environments)
 - [Exception Handling](#exception-handling)
 - [Pagination](#pagination)
 - [Advanced](#advanced)
   - [Retries](#retries)
   - [Timeouts](#timeouts)
   - [Raw Response](#raw-response)
+  - [Additional Headers](#additional-headers)
+  - [Additional Query Parameters](#additional-query-parameters)
   - [Forward Compatible Enums](#forward-compatible-enums)
 - [Contributing](#contributing)
 
@@ -43,10 +46,20 @@ using Hume.EmpathicVoice;
 using Hume;
 
 var client = new HumeClient("API_KEY");
-await client.EmpathicVoice.ControlPlane.SendAsync(
-    "chat_id",
-    new SessionSettings { Type = "session_settings" }
-);
+await client.EmpathicVoice.ControlPlane.SendAsync("chat_id", new SessionSettings());
+```
+
+## Environments
+
+This SDK allows you to configure different environments for API requests.
+
+```csharp
+using Hume;
+
+var client = new HumeClient(new ClientOptions
+{
+    Environment = HumeClientEnvironment.Prod
+});
 ```
 
 ## Exception Handling
@@ -154,6 +167,38 @@ if (headers.TryGetValue("X-Request-Id", out var requestId))
 
 // For the default behavior, simply await without .WithRawResponse()
 var data = await client.EmpathicVoice.ControlPlane.SendAsync(...);
+```
+
+### Additional Headers
+
+If you would like to send additional headers as part of the request, use the `AdditionalHeaders` request option.
+
+```csharp
+var response = await client.EmpathicVoice.ControlPlane.SendAsync(
+    ...,
+    new RequestOptions {
+        AdditionalHeaders = new Dictionary<string, string?>
+        {
+            { "X-Custom-Header", "custom-value" }
+        }
+    }
+);
+```
+
+### Additional Query Parameters
+
+If you would like to send additional query parameters as part of the request, use the `AdditionalQueryParameters` request option.
+
+```csharp
+var response = await client.EmpathicVoice.ControlPlane.SendAsync(
+    ...,
+    new RequestOptions {
+        AdditionalQueryParameters = new Dictionary<string, string>
+        {
+            { "custom_param", "custom-value" }
+        }
+    }
+);
 ```
 
 ### Forward Compatible Enums

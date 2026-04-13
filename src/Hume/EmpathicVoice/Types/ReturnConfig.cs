@@ -1,5 +1,5 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume;
 using Hume.Core;
 
@@ -47,6 +47,9 @@ public record ReturnConfig : IJsonOnDeserialized
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
+    [JsonPropertyName("interruption")]
+    public ReturnInterruptionSpec? Interruption { get; set; }
+
     [JsonPropertyName("language_model")]
     public ReturnLanguageModel? LanguageModel { get; set; }
 
@@ -76,6 +79,9 @@ public record ReturnConfig : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("tools")]
     public IEnumerable<ReturnUserDefinedTool>? Tools { get; set; }
+
+    [JsonPropertyName("turn_detection")]
+    public ReturnTurnDetectionSpec? TurnDetection { get; set; }
 
     /// <summary>
     /// Version number for a Config.

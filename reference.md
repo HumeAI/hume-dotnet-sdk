@@ -27,10 +27,7 @@ Send a message to a specific chat.
 <dd>
 
 ```csharp
-await client.EmpathicVoice.ControlPlane.SendAsync(
-    "chat_id",
-    new SessionSettings { Type = "session_settings" }
-);
+await client.EmpathicVoice.ControlPlane.SendAsync("chat_id", new SessionSettings());
 ```
 </dd>
 </dl>
@@ -2606,7 +2603,7 @@ await client.Tts.SynthesizeJsonAsync(
                 },
             },
         },
-        Format = new FormatMp3 { Type = "mp3" },
+        Format = new FormatMp3(),
         NumGenerations = 1,
         Utterances = new List<PostedUtterance>()
         {
@@ -2679,7 +2676,7 @@ await client.Tts.SynthesizeFileAsync(
     new PostedTts
     {
         Context = new PostedContextWithGenerationId { GenerationId = "" },
-        Format = new FormatMp3 { Type = "mp3" },
+        Format = new FormatMp3(),
         NumGenerations = 1,
         Utterances = new List<PostedUtterance>()
         {

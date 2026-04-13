@@ -1,9 +1,9 @@
 // ReSharper disable NullableWarningSuppressionIsUsed
 // ReSharper disable InconsistentNaming
 
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Nodes;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.ExpressionMeasurement.Batch;
@@ -92,7 +92,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingQueued AsQueued() =>
         IsQueued
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingQueued)Value!
-            : throw new System.Exception("StateTraining.Status is not 'QUEUED'");
+            : throw new global::System.Exception("StateTraining.Status is not 'QUEUED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTrainingInProgress"/> if <see cref="Status"/> is 'IN_PROGRESS', otherwise throws an exception.
@@ -101,7 +101,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingInProgress AsInProgress() =>
         IsInProgress
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingInProgress)Value!
-            : throw new System.Exception("StateTraining.Status is not 'IN_PROGRESS'");
+            : throw new global::System.Exception("StateTraining.Status is not 'IN_PROGRESS'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining"/> if <see cref="Status"/> is 'COMPLETED', otherwise throws an exception.
@@ -110,7 +110,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining AsCompleted() =>
         IsCompleted
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingCompletedTraining)Value!
-            : throw new System.Exception("StateTraining.Status is not 'COMPLETED'");
+            : throw new global::System.Exception("StateTraining.Status is not 'COMPLETED'");
 
     /// <summary>
     /// Returns the value as a <see cref="Hume.ExpressionMeasurement.Batch.StateTrainingFailed"/> if <see cref="Status"/> is 'FAILED', otherwise throws an exception.
@@ -119,7 +119,7 @@ public record StateTraining
     public Hume.ExpressionMeasurement.Batch.StateTrainingFailed AsFailed() =>
         IsFailed
             ? (Hume.ExpressionMeasurement.Batch.StateTrainingFailed)Value!
-            : throw new System.Exception("StateTraining.Status is not 'FAILED'");
+            : throw new global::System.Exception("StateTraining.Status is not 'FAILED'");
 
     public T Match<T>(
         Func<Hume.ExpressionMeasurement.Batch.StateTrainingQueued, T> onQueued,
@@ -238,12 +238,12 @@ public record StateTraining
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<StateTraining>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
+        public override bool CanConvert(global::System.Type typeToConvert) =>
             typeof(StateTraining).IsAssignableFrom(typeToConvert);
 
         public override StateTraining Read(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -326,6 +326,27 @@ public record StateTraining
                 } ?? new JsonObject();
             json["status"] = value.Status;
             json.WriteTo(writer, options);
+        }
+
+        public override StateTraining ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new JsonException("The JSON property name could not be read as a string.");
+            return new StateTraining(stringValue, stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            StateTraining value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Status);
         }
     }
 

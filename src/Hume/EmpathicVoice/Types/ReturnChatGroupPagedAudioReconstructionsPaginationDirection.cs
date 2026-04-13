@@ -1,10 +1,11 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using Hume.Core;
 
 namespace Hume.EmpathicVoice;
 
 [JsonConverter(
-    typeof(StringEnumSerializer<ReturnChatGroupPagedAudioReconstructionsPaginationDirection>)
+    typeof(ReturnChatGroupPagedAudioReconstructionsPaginationDirection.ReturnChatGroupPagedAudioReconstructionsPaginationDirectionSerializer)
 )]
 [Serializable]
 public readonly record struct ReturnChatGroupPagedAudioReconstructionsPaginationDirection
@@ -68,6 +69,56 @@ public readonly record struct ReturnChatGroupPagedAudioReconstructionsPagination
     public static explicit operator ReturnChatGroupPagedAudioReconstructionsPaginationDirection(
         string value
     ) => new(value);
+
+    internal class ReturnChatGroupPagedAudioReconstructionsPaginationDirectionSerializer
+        : JsonConverter<ReturnChatGroupPagedAudioReconstructionsPaginationDirection>
+    {
+        public override ReturnChatGroupPagedAudioReconstructionsPaginationDirection Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new ReturnChatGroupPagedAudioReconstructionsPaginationDirection(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            ReturnChatGroupPagedAudioReconstructionsPaginationDirection value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override ReturnChatGroupPagedAudioReconstructionsPaginationDirection ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new ReturnChatGroupPagedAudioReconstructionsPaginationDirection(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            ReturnChatGroupPagedAudioReconstructionsPaginationDirection value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values
