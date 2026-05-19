@@ -2264,7 +2264,7 @@ Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-ca
 <dd>
 
 ```csharp
-await client.EmpathicVoice.Tools.DeleteToolVersionAsync("", 1);
+await client.EmpathicVoice.Tools.DeleteToolVersionAsync("your-tool-id", 1);
 ```
 </dd>
 </dl>

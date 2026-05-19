@@ -927,7 +927,7 @@ public partial class ToolsClient : IToolsClient
     /// Refer to our [tool use](/docs/speech-to-speech-evi/features/tool-use#function-calling) guide for comprehensive instructions on defining and integrating tools into EVI.
     /// </summary>
     /// <example><code>
-    /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("", 1);
+    /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("your-tool-id", 1);
     /// </code></example>
     public async global::System.Threading.Tasks.Task DeleteToolVersionAsync(
         string id,
