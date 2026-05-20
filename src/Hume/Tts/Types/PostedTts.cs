@@ -58,6 +58,19 @@ public record PostedTts : IJsonOnDeserialized
     public bool? StripHeaders { get; set; }
 
     /// <summary>
+    /// Sampling temperature for the speech generation model. Higher values increase variation; lower values increase consistency.
+    ///
+    /// **This is an experimental parameter.** It is recommended to use the default values for most use cases.
+    ///
+    /// Defaults when omitted:
+    /// - Octave 1 voice creation (no voice specified): `0.9`
+    /// - Octave 1 text-to-speech: `0.8`
+    /// - Octave 2 text-to-speech: `0.75`
+    /// </summary>
+    [JsonPropertyName("temperature")]
+    public double? Temperature { get; set; }
+
+    /// <summary>
     /// A list of **Utterances** to be converted to speech output.
     ///
     /// An **Utterance** is a unit of input for [Octave](/docs/text-to-speech-tts/overview), and includes input `text`, an optional `description` to serve as the prompt for how the speech should be delivered, an optional `voice` specification, and additional controls to guide delivery for `speed` and `trailing_silence`.
@@ -75,6 +88,12 @@ public record PostedTts : IJsonOnDeserialized
     [JsonPropertyName("version")]
     public OctaveVersion? Version { get; set; }
 
+    /// <summary>
+    /// Enables ultra-low latency streaming, significantly reducing the time until the first audio chunk is received. Recommended for real-time applications requiring immediate audio playback. For further details, see our documentation on [instant mode](/docs/text-to-speech-tts/overview#ultra-low-latency-streaming-instant-mode).
+    /// - A [voice](/reference/text-to-speech-tts/synthesize-json-streaming#request.body.utterances.voice) must be specified when instant mode is enabled. Dynamic voice generation is not supported with this mode.
+    /// - Instant mode is only supported for streaming endpoints (e.g., [/v0/tts/stream/json](/reference/text-to-speech-tts/synthesize-json-streaming), [/v0/tts/stream/file](/reference/text-to-speech-tts/synthesize-file-streaming)).
+    /// - Ensure only a single generation is requested ([num_generations](/reference/text-to-speech-tts/synthesize-json-streaming#request.body.num_generations) must be `1` or omitted).
+    /// </summary>
     [JsonPropertyName("instant_mode")]
     public bool? InstantMode { get; set; }
 

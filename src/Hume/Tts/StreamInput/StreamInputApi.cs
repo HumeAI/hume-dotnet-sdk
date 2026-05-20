@@ -40,7 +40,7 @@ public partial class StreamInputApi
         _options = options;
         var uri = new UriBuilder(_options.BaseUrl)
         {
-            Query = new Hume.Core.QueryStringBuilder.Builder(capacity: 9)
+            Query = new Hume.Core.QueryStringBuilder.Builder(capacity: 10)
                 .Add("access_token", _options.AccessToken)
                 .Add("context_generation_id", _options.ContextGenerationId)
                 .AddDeepObject("format_type", _options.FormatType)
@@ -48,6 +48,7 @@ public partial class StreamInputApi
                 .Add("instant_mode", _options.InstantMode)
                 .Add("no_binary", _options.NoBinary)
                 .Add("strip_headers", _options.StripHeaders)
+                .Add("temperature", _options.Temperature)
                 .AddDeepObject("version", _options.Version)
                 .Add("api_key", _options.ApiKey)
                 .Build(),
@@ -286,6 +287,18 @@ public partial class StreamInputApi
         /// If enabled, the audio for all the chunks of a generation, once concatenated together, will constitute a single audio file. Otherwise, if disabled, each chunk's audio will be its own audio file, each with its own headers (if applicable).
         /// </summary>
         public bool? StripHeaders { get; set; }
+
+        /// <summary>
+        /// Sampling temperature for the speech generation model. Higher values increase variation; lower values increase consistency.
+        ///
+        /// **This is an experimental parameter.** It is recommended to use the default values for most use cases.
+        ///
+        /// Defaults when omitted:
+        /// - Octave 1 voice creation (no voice specified): `0.9`
+        /// - Octave 1 text-to-speech: `0.8`
+        /// - Octave 2 text-to-speech: `0.75`
+        /// </summary>
+        public double? Temperature { get; set; }
 
         /// <summary>
         /// The version of the Octave Model to use. 1 for the legacy model, 2 for the new model.
