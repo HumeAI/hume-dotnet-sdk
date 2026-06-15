@@ -229,7 +229,7 @@ public readonly record struct LanguageModelType : IStringEnum
     {
         public override LanguageModelType Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -252,7 +252,7 @@ public readonly record struct LanguageModelType : IStringEnum
 
         public override LanguageModelType ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

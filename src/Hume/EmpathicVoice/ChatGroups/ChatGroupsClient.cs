@@ -27,9 +27,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedChatGroups>
-    > ListChatGroupsInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedChatGroups>> ListChatGroupsInternalAsyncCore(
         ChatGroupsListChatGroupsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -117,9 +115,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnChatGroupPagedChats>
-    > GetChatGroupAsyncCore(
+    private async Task<WithRawResponse<ReturnChatGroupPagedChats>> GetChatGroupAsyncCore(
         string id,
         ChatGroupsGetChatGroupRequest request,
         RequestOptions? options = null,
@@ -211,9 +207,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnChatGroupPagedAudioReconstructions>
-    > GetAudioAsyncCore(
+    private async Task<WithRawResponse<ReturnChatGroupPagedAudioReconstructions>> GetAudioAsyncCore(
         string id,
         ChatGroupsGetAudioRequest request,
         RequestOptions? options = null,
@@ -321,7 +315,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
+    private async Task<
         WithRawResponse<ReturnChatGroupPagedEvents>
     > ListChatGroupEventsInternalAsyncCore(
         string id,
@@ -428,7 +422,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
     ///     }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnChatGroup>> ListChatGroupsAsync(
+    public async Task<Pager<ReturnChatGroup>> ListChatGroupsAsync(
         ChatGroupsListChatGroupsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -529,9 +523,7 @@ public partial class ChatGroupsClient : IChatGroupsClient
     ///     }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<
-        Pager<ReturnChatEvent>
-    > ListChatGroupEventsAsync(
+    public async Task<Pager<ReturnChatEvent>> ListChatGroupEventsAsync(
         string id,
         ChatGroupsListChatGroupEventsRequest request,
         RequestOptions? options = null,

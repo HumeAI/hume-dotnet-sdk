@@ -27,9 +27,7 @@ public partial class ChatsClient : IChatsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedChats>
-    > ListChatsInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedChats>> ListChatsInternalAsyncCore(
         ChatsListChatsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -133,9 +131,7 @@ public partial class ChatsClient : IChatsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnChatPagedEvents>
-    > ListChatEventsInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnChatPagedEvents>> ListChatEventsInternalAsyncCore(
         string id,
         ChatsListChatEventsRequest request,
         RequestOptions? options = null,
@@ -226,9 +222,7 @@ public partial class ChatsClient : IChatsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnChatAudioReconstruction>
-    > GetAudioAsyncCore(
+    private async Task<WithRawResponse<ReturnChatAudioReconstruction>> GetAudioAsyncCore(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -326,7 +320,7 @@ public partial class ChatsClient : IChatsClient
     ///     }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnChat>> ListChatsAsync(
+    public async Task<Pager<ReturnChat>> ListChatsAsync(
         ChatsListChatsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -375,7 +369,7 @@ public partial class ChatsClient : IChatsClient
     ///     }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnChatEvent>> ListChatEventsAsync(
+    public async Task<Pager<ReturnChatEvent>> ListChatEventsAsync(
         string id,
         ChatsListChatEventsRequest request,
         RequestOptions? options = null,

@@ -24,9 +24,9 @@ public partial interface IControlPlaneApi : IAsyncDisposable, IDisposable
     public Event<SessionSettings> SessionSettings { get; }
     public Event<JsonElement> UnknownMessage { get; }
     public ConnectionStatus Status { get; }
-    global::System.Threading.Tasks.Task ConnectAsync(CancellationToken cancellationToken = default);
+    Task ConnectAsync(CancellationToken cancellationToken = default);
 
-    global::System.Threading.Tasks.Task Send(
+    Task Send(
         OneOf<
             SessionSettings,
             UserInput,
@@ -39,5 +39,5 @@ public partial interface IControlPlaneApi : IAsyncDisposable, IDisposable
         CancellationToken cancellationToken = default
     );
 
-    global::System.Threading.Tasks.Task CloseAsync(CancellationToken cancellationToken = default);
+    Task CloseAsync(CancellationToken cancellationToken = default);
 }

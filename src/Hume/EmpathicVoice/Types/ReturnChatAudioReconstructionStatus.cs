@@ -67,7 +67,7 @@ public readonly record struct ReturnChatAudioReconstructionStatus : IStringEnum
     {
         public override ReturnChatAudioReconstructionStatus Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -90,7 +90,7 @@ public readonly record struct ReturnChatAudioReconstructionStatus : IStringEnum
 
         public override ReturnChatAudioReconstructionStatus ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

@@ -63,7 +63,7 @@ public readonly record struct Role : IStringEnum
     {
         public override Role Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -82,7 +82,7 @@ public readonly record struct Role : IStringEnum
 
         public override Role ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

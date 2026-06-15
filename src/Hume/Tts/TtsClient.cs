@@ -17,9 +17,7 @@ public partial class TtsClient : ITtsClient
 
     public IVoicesClient Voices { get; }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnTts>
-    > SynthesizeJsonAsyncCore(
+    private async Task<WithRawResponse<ReturnTts>> SynthesizeJsonAsyncCore(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -101,9 +99,7 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<global::System.IO.Stream>
-    > SynthesizeFileAsyncCore(
+    private async Task<WithRawResponse<global::System.IO.Stream>> SynthesizeFileAsyncCore(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -170,9 +166,7 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<global::System.IO.Stream>
-    > SynthesizeFileStreamingAsyncCore(
+    private async Task<WithRawResponse<global::System.IO.Stream>> SynthesizeFileStreamingAsyncCore(
         PostedTts request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -239,9 +233,7 @@ public partial class TtsClient : ITtsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<global::System.IO.Stream>
-    > ConvertVoiceFileAsyncCore(
+    private async Task<WithRawResponse<global::System.IO.Stream>> ConvertVoiceFileAsyncCore(
         ConvertVoiceFileRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

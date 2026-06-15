@@ -10,7 +10,7 @@ namespace Hume.Test.Unit.MockServer.Tts.Voices;
 public class CreateTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    public async Task MockServerTest()
     {
         const string requestJson = """
             {

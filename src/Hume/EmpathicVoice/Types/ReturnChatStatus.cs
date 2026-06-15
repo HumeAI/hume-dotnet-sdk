@@ -65,7 +65,7 @@ public readonly record struct ReturnChatStatus : IStringEnum
     {
         public override ReturnChatStatus Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -88,7 +88,7 @@ public readonly record struct ReturnChatStatus : IStringEnum
 
         public override ReturnChatStatus ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

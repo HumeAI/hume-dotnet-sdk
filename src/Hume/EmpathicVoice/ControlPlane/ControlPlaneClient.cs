@@ -20,7 +20,7 @@ public partial class ControlPlaneClient : IControlPlaneClient
     /// <example><code>
     /// await client.EmpathicVoice.ControlPlane.SendAsync("chat_id", new SessionSettings());
     /// </code></example>
-    public async global::System.Threading.Tasks.Task SendAsync(
+    public async Task SendAsync(
         string chatId,
         OneOf<
             SessionSettings,

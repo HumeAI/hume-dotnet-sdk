@@ -61,7 +61,7 @@ public readonly record struct ReturnChatEventRole : IStringEnum
     {
         public override ReturnChatEventRole Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -84,7 +84,7 @@ public readonly record struct ReturnChatEventRole : IStringEnum
 
         public override ReturnChatEventRole ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

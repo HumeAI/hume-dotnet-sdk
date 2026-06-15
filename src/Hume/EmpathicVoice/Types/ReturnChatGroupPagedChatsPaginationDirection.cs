@@ -66,7 +66,7 @@ public readonly record struct ReturnChatGroupPagedChatsPaginationDirection : ISt
     {
         public override ReturnChatGroupPagedChatsPaginationDirection Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -89,7 +89,7 @@ public readonly record struct ReturnChatGroupPagedChatsPaginationDirection : ISt
 
         public override ReturnChatGroupPagedChatsPaginationDirection ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
