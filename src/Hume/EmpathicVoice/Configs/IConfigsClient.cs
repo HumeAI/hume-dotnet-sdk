@@ -10,7 +10,7 @@ public partial interface IConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    global::System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigsAsync(
+    Task<Pager<ReturnConfig>> ListConfigsAsync(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -32,7 +32,7 @@ public partial interface IConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    global::System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
+    Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
         string id,
         ConfigsListConfigVersionsRequest request,
         RequestOptions? options = null,
@@ -56,7 +56,7 @@ public partial interface IConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    global::System.Threading.Tasks.Task DeleteConfigAsync(
+    Task DeleteConfigAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -91,7 +91,7 @@ public partial interface IConfigsClient
     ///
     /// For more details on configuration options and how to configure EVI, see our [configuration guide](/docs/speech-to-speech-evi/configuration).
     /// </summary>
-    global::System.Threading.Tasks.Task DeleteConfigVersionAsync(
+    Task DeleteConfigVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,

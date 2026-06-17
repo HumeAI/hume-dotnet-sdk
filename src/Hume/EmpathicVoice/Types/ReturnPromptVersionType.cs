@@ -57,7 +57,7 @@ public readonly record struct ReturnPromptVersionType : IStringEnum
     {
         public override ReturnPromptVersionType Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -80,7 +80,7 @@ public readonly record struct ReturnPromptVersionType : IStringEnum
 
         public override ReturnPromptVersionType ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

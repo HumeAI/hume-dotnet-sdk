@@ -27,9 +27,7 @@ public partial class VoicesClient : IVoicesClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedVoices>
-    > ListInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedVoices>> ListInternalAsyncCore(
         VoicesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -118,7 +116,7 @@ public partial class VoicesClient : IVoicesClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<WithRawResponse<ReturnVoice>> CreateAsyncCore(
+    private async Task<WithRawResponse<ReturnVoice>> CreateAsyncCore(
         PostedVoice request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -208,7 +206,7 @@ public partial class VoicesClient : IVoicesClient
     ///     new VoicesListRequest { Provider = Hume.Tts.VoiceProvider.CustomVoice }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnVoice>> ListAsync(
+    public async Task<Pager<ReturnVoice>> ListAsync(
         VoicesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -267,7 +265,7 @@ public partial class VoicesClient : IVoicesClient
     /// <example><code>
     /// await client.Tts.Voices.DeleteAsync(new VoicesDeleteRequest { Name = "David Hume" });
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteAsync(
+    public async Task DeleteAsync(
         VoicesDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

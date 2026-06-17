@@ -77,7 +77,7 @@ public readonly record struct ModelProviderEnum : IStringEnum
     {
         public override ModelProviderEnum Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -100,7 +100,7 @@ public readonly record struct ModelProviderEnum : IStringEnum
 
         public override ModelProviderEnum ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

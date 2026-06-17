@@ -29,9 +29,7 @@ public partial class ConfigsClient : IConfigsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedConfigs>
-    > ListConfigsInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedConfigs>> ListConfigsInternalAsyncCore(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -119,9 +117,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnConfig>
-    > CreateConfigAsyncCore(
+    private async Task<WithRawResponse<ReturnConfig>> CreateConfigAsyncCore(
         PostedConfig request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -220,9 +216,7 @@ public partial class ConfigsClient : IConfigsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedConfigs>
-    > ListConfigVersionsInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedConfigs>> ListConfigVersionsInternalAsyncCore(
         string id,
         ConfigsListConfigVersionsRequest request,
         RequestOptions? options = null,
@@ -313,9 +307,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnConfig>
-    > CreateConfigVersionAsyncCore(
+    private async Task<WithRawResponse<ReturnConfig>> CreateConfigVersionAsyncCore(
         string id,
         PostedConfigVersion request,
         RequestOptions? options = null,
@@ -401,9 +393,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<string>
-    > UpdateConfigNameAsyncCore(
+    private async Task<WithRawResponse<string>> UpdateConfigNameAsyncCore(
         string id,
         PostedConfigName request,
         RequestOptions? options = null,
@@ -476,9 +466,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnConfig>
-    > GetConfigVersionAsyncCore(
+    private async Task<WithRawResponse<ReturnConfig>> GetConfigVersionAsyncCore(
         string id,
         int version,
         RequestOptions? options = null,
@@ -563,9 +551,7 @@ public partial class ConfigsClient : IConfigsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnConfig>
-    > UpdateConfigDescriptionAsyncCore(
+    private async Task<WithRawResponse<ReturnConfig>> UpdateConfigDescriptionAsyncCore(
         string id,
         int version,
         PostedConfigVersionDescription request,
@@ -663,7 +649,7 @@ public partial class ConfigsClient : IConfigsClient
     ///     new ConfigsListConfigsRequest { PageNumber = 0, PageSize = 1 }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigsAsync(
+    public async Task<Pager<ReturnConfig>> ListConfigsAsync(
         ConfigsListConfigsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -752,7 +738,7 @@ public partial class ConfigsClient : IConfigsClient
     ///     new ConfigsListConfigVersionsRequest()
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
+    public async Task<Pager<ReturnConfig>> ListConfigVersionsAsync(
         string id,
         ConfigsListConfigVersionsRequest request,
         RequestOptions? options = null,
@@ -842,7 +828,7 @@ public partial class ConfigsClient : IConfigsClient
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigAsync("your-config-id");
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteConfigAsync(
+    public async Task DeleteConfigAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -951,7 +937,7 @@ public partial class ConfigsClient : IConfigsClient
     /// <example><code>
     /// await client.EmpathicVoice.Configs.DeleteConfigVersionAsync("your-config-id", 1);
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteConfigVersionAsync(
+    public async Task DeleteConfigVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,

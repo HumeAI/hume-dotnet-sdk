@@ -55,7 +55,7 @@ public readonly record struct ToolType : IStringEnum
     {
         public override ToolType Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -78,7 +78,7 @@ public readonly record struct ToolType : IStringEnum
 
         public override ToolType ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

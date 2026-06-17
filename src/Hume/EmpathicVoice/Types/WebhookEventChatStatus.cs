@@ -69,7 +69,7 @@ public readonly record struct WebhookEventChatStatus : IStringEnum
     {
         public override WebhookEventChatStatus Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -92,7 +92,7 @@ public readonly record struct WebhookEventChatStatus : IStringEnum
 
         public override WebhookEventChatStatus ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

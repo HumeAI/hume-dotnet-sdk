@@ -70,7 +70,7 @@ public readonly record struct ReturnChatPagedEventsStatus : IStringEnum
     {
         public override ReturnChatPagedEventsStatus Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -93,7 +93,7 @@ public readonly record struct ReturnChatPagedEventsStatus : IStringEnum
 
         public override ReturnChatPagedEventsStatus ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

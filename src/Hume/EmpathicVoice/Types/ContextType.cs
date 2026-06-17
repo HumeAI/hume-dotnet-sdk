@@ -57,7 +57,7 @@ public readonly record struct ContextType : IStringEnum
     {
         public override ContextType Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -80,7 +80,7 @@ public readonly record struct ContextType : IStringEnum
 
         public override ContextType ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

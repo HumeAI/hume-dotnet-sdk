@@ -8,7 +8,7 @@ public partial interface IVoicesClient
     /// <summary>
     /// Lists voices you have saved in your account, or voices from the [Voice Library](https://app.hume.ai/tts/voice-library).
     /// </summary>
-    global::System.Threading.Tasks.Task<Pager<ReturnVoice>> ListAsync(
+    Task<Pager<ReturnVoice>> ListAsync(
         VoicesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -28,7 +28,7 @@ public partial interface IVoicesClient
     /// <summary>
     /// Deletes a previously generated custom voice.
     /// </summary>
-    global::System.Threading.Tasks.Task DeleteAsync(
+    Task DeleteAsync(
         VoicesDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

@@ -13,12 +13,9 @@ public partial interface IStreamInputApi : IAsyncDisposable, IDisposable
     public Event<TimestampMessage> TimestampMessage { get; }
     public Event<JsonElement> UnknownMessage { get; }
     public ConnectionStatus Status { get; }
-    global::System.Threading.Tasks.Task ConnectAsync(CancellationToken cancellationToken = default);
+    Task ConnectAsync(CancellationToken cancellationToken = default);
 
-    global::System.Threading.Tasks.Task Send(
-        PublishTts message,
-        CancellationToken cancellationToken = default
-    );
+    Task Send(PublishTts message, CancellationToken cancellationToken = default);
 
-    global::System.Threading.Tasks.Task CloseAsync(CancellationToken cancellationToken = default);
+    Task CloseAsync(CancellationToken cancellationToken = default);
 }

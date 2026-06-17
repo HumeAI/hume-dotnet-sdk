@@ -185,7 +185,7 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    private async global::System.Threading.Tasks.Task OnTextMessage(Stream stream)
+    private async Task OnTextMessage(Stream stream)
     {
         using var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -299,10 +299,7 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     /// <summary>
     /// Serializes and sends a JSON message to the server
     /// </summary>
-    private async global::System.Threading.Tasks.Task SendJsonAsync(
-        object message,
-        CancellationToken cancellationToken = default
-    )
+    private async Task SendJsonAsync(object message, CancellationToken cancellationToken = default)
     {
         await _client
             .SendInstant(JsonUtils.Serialize(message), cancellationToken)
@@ -312,7 +309,7 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     /// <summary>
     /// Injects a fake text message for testing. Dispatches through the normal message handling pipeline.
     /// </summary>
-    internal async global::System.Threading.Tasks.Task InjectTestMessage(string rawJson)
+    internal async Task InjectTestMessage(string rawJson)
     {
         using var stream = new MemoryStream(global::System.Text.Encoding.UTF8.GetBytes(rawJson));
         await OnTextMessage(stream).ConfigureAwait(false);
@@ -321,9 +318,7 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     /// <summary>
     /// Asynchronously establishes a WebSocket connection.
     /// </summary>
-    public async global::System.Threading.Tasks.Task ConnectAsync(
-        CancellationToken cancellationToken = default
-    )
+    public async Task ConnectAsync(CancellationToken cancellationToken = default)
     {
 #if NET6_0_OR_GREATER
         _client.DeflateOptions = _options.EnableCompression
@@ -336,9 +331,7 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     /// <summary>
     /// Asynchronously closes the WebSocket connection.
     /// </summary>
-    public async global::System.Threading.Tasks.Task CloseAsync(
-        CancellationToken cancellationToken = default
-    )
+    public async Task CloseAsync(CancellationToken cancellationToken = default)
     {
         await _client.CloseAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -366,7 +359,7 @@ public partial class ChatApi : IChatApi, IAsyncDisposable, IDisposable, INotifyP
     /// <summary>
     /// Sends a PublishEvent message to the server
     /// </summary>
-    public async global::System.Threading.Tasks.Task Send(
+    public async Task Send(
         OneOf<
             AudioInput,
             SessionSettings,

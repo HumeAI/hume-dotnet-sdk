@@ -29,9 +29,7 @@ public partial class PromptsClient : IPromptsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedPrompts>
-    > ListPromptsInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedPrompts>> ListPromptsInternalAsyncCore(
         PromptsListPromptsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -119,9 +117,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPrompt?>
-    > CreatePromptAsyncCore(
+    private async Task<WithRawResponse<ReturnPrompt?>> CreatePromptAsyncCore(
         PostedPrompt request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -203,9 +199,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedPrompts>
-    > ListPromptVersionsAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedPrompts>> ListPromptVersionsAsyncCore(
         string id,
         PromptsListPromptVersionsRequest request,
         RequestOptions? options = null,
@@ -296,9 +290,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPrompt?>
-    > CreatePromptVersionAsyncCore(
+    private async Task<WithRawResponse<ReturnPrompt?>> CreatePromptVersionAsyncCore(
         string id,
         PostedPromptVersion request,
         RequestOptions? options = null,
@@ -384,9 +376,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<string>
-    > UpdatePromptNameAsyncCore(
+    private async Task<WithRawResponse<string>> UpdatePromptNameAsyncCore(
         string id,
         PostedPromptName request,
         RequestOptions? options = null,
@@ -459,9 +449,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPrompt?>
-    > GetPromptVersionAsyncCore(
+    private async Task<WithRawResponse<ReturnPrompt?>> GetPromptVersionAsyncCore(
         string id,
         int version,
         RequestOptions? options = null,
@@ -546,9 +534,7 @@ public partial class PromptsClient : IPromptsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPrompt?>
-    > UpdatePromptDescriptionAsyncCore(
+    private async Task<WithRawResponse<ReturnPrompt?>> UpdatePromptDescriptionAsyncCore(
         string id,
         int version,
         PostedPromptVersionDescription request,
@@ -646,7 +632,7 @@ public partial class PromptsClient : IPromptsClient
     ///     new PromptsListPromptsRequest { PageNumber = 0, PageSize = 2 }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnPrompt>> ListPromptsAsync(
+    public async Task<Pager<ReturnPrompt>> ListPromptsAsync(
         PromptsListPromptsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -766,7 +752,7 @@ public partial class PromptsClient : IPromptsClient
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.DeletePromptAsync("your-prompt-id");
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeletePromptAsync(
+    public async Task DeletePromptAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -875,7 +861,7 @@ public partial class PromptsClient : IPromptsClient
     /// <example><code>
     /// await client.EmpathicVoice.Prompts.DeletePromptVersionAsync("your-prompt-id", 1);
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeletePromptVersionAsync(
+    public async Task DeletePromptVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,

@@ -9,7 +9,7 @@ namespace Hume.Test.Unit.MockServer.EmpathicVoice.ChatGroups;
 public class ListChatGroupEventsTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]
-    public async global::System.Threading.Tasks.Task MockServerTest()
+    public async Task MockServerTest()
     {
         const string mockResponse = """
             {

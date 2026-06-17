@@ -57,7 +57,7 @@ public readonly record struct TimestampType : IStringEnum
     {
         public override TimestampType Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -80,7 +80,7 @@ public readonly record struct TimestampType : IStringEnum
 
         public override TimestampType ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

@@ -75,7 +75,7 @@ public readonly record struct ReturnChatGroupPagedAudioReconstructionsPagination
     {
         public override ReturnChatGroupPagedAudioReconstructionsPaginationDirection Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -98,7 +98,7 @@ public readonly record struct ReturnChatGroupPagedAudioReconstructionsPagination
 
         public override ReturnChatGroupPagedAudioReconstructionsPaginationDirection ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

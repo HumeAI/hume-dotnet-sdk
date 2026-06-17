@@ -17,14 +17,9 @@
         "environments": {
           "prod": "wss://api.hume.ai/v0/evi"
         }
-      },
-      "/models": {
-        "environments": {
-          "prod": "wss://api.hume.ai/v0/stream"
-        }
       }
     }
   },
-  "originGitCommit": "274a9e627c776728cbf8da2fc71627448d122f99",
-  "sdkVersion": "0.2.8"
+  "originGitCommit": "2968d0bfb0c9e8d381a274972edb6f7948cf77c6",
+  "sdkVersion": "0.3.0"
 }

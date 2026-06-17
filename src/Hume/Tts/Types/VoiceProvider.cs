@@ -57,7 +57,7 @@ public readonly record struct VoiceProvider : IStringEnum
     {
         public override VoiceProvider Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -80,7 +80,7 @@ public readonly record struct VoiceProvider : IStringEnum
 
         public override VoiceProvider ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

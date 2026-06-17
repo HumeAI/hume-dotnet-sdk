@@ -29,9 +29,7 @@ public partial class ToolsClient : IToolsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnPagedUserDefinedTools>
-    > ListToolsInternalAsyncCore(
+    private async Task<WithRawResponse<ReturnPagedUserDefinedTools>> ListToolsInternalAsyncCore(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -121,9 +119,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnUserDefinedTool?>
-    > CreateToolAsyncCore(
+    private async Task<WithRawResponse<ReturnUserDefinedTool?>> CreateToolAsyncCore(
         PostedUserDefinedTool request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -222,7 +218,7 @@ public partial class ToolsClient : IToolsClient
         );
     }
 
-    private async global::System.Threading.Tasks.Task<
+    private async Task<
         WithRawResponse<ReturnPagedUserDefinedTools>
     > ListToolVersionsInternalAsyncCore(
         string id,
@@ -317,9 +313,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnUserDefinedTool?>
-    > CreateToolVersionAsyncCore(
+    private async Task<WithRawResponse<ReturnUserDefinedTool?>> CreateToolVersionAsyncCore(
         string id,
         PostedUserDefinedToolVersion request,
         RequestOptions? options = null,
@@ -405,9 +399,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<string>
-    > UpdateToolNameAsyncCore(
+    private async Task<WithRawResponse<string>> UpdateToolNameAsyncCore(
         string id,
         PostedUserDefinedToolName request,
         RequestOptions? options = null,
@@ -480,9 +472,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnUserDefinedTool?>
-    > GetToolVersionAsyncCore(
+    private async Task<WithRawResponse<ReturnUserDefinedTool?>> GetToolVersionAsyncCore(
         string id,
         int version,
         RequestOptions? options = null,
@@ -567,9 +557,7 @@ public partial class ToolsClient : IToolsClient
         }
     }
 
-    private async global::System.Threading.Tasks.Task<
-        WithRawResponse<ReturnUserDefinedTool?>
-    > UpdateToolDescriptionAsyncCore(
+    private async Task<WithRawResponse<ReturnUserDefinedTool?>> UpdateToolDescriptionAsyncCore(
         string id,
         int version,
         PostedUserDefinedToolVersionDescription request,
@@ -667,7 +655,7 @@ public partial class ToolsClient : IToolsClient
     ///     new ToolsListToolsRequest { PageNumber = 0, PageSize = 2 }
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
+    public async Task<Pager<ReturnUserDefinedTool>> ListToolsAsync(
         ToolsListToolsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -743,9 +731,7 @@ public partial class ToolsClient : IToolsClient
     ///     new ToolsListToolVersionsRequest()
     /// );
     /// </code></example>
-    public async global::System.Threading.Tasks.Task<
-        Pager<ReturnUserDefinedTool>
-    > ListToolVersionsAsync(
+    public async Task<Pager<ReturnUserDefinedTool>> ListToolVersionsAsync(
         string id,
         ToolsListToolVersionsRequest request,
         RequestOptions? options = null,
@@ -820,7 +806,7 @@ public partial class ToolsClient : IToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolAsync("your-tool-id");
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteToolAsync(
+    public async Task DeleteToolAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -929,7 +915,7 @@ public partial class ToolsClient : IToolsClient
     /// <example><code>
     /// await client.EmpathicVoice.Tools.DeleteToolVersionAsync("your-tool-id", 1);
     /// </code></example>
-    public async global::System.Threading.Tasks.Task DeleteToolVersionAsync(
+    public async Task DeleteToolVersionAsync(
         string id,
         int version,
         RequestOptions? options = null,

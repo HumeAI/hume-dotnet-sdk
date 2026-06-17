@@ -57,7 +57,7 @@ public readonly record struct PostedBuiltinToolName : IStringEnum
     {
         public override PostedBuiltinToolName Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -80,7 +80,7 @@ public readonly record struct PostedBuiltinToolName : IStringEnum
 
         public override PostedBuiltinToolName ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

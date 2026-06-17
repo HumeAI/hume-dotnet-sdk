@@ -59,7 +59,7 @@ public readonly record struct AudioFormatType : IStringEnum
     {
         public override AudioFormatType Read(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -82,7 +82,7 @@ public readonly record struct AudioFormatType : IStringEnum
 
         public override AudioFormatType ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            Type typeToConvert,
             JsonSerializerOptions options
         )
         {

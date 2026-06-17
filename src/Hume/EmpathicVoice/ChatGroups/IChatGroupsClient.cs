@@ -8,7 +8,7 @@ public partial interface IChatGroupsClient
     /// <summary>
     /// Fetches a paginated list of **Chat Groups**.
     /// </summary>
-    global::System.Threading.Tasks.Task<Pager<ReturnChatGroup>> ListChatGroupsAsync(
+    Task<Pager<ReturnChatGroup>> ListChatGroupsAsync(
         ChatGroupsListChatGroupsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -37,7 +37,7 @@ public partial interface IChatGroupsClient
     /// <summary>
     /// Fetches a paginated list of **Chat** events associated with a **Chat Group**.
     /// </summary>
-    global::System.Threading.Tasks.Task<Pager<ReturnChatEvent>> ListChatGroupEventsAsync(
+    Task<Pager<ReturnChatEvent>> ListChatGroupEventsAsync(
         string id,
         ChatGroupsListChatGroupEventsRequest request,
         RequestOptions? options = null,
