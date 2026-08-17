@@ -147,9 +147,13 @@ public class CreateConfigVersionTest : BaseMockServerTest
                 EllmModel = new PostedEllmModel { AllowShortResponses = true },
                 EventMessages = new PostedEventMessageSpecs
                 {
-                    OnNewChat = new PostedEventMessageSpec { Enabled = false, Text = "" },
-                    OnInactivityTimeout = new PostedEventMessageSpec { Enabled = false, Text = "" },
-                    OnMaxDurationTimeout = new PostedEventMessageSpec
+                    OnNewChat = new PostedEventMessageSpecsOnNewChat { Enabled = false, Text = "" },
+                    OnInactivityTimeout = new PostedEventMessageSpecsOnInactivityTimeout
+                    {
+                        Enabled = false,
+                        Text = "",
+                    },
+                    OnMaxDurationTimeout = new PostedEventMessageSpecsOnMaxDurationTimeout
                     {
                         Enabled = false,
                         Text = "",

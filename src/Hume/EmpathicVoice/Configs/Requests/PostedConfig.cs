@@ -13,11 +13,19 @@ public record PostedConfig
     [JsonPropertyName("builtin_tools")]
     public IEnumerable<PostedBuiltinTool>? BuiltinTools { get; set; }
 
+    /// <summary>
+    /// The eLLM setup associated with this Config.
+    ///
+    /// Hume's eLLM (empathic Large Language Model) is a multimodal language model that takes into account both expression measures and language. The eLLM generates short, empathic language responses and guides text-to-speech (TTS) prosody.
+    /// </summary>
     [JsonPropertyName("ellm_model")]
-    public PostedEllmModel? EllmModel { get; set; }
+    public PostedConfigEllmModel? EllmModel { get; set; }
 
+    /// <summary>
+    /// Map of event messages associated with this config.
+    /// </summary>
     [JsonPropertyName("event_messages")]
-    public PostedEventMessageSpecs? EventMessages { get; set; }
+    public PostedConfigEventMessages? EventMessages { get; set; }
 
     /// <summary>
     /// EVI version to use. Only versions `3` and `4-mini` are supported.
@@ -28,8 +36,13 @@ public record PostedConfig
     [JsonPropertyName("interruption")]
     public PostedInterruptionSpec? Interruption { get; set; }
 
+    /// <summary>
+    /// The supplemental language model associated with this Config.
+    ///
+    /// This model is used to generate longer, more detailed responses from EVI. Choosing an appropriate supplemental language model for your use case is crucial for generating fast, high-quality responses from EVI.
+    /// </summary>
     [JsonPropertyName("language_model")]
-    public PostedLanguageModel? LanguageModel { get; set; }
+    public PostedConfigLanguageModel? LanguageModel { get; set; }
 
     /// <summary>
     /// Name applied to all versions of a particular Config.
@@ -37,14 +50,23 @@ public record PostedConfig
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    /// <summary>
+    /// Configures nudges, brief audio prompts that can guide conversations when users pause or need encouragement to continue speaking. Nudges help create more natural, flowing interactions by providing gentle conversational cues.
+    /// </summary>
     [JsonPropertyName("nudges")]
-    public PostedNudgeSpec? Nudges { get; set; }
+    public PostedConfigNudges? Nudges { get; set; }
 
+    /// <summary>
+    /// A Prompt associated with this Config.
+    /// </summary>
     [JsonPropertyName("prompt")]
-    public PostedConfigPromptSpec? Prompt { get; set; }
+    public PostedConfigPrompt? Prompt { get; set; }
 
+    /// <summary>
+    /// Map of timeouts associated with this config.
+    /// </summary>
     [JsonPropertyName("timeouts")]
-    public PostedTimeoutSpecs? Timeouts { get; set; }
+    public PostedConfigTimeouts? Timeouts { get; set; }
 
     /// <summary>
     /// Tool specification for a Config.

@@ -613,24 +613,32 @@ await client.EmpathicVoice.Configs.CreateConfigAsync(
     new PostedConfig
     {
         Name = "Weather Assistant Config",
-        Prompt = new PostedConfigPromptSpec { Id = "", Version = 0 },
+        Prompt = new PostedConfigPrompt { Id = "", Version = 0 },
         EviVersion = "3",
         Voice = new VoiceName
         {
             Provider = Hume.EmpathicVoice.VoiceProvider.HumeAi,
             Name = "Ava Song",
         },
-        LanguageModel = new PostedLanguageModel
+        LanguageModel = new PostedConfigLanguageModel
         {
             ModelProvider = ModelProviderEnum.Anthropic,
             ModelResource = LanguageModelType.Claude37SonnetLatest,
             Temperature = 1f,
         },
-        EventMessages = new PostedEventMessageSpecs
+        EventMessages = new PostedConfigEventMessages
         {
-            OnNewChat = new PostedEventMessageSpec { Enabled = false, Text = "" },
-            OnInactivityTimeout = new PostedEventMessageSpec { Enabled = false, Text = "" },
-            OnMaxDurationTimeout = new PostedEventMessageSpec { Enabled = false, Text = "" },
+            OnNewChat = new PostedConfigEventMessagesOnNewChat { Enabled = false, Text = "" },
+            OnInactivityTimeout = new PostedConfigEventMessagesOnInactivityTimeout
+            {
+                Enabled = false,
+                Text = "",
+            },
+            OnMaxDurationTimeout = new PostedConfigEventMessagesOnMaxDurationTimeout
+            {
+                Enabled = false,
+                Text = "",
+            },
         },
     }
 );
@@ -777,9 +785,17 @@ await client.EmpathicVoice.Configs.CreateConfigVersionAsync(
         EllmModel = new PostedEllmModel { AllowShortResponses = true },
         EventMessages = new PostedEventMessageSpecs
         {
-            OnNewChat = new PostedEventMessageSpec { Enabled = false, Text = "" },
-            OnInactivityTimeout = new PostedEventMessageSpec { Enabled = false, Text = "" },
-            OnMaxDurationTimeout = new PostedEventMessageSpec { Enabled = false, Text = "" },
+            OnNewChat = new PostedEventMessageSpecsOnNewChat { Enabled = false, Text = "" },
+            OnInactivityTimeout = new PostedEventMessageSpecsOnInactivityTimeout
+            {
+                Enabled = false,
+                Text = "",
+            },
+            OnMaxDurationTimeout = new PostedEventMessageSpecsOnMaxDurationTimeout
+            {
+                Enabled = false,
+                Text = "",
+            },
         },
     }
 );

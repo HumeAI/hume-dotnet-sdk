@@ -127,24 +127,32 @@ public class CreateConfigTest : BaseMockServerTest
             new PostedConfig
             {
                 Name = "Weather Assistant Config",
-                Prompt = new PostedConfigPromptSpec { Id = "", Version = 0 },
+                Prompt = new PostedConfigPrompt { Id = "", Version = 0 },
                 EviVersion = "3",
                 Voice = new VoiceName
                 {
                     Provider = Hume.EmpathicVoice.VoiceProvider.HumeAi,
                     Name = "Ava Song",
                 },
-                LanguageModel = new PostedLanguageModel
+                LanguageModel = new PostedConfigLanguageModel
                 {
                     ModelProvider = ModelProviderEnum.Anthropic,
                     ModelResource = LanguageModelType.Claude37SonnetLatest,
                     Temperature = 1f,
                 },
-                EventMessages = new PostedEventMessageSpecs
+                EventMessages = new PostedConfigEventMessages
                 {
-                    OnNewChat = new PostedEventMessageSpec { Enabled = false, Text = "" },
-                    OnInactivityTimeout = new PostedEventMessageSpec { Enabled = false, Text = "" },
-                    OnMaxDurationTimeout = new PostedEventMessageSpec
+                    OnNewChat = new PostedConfigEventMessagesOnNewChat
+                    {
+                        Enabled = false,
+                        Text = "",
+                    },
+                    OnInactivityTimeout = new PostedConfigEventMessagesOnInactivityTimeout
+                    {
+                        Enabled = false,
+                        Text = "",
+                    },
+                    OnMaxDurationTimeout = new PostedConfigEventMessagesOnMaxDurationTimeout
                     {
                         Enabled = false,
                         Text = "",
