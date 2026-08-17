@@ -53,7 +53,6 @@ public partial class ControlPlaneClient : IControlPlaneClient
                     ),
                     Body = request,
                     Headers = _headers,
-                    ContentType = "application/json",
                     Options = options,
                 },
                 cancellationToken
